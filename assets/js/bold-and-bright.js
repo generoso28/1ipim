@@ -58,4 +58,12 @@
 
   initParallax();
 })(); // End of use strict
+document.addEventListener("DOMContentLoaded", function () {
+  const toggler = document.querySelector(".navbar-toggler");
+  const nav = document.querySelector("#navcol-1");
+
+  nav.addEventListener("hidden.bs.collapse", function () {
+      toggler.style.backgroundColor = "transparent";
+  });
+});
 

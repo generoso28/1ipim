@@ -33,3 +33,8 @@
     border: none; /* Remove borda */
     transition: background-color 0.3s ease-in-out;
 }
+.scroll-card {
+    visibility: hidden; /* Fica invisível, mas mantém o espaço */
+    opacity: 0;
+    transform: translateY(50px);
+}

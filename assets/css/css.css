@@ -8,6 +8,7 @@ body {
 * {
     box-sizing: border-box;
 }
+/*
 @media (min-width: 0px) and (max-width: 1200px) {
     .header-content {
         text-align: center;
@@ -18,11 +19,11 @@ body {
     }
     header {
         display: flex;
-        justify-content: center; /* Centraliza o conteúdo horizontalmente */
-        align-items: center; /* Centraliza o conteúdo verticalmente */
-        overflow: hidden; /* Evita o scroll do header */
-        padding: 0; /* Remover qualquer padding extra no header */
-        margin: 0; /* Remover qualquer margem extra no header */
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
     }
     header .container{
         height: 500px;
@@ -46,20 +47,23 @@ body {
     min-height: 115%;
     max-height: 150%;
 }
-
+*/
 @media (min-width: 1200px) {
+    /*
     header {
-        height: 600px; /* Ocupa 100% da altura da tela */
+        height: 600px;
         display: flex;
-        justify-content: center; /* Centraliza o conteúdo horizontalmente */
-        align-items: center; /* Centraliza o conteúdo verticalmente */
-        overflow: hidden; /* Evita o scroll do header */
-        padding: 0; /* Remover qualquer padding extra no header */
-        margin: 0; /* Remover qualquer margem extra no header */
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
     }
+
     header .container{
         height: 60vh;
     }
+    */
     .mapouter {
         position: relative;
         text-align: right;
@@ -70,6 +74,51 @@ body {
         width: 100%; /* Mapa ocupa 100% da largura do contêiner */
         height: 100% !important; /* O mapa ocupa 100% da altura do contêiner */
     }
+}
+header {
+    position: relative;
+    width: 100%;
+    height: 88vh; /* Ocupa toda a altura da tela */
+    overflow: hidden;
+    background: black; /* Teste com fundo preto para ver se algo aparece */
+}
+
+.video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill; /* Faz o vídeo preencher toda a tela */
+    display: block; /* Garante que o vídeo não esteja oculto */
+}
+@media (max-width: 600px) {
+    header {
+        position: relative;
+        width: 100%;
+        height: 44vh; /* Ocupa toda a altura da tela */
+        overflow: hidden;
+        background: black; /* Teste com fundo preto para ver se algo aparece */
+    }
+}
+@media (min-width: 601px) and (max-width: 700px) {
+    header {
+        position: relative;
+        width: 100%;
+        height: 50vh; /* Ocupa toda a altura da tela */
+        overflow: hidden;
+        background: black; /* Teste com fundo preto para ver se algo aparece */
+    }
+}
+@media (min-width: 701px) and (max-width: 899px) {
+    header {
+        position: relative;
+        width: 100%;
+        height: 60vh; /* Ocupa toda a altura da tela */
+        overflow: hidden;
+        background: black; /* Teste com fundo preto para ver se algo aparece */
+    }
+
 }
 
 .navbar{

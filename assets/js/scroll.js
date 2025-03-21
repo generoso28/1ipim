@@ -62,11 +62,15 @@ window.addEventListener("scroll", function () {
 // Importando GSAP e ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
+
+// Criar uma variável para armazenar os triggers de zoom
+let zoomTriggers = [];
+
 // Função que inicializa o efeito de zoom
 function initializeZoomEffect() {
     if (window.innerWidth >= 550) {
         gsap.utils.toArray(".imagens-nossa-historia").forEach(img => {
-            gsap.fromTo(img,
+            const zoomTrigger = gsap.fromTo(img,
                 {scale: 1},  // Inicializa o scale para 1 (sem zoom)
                 {
                     scale: 4,  // Zoom final quando o scroll atingir o limite
@@ -79,15 +83,18 @@ function initializeZoomEffect() {
                     }
                 }
             );
+            // Armazena o trigger de zoom
+            zoomTriggers.push(zoomTrigger.scrollTrigger);
         });
     } else {
-        // Remove qualquer efeito de zoom se a tela for pequena
+        // Remove o efeito de zoom quando a tela for pequena, mas não afeta outros triggers
+        zoomTriggers.forEach(trigger => trigger.kill());  // Mata apenas os triggers de zoom
         gsap.utils.toArray(".imagens-nossa-historia img").forEach(img => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());  // Mata os triggers para reiniciar
             gsap.set(img, {scale: 1});  // Restaura o estado inicial
         });
     }
 }
+
 
 // Evento de carregamento da página
 document.addEventListener("DOMContentLoaded", function () {

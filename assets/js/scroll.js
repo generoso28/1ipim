@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     gsap.utils.toArray(".scroll-card").forEach((card, i) => {
         gsap.fromTo(card,
-            {opacity: 0, y: 80, visibility: "hidden"}, // Movendo um pouco mais para baixo para suavizar
+            {opacity: 0, y: 40, visibility: "hidden"}, // Movendo um pouco mais para baixo para suavizar
             {
-                opacity: 1, y: 0, visibility: "visible", duration: 2.0, ease: "power2.out", // Ajustando a duração e o easing
+                opacity: 1, y: 0, visibility: "visible", duration: 1.5, ease: "power2.out", // Ajustando a duração e o easing
                 scrollTrigger: {
                     trigger: card,
-                    start: "top 95%", // Inicia antes para dar uma sensação de fluidez
+                    start: "top 100%", // Inicia antes para dar uma sensação de fluidez
                     toggleActions: "play none none reverse",
                     once: false
                 }

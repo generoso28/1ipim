@@ -25,7 +25,7 @@ body {
         margin: 0; /* Remover qualquer margem extra no header */
     }
     header .container{
-        height: 87vh;
+        height: 500px;
     }
 
 }
@@ -47,15 +47,9 @@ body {
     max-height: 150%;
 }
 
-@media (max-height: 600px) {
-
-    header .container{
-        height: 130vh;
-    }
-}
 @media (min-width: 1200px) {
     header {
-        height: 87vh; /* Ocupa 100% da altura da tela */
+        height: 600px; /* Ocupa 100% da altura da tela */
         display: flex;
         justify-content: center; /* Centraliza o conteúdo horizontalmente */
         align-items: center; /* Centraliza o conteúdo verticalmente */

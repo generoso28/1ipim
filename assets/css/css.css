@@ -25,12 +25,27 @@ body {
         margin: 0; /* Remover qualquer margem extra no header */
     }
     header .container{
-        height: 100vh;
+        height: 87vh;
     }
 
 }
+@media (max-width: 764px) {
+    .header-content iframe{
+        width: 125%;
+        height: 170%;
+        min-height: 115%;
+        max-height: 150%;
+        align-self: center;
+        justify-self: center;
 
-
+    }
+}
+.header-content iframe{
+    width: 100%;
+    height: auto;
+    min-height: 115%;
+    max-height: 150%;
+}
 
 @media (min-width: 1200px) {
     header {
@@ -86,6 +101,7 @@ body {
         width: 100%;
         height: 100% !important;
     }
+
 }
 @media (min-width: 768px)and(max-width: 1199px) {
     .container-contato-sede {

@@ -47,6 +47,12 @@ body {
     max-height: 150%;
 }
 
+@media (max-height: 600px) {
+
+    header .container{
+        height: 130vh;
+    }
+}
 @media (min-width: 1200px) {
     header {
         height: 87vh; /* Ocupa 100% da altura da tela */

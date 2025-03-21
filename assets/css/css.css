@@ -1,3 +1,13 @@
+.navbar {
+    position: relative;  /* Garante que o z-index seja aplicado corretamente */
+    z-index: 9999;  /* Um valor alto para garantir que a navbar fique visível sobre outros elementos */
+}
+body {
+    overflow-x: hidden;  /* Para evitar o scroll horizontal global */
+}
+* {
+    box-sizing: border-box;
+}
 @media (min-width: 0px) and (max-width: 1200px) {
     .header-content {
         text-align: center;
@@ -168,6 +178,9 @@
     width: 100%;
     text-align: center; /* Centraliza o texto dentro da lista */
 }
+.div-pastores-150anos{
+    margin-top: 0;
+}
 .fade-on-scroll {
     transition: opacity 1ms ease-out; /* Suaviza a transição */
 }
@@ -201,7 +214,4 @@
         margin-bottom: 11rem;
     }
 }
-
-
-
 

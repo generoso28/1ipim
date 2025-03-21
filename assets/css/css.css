@@ -214,4 +214,72 @@ body {
         margin-bottom: 11rem;
     }
 }
+#insta-frame {
+    width: 100%;
+    border: none;
+    overflow: hidden;
+    border-radius: 1rem;
+}
 
+/* Estilos para telas grandes (largura padrão) */
+
+#insta-frame {
+    height: 340px;
+}
+
+/* Media query para telas pequenas (largura máxima de 768px) */
+@media (max-width: 600px) {
+    #insta-frame {
+        height: 500px;
+    }
+}
+@media (min-width: 601px) and (max-height: 700px) {
+    #insta-frame {
+        height: 480px;
+    }
+}
+@media (min-width: 701px) and (max-height: 750px) {
+    #insta-frame {
+        height: 470px;
+    }
+}
+@media (min-width: 751px) and (max-height: 800px) {
+    #insta-frame {
+        height: 450px;
+    }
+}
+@media (min-width: 801px) and (max-height: 900px) {
+    #insta-frame {
+        height: 420px;
+    }
+}
+@media (min-width: 901px) {
+    #insta-frame {
+        height: 340px;
+    }
+}
+#midias .midia .card-body{
+    align-content: center;
+    justify-content: center;
+}
+
+
+/* Estilos para ocultar a barra de rolagem */
+#insta-frame::-webkit-scrollbar {
+    display: none;
+}
+
+#insta-frame {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+#midias .midia {
+    min-height: 340px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.row.row-cols-1.row-cols-md-2.d-flex {
+    gap: 20px;
+}

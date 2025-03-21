@@ -107,8 +107,3 @@ window.addEventListener("resize", function () {
     // Reaplicar o efeito de zoom com base no tamanho da janela
     initializeZoomEffect();
 });
-
-
-
-
-

@@ -74,9 +74,6 @@ function isTablet() {
     // Ajuste para capturar tablets em resolução 1024x600
     return (width >= 600 && width <= 1280) && (height >= 800 && height <= 2000) || (width === 1024 && height === 600) || (width>=1280 && height>=800);
 }
-function defineZoomScale(){
-
-}
 // Função que inicializa o efeito de zoom
 function initializeZoomEffect() {
     if (window.innerWidth >= 550 && !isTablet()) {

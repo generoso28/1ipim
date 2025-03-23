@@ -66,9 +66,20 @@ gsap.registerPlugin(ScrollTrigger);
 // Criar uma variável para armazenar os triggers de zoom
 let zoomTriggers = [];
 
+// Função para verificar se o dispositivo é um tablet
+function isTablet() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // Ajuste para capturar tablets em resolução 1024x600
+    return (width >= 600 && width <= 1280) && (height >= 800 && height <= 2000) || (width === 1024 && height === 600) || (width>=1280 && height>=800);
+}
+function defineZoomScale(){
+
+}
 // Função que inicializa o efeito de zoom
 function initializeZoomEffect() {
-    if (window.innerWidth >= 550) {
+    if (window.innerWidth >= 550 && !isTablet()) {
         gsap.utils.toArray(".imagens-nossa-historia").forEach(img => {
             const zoomTrigger = gsap.fromTo(img,
                 {scale: 1},  // Inicializa o scale para 1 (sem zoom)

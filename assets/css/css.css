@@ -32,7 +32,7 @@ body {
         margin: 0; /* Remover qualquer margem extra no header */
     }
     header .container{
-        height: 500px;
+        height: 600px;
     }
 
 }
@@ -140,6 +140,11 @@ body {
 .church-card{
     padding: 20px;
     margin-top: 20px;
+}
+.church-row .scroll-card .church-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 .navbar-toggler {
     background-color: transparent !important; /* Começa transparente */

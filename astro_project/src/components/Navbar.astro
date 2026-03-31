@@ -9,10 +9,12 @@ const links = [
     { href: "/pastores", text: "Pastores" },
     { href: "/cremos", text: "O que cremos?" },
     { href: "/historia", text: "Nossa história" },
-    { href: "/contato", text: "Contato" }
+    { href: "/mensagens", text: "Mensagens" },
+    { href: "/visitantes", text: "Primeira Vez?", special: true }
 ];
+const { isImmersive = false } = Astro.props || {};
 ---
-<nav class="fixed top-0 left-0 w-full z-[1000] bg-white/95 dark:bg-slate-900/95 dark:border-b dark:border-slate-800 backdrop-blur-sm shadow-sm transition-all duration-300 py-3" id="mainNav">
+<nav class={`fixed top-0 left-0 w-full z-[1000] bg-white/95 dark:bg-slate-900/95 dark:border-b dark:border-slate-800 backdrop-blur-sm shadow-sm transition-all duration-700 py-3 ${isImmersive ? 'opacity-0 -translate-y-[150%] pointer-events-none is-immersive' : ''}`} id="mainNav">
     <div class="container mx-auto px-4 lg:px-8 flex justify-between items-center max-w-7xl">
         <a class="flex justify-center items-center" href="/">
             <!-- Add brightness/invert filter on dark mode for the specific logo if needed -->
@@ -20,14 +22,20 @@ const links = [
         </a>
         
         <div class="flex items-center space-x-2 md:space-x-6 lg:space-x-8">
-            <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+            <div class="hidden xl:flex items-center space-x-6">
                 {links.map(link => (
-                    <a 
-                        href={link.href} 
-                        class={`font-medium transition-colors hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] ${currentPath === link.href || (currentPath === '/' && link.href === '/') ? 'text-[var(--color-brand)] dark:text-[var(--color-brand-light)]' : 'text-gray-600 dark:text-gray-300'}`}
-                    >
-                        {link.text}
-                    </a>
+                    link.special ? (
+                        <a href={link.href} class="bg-[var(--color-brand)] text-white px-5 py-2.5 rounded-lg font-bold hover:bg-[var(--color-brand-dark)] transition-colors shadow-md animate-pulse hover:animate-none flex items-center gap-2">
+                            <i class="fa-solid fa-hand-wave"></i> {link.text}
+                        </a>
+                    ) : (
+                        <a 
+                            href={link.href} 
+                            class={`font-medium transition-colors hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] text-sm ${currentPath === link.href || (currentPath === '/' && link.href === '/') ? 'text-[var(--color-brand)] dark:text-[var(--color-brand-light)]' : 'text-gray-600 dark:text-gray-300'}`}
+                        >
+                            {link.text}
+                        </a>
+                    )
                 ))}
             </div>
 
@@ -36,7 +44,7 @@ const links = [
                 <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden text-lg"></i>
             </button>
             
-            <div class="md:hidden flex">
+            <div class="xl:hidden flex">
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-btn" aria-label="Menu" class="p-2 text-gray-600 dark:text-gray-300 hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] focus:outline-none transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -46,7 +54,7 @@ const links = [
     </div>
     
     <!-- Mobile Menu Content -->
-    <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 mt-3 absolute w-full left-0 px-4 py-2 shadow-lg transition-all duration-300">
+    <div id="mobile-menu" class="xl:hidden hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 mt-3 absolute w-full left-0 px-4 py-2 shadow-lg transition-all duration-300">
         <div class="flex flex-col space-y-2 pb-4">
             {links.map(link => (
                 <a 
@@ -97,6 +105,19 @@ const links = [
             btn.onclick = () => {
                 menu.classList.toggle('hidden');
             };
+        }
+
+        const mainNav = document.getElementById('mainNav');
+        if (mainNav && mainNav.classList.contains('is-immersive')) {
+            const handleScroll = () => {
+                if (window.scrollY > window.innerHeight * 0.7) {
+                    mainNav.classList.remove('opacity-0', '-translate-y-[150%]', 'pointer-events-none');
+                } else {
+                    mainNav.classList.add('opacity-0', '-translate-y-[150%]', 'pointer-events-none');
+                }
+            };
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            handleScroll();
         }
     });
 </script>

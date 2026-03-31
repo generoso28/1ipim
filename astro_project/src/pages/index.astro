@@ -1,142 +1,242 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+
+const API_KEY = import.meta.env.YOUTUBE_API_KEY;
+const PLAYLIST_ID = 'UUo1LQoyw17iaoL3y0TnDP9g';
+let latestVideoId = 'CMwYG1snm3U'; // Fallback padrão
+let latestThumbnail = `https://img.youtube.com/vi/${latestVideoId}/maxresdefault.jpg`;
+
+try {
+  if (API_KEY) {
+    const res = await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${PLAYLIST_ID}&maxResults=1&key=${API_KEY}`);
+    if (res.ok) {
+        const data = await res.json();
+        if (data.items && data.items.length > 0) {
+            const item = data.items[0];
+            latestVideoId = item.snippet.resourceId.videoId;
+            latestThumbnail = item.snippet.thumbnails?.maxres?.url || item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.medium?.url || `https://img.youtube.com/vi/${latestVideoId}/hqdefault.jpg`;
+        }
+    }
+  }
+} catch (e) {
+  console.error("Erro ao puxar API do Youtube na Home:", e);
+}
 ---
-<Layout title="Primeira Igreja Presbiteriana Independente de Machado">
-    <header class="bg-white dark:bg-slate-900 transition-colors w-full min-h-screen flex items-center justify-center relative overflow-hidden">
-        <div class="container mx-auto px-4 lg:px-8 max-w-7xl mt-16 lg:mt-0">
-            <div class="flex flex-wrap lg:flex-nowrap items-center justify-between gap-12">
-                
-                <div class="w-full lg:w-1/2 text-center lg:text-left z-10 flex flex-col justify-center">
-                    <h2 class="font-bold text-[var(--color-success)] mb-2 text-sm tracking-wider uppercase">Atos 2:42</h2>
-                    <h1 class="font-bold text-2xl lg:text-3xl leading-snug text-gray-900 dark:text-white mb-8">
-                        "E perseveravam na doutrina dos apóstolos, na comunhão, no partir do pão e nas orações"
-                    </h1>
-                </div>
-                
-                <div class="w-full lg:w-1/2 z-10 flex justify-center lg:justify-end">
-                    <div class="w-full max-w-lg aspect-video rounded-xl shadow-xl overflow-hidden ring-2 ring-white/20 bg-black">
-                        <iframe title="YouTube video player" class="w-full h-full" allowfullscreen="" src="https://www.youtube.com/embed/CMwYG1snm3U?autoplay=1&mute=1&loop=1&playlist=CMwYG1snm3U"></iframe>
-                    </div>
-                </div>
+<Layout title="Primeira Igreja Presbiteriana Independente de Machado" isImmersive={true}>
+    <header class="bg-black relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-end overflow-hidden pb-16 md:pb-24">
+        <!-- Background Video com matemática 16:9 perfeita (object-fit cover) -->
+        <div class="absolute inset-0 z-0 bg-black flex items-center justify-center pointer-events-none overflow-hidden">
+            <iframe 
+                class="absolute w-[100vw] h-[56.25vw] min-h-[100svh] min-w-[177.77vh] opacity-90 transform top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[1.02]" 
+                src="https://www.youtube.com/embed/CMwYG1snm3U?autoplay=1&mute=1&loop=1&controls=0&disablekb=1&fs=0&modestbranding=1&playsinline=1&playlist=CMwYG1snm3U" 
+                frameborder="0" allow="autoplay; encrypted-media"></iframe>
+            <!-- Sombreamento de base apenas para destacar os botões -->
+            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+        </div>
+
+        <div class="container mx-auto px-4 lg:px-8 max-w-4xl relative z-10 text-center animate-fade-in-up">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/visitantes" class="bg-[var(--color-brand)] text-white px-8 py-4 rounded-lg font-bold hover:bg-[var(--color-brand-dark)] transition-colors shadow-2xl hover:-translate-y-1 text-center flex items-center justify-center gap-2 text-lg">
+                    <i class="fa-regular fa-calendar-check text-xl"></i> Planeje sua Visita
+                </a>
+                <a href="#ultimo-culto" class="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-lg font-bold hover:bg-white/20 transition-all shadow-sm text-center border border-white/20 hover:border-white/40 text-lg">Mais da Igreja</a>
             </div>
         </div>
         
         <!-- Scroll indicator -->
-        <a aria-label="Role para baixo" href="#sobre-nos" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce text-gray-400 hover:text-[var(--color-brand)] dark:text-gray-500 dark:hover:text-white select-none hidden lg:flex cursor-pointer no-underline transition-colors">
-            <span class="text-xs uppercase tracking-widest mb-1 font-semibold">Role Para Baixo</span>
-            <i class="fa-solid fa-chevron-down text-lg"></i>
+        <a aria-label="Role para baixo" href="#ultimo-culto" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce text-white/50 hover:text-white select-none hidden lg:flex cursor-pointer no-underline transition-colors z-20">
+            <i class="fa-solid fa-chevron-down text-3xl"></i>
         </a>
     </header>
 
-    <section id="sobre-nos" class="py-20 relative bg-white dark:bg-slate-900 transition-colors">
+    <!-- ÚLTIMO CULTO SECTION -->
+    <section class="py-24 bg-white dark:bg-slate-900 transition-colors relative border-b border-gray-100 dark:border-slate-800" id="ultimo-culto">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                <!-- Text / Info -->
+                <div class="w-full lg:w-5/12 scroll-card text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold uppercase tracking-wider mb-6">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                        </span>
+                        Aconteceu Recentemente
+                    </div>
+                    <h2 class="font-extrabold text-3xl md:text-5xl text-gray-900 dark:text-white mb-6 leading-tight">Último Culto</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                        Neste domingo nos reunimos na presença de Deus. Se você perdeu ou simplesmente deseja reviver essa mensagem, o culto já está disponível para você assistir na íntegra.
+                    </p>
+                    <a href="/mensagens" class="inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-gray-100 dark:text-gray-900 px-8 py-4 rounded-lg font-bold hover:bg-black dark:hover:bg-gray-100 transition-colors shadow-md hover:-translate-y-0.5">
+                        <i class="fa-solid fa-play text-lg text-[#ff0033]"></i> Ver galeria de mensagens
+                    </a>
+                </div>
+                
+                <!-- Video Embed as Button -->
+                <div class="w-full lg:w-7/12 scroll-card">
+                    <div class="w-full aspect-video rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 relative group bg-black">
+                        <button data-videoid={latestVideoId} class="open-yt-modal relative w-full h-full block focus:outline-none">
+                            <img src={latestThumbnail} alt="Último Culto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                            <div class="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center">
+                                <div class="w-16 h-16 bg-[#ff0033] text-white rounded-full flex items-center justify-center opacity-90 group-hover:opacity-100 group-hover:scale-110 shadow-lg transition-transform">
+                                    <i class="fa-solid fa-play text-2xl ml-1"></i>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 relative bg-[var(--color-brand)] dark:bg-[var(--color-brand-dark)] overflow-hidden transition-colors">
+        <!-- Decoration -->
+        <div class="absolute inset-0 opacity-10 mix-blend-overlay" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                <div class="w-full lg:w-1/2 text-center lg:text-left scroll-card">
+                    <p class="font-bold text-green-100 mb-2 uppercase tracking-wide text-xs">Nossos Grupos</p>
+                    <h2 class="font-extrabold text-3xl md:text-5xl text-white mb-6 leading-tight">A vida é melhor vivida em comunidade.</h2>
+                    <p class="text-white/80 text-lg mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                        Pequenos Grupos são o coração da nossa igreja. Eles são encontros semanais em lares para compartilhar a vida, estudar a Palavra e orar juntos. Há um grupo cheio de carinho na sua vizinhança!
+                    </p>
+                    <a href="/pg" class="inline-flex items-center gap-2 bg-white text-[var(--color-brand)] px-8 py-4 rounded-lg font-bold hover:bg-gray-50 transition-colors shadow-lg hover:-translate-y-1">
+                        Encontre sua Comunidade <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="w-full lg:w-1/2 scroll-card">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-4 mt-12">
+                            <Image src="/assets/img/pgs/pg-online.jpeg" alt="Pequeno Grupo em Casa" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[220px] object-cover ring-4 ring-white/10" />
+                            <Image src="/assets/img/pgs/mulheres-com-proposito.jpeg" alt="Pessoas sorrindo" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[280px] object-cover ring-4 ring-white/10" />
+                        </div>
+                        <div class="space-y-4">
+                            <Image src="/assets/img/pgs/pg-enrico.jpeg" alt="Grupo de jovens" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[280px] object-cover ring-4 ring-white/10" />
+                            <Image src="/assets/img/pgs/pg-pedro.jpeg" alt="Estudo bíblico" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[220px] object-cover ring-4 ring-white/10" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sobre-nos" class="py-24 relative bg-gray-50 dark:bg-slate-900 transition-colors">
         <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
             <div class="text-center max-w-2xl mx-auto mb-16 scroll-card">
-                <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-xs">Um pouco mais sobre nossa igreja</p>
-                <h3 class="font-extrabold text-2xl lg:text-3xl text-gray-900 dark:text-white">Sobre nós</h3>
+                <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-xs">A nossa identidade</p>
+                <h3 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white">Conheça a 1IPIM</h3>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative scroll-card border border-gray-100 dark:border-slate-700 group">
-                    <div class="absolute top-5 right-5 text-[var(--color-success)] w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-900 rounded-full shadow-sm text-lg group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-users"></i>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto auto-rows-min">
+                <!-- Bento Block 1: História (Large/Tall) -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 scroll-card border border-gray-100 dark:border-slate-700 md:col-span-2 md:row-span-2 relative overflow-hidden group flex flex-col justify-end min-h-[300px] md:min-h-[400px]">
+                    <div class="absolute inset-0">
+                        <Image src="/assets/img/historia/img-4.jpg" alt="História da igreja" width={800} height={600} class="w-full h-full object-cover opacity-60 dark:opacity-40 group-hover:scale-105 transition-transform duration-700 object-center" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
                     </div>
-                    <h5 class="font-bold text-lg mb-2 pr-12 text-gray-900 dark:text-gray-100">Pastores</h5>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-5 line-clamp-2">Conheça nosso quadro pastoral e um pouco sobre cada um dos pastores</p>
-                    <a href="/pastores" class="inline-block bg-[var(--color-brand)] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[var(--color-brand-dark)] transition-colors shadow-sm">Conheça</a>
+                    <h5 class="font-bold text-2xl text-white relative z-10 mb-2 drop-shadow-lg">A nossa História</h5>
+                    <p class="text-gray-200 text-sm relative z-10 mb-6 max-w-md drop-shadow">Conheça nossa trajetória centenária até os dias de hoje através dos milagres e da palavra de Deus.</p>
+                    <a href="/historia" class="inline-flex w-max items-center bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold shadow-lg hover:scale-105 transition-transform relative z-10">Ler a história detalhada <i class="fa-solid fa-arrow-right ml-2 text-xs"></i></a>
                 </div>
 
-                <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative scroll-card border border-gray-100 dark:border-slate-700 group">
-                    <div class="absolute top-5 right-5 text-[var(--color-success)] w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-900 rounded-full shadow-sm text-lg group-hover:scale-110 transition-transform">
-                        <i class="fa-regular fa-calendar-check"></i>
+                <!-- Bento Block 2: Cremos (Square) -->
+                <div class="bg-gradient-to-br from-[var(--color-brand)] to-[var(--color-brand-dark)] rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 scroll-card md:col-span-1 md:row-span-1 flex flex-col items-start justify-center text-white relative group overflow-hidden">
+                    <div class="absolute -right-6 -top-6 text-white/10 text-9xl group-hover:rotate-12 transition-transform duration-500">
+                        <i class="fa-solid fa-book-bible"></i>
                     </div>
-                    <h5 class="font-bold text-lg mb-2 pr-12 text-gray-900 dark:text-gray-100">Eventos</h5>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-5 line-clamp-2">Tudo que acontece na igreja durante a semana</p>
-                    <a href="/programacao" class="inline-block bg-[var(--color-brand)] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[var(--color-brand-dark)] transition-colors shadow-sm">Fique por dentro</a>
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur shadow-sm">
+                        <i class="fa-solid fa-book-open text-xl"></i>
+                    </div>
+                    <h5 class="font-bold text-xl mb-2">O que nós cremos?</h5>
+                    <a href="/cremos" class="inline-block mt-4 text-white/90 font-medium hover:text-white border-b border-white/50 hover:border-white transition-all text-sm pb-1">Saiba mais</a>
                 </div>
 
-                <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative scroll-card border border-gray-100 dark:border-slate-700 group">
-                    <div class="absolute top-5 right-5 text-[var(--color-success)] w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-900 rounded-full shadow-sm text-lg group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-book-open"></i>
+                <!-- Bento Block 3: Pastores (Square) -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 scroll-card border border-gray-100 dark:border-slate-700 md:col-span-1 md:row-span-1 group flex flex-col items-start">
+                    <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-6 border border-blue-100 dark:border-blue-800/50 group-hover:scale-110 transition-transform shadow-sm">
+                        <i class="fa-solid fa-users text-xl"></i>
                     </div>
-                    <h5 class="font-bold text-lg mb-2 pr-12 text-gray-900 dark:text-gray-100">O que nós cremos?</h5>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-5 line-clamp-2">Saiba um pouco mais sobre a doutrina e visão da nossa igreja</p>
-                    <a href="/cremos" class="inline-block bg-[var(--color-brand)] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[var(--color-brand-dark)] transition-colors shadow-sm">Saiba mais</a>
+                    <h5 class="font-bold text-xl text-gray-900 dark:text-white mb-2">Liderança</h5>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-4 line-clamp-2">Conheça nosso quadro pastoral.</p>
+                    <a href="/pastores" class="text-[var(--color-brand)] dark:text-[var(--color-brand-light)] font-bold text-sm hover:underline mt-auto">Ver pastores</a>
                 </div>
-
-                <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 relative scroll-card border border-gray-100 dark:border-slate-700 group">
-                    <div class="absolute top-5 right-5 text-[var(--color-success)] w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-900 rounded-full shadow-sm text-lg group-hover:scale-110 transition-transform">
-                        <i class="fa-regular fa-newspaper"></i>
-                    </div>
-                    <h5 class="font-bold text-lg mb-2 pr-12 text-gray-900 dark:text-gray-100">História</h5>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm mb-5 line-clamp-2">Descubra nossa história, desde a fundação até os dias de hoje.</p>
-                    <a href="/historia" class="inline-block bg-[var(--color-brand)] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[var(--color-brand-dark)] transition-colors shadow-sm">Leia</a>
-                </div>
+            </div>
+            
+            <div class="mt-8 text-center scroll-card">
+                 <a href="/programacao" class="inline-flex items-center gap-2 bg-transparent text-gray-600 dark:text-gray-400 font-medium hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] transition-colors text-sm border-b border-gray-300 dark:border-slate-700 hover:border-transparent pb-0.5">
+                     Ver todos os horários e programações completas <i class="fa-solid fa-arrow-right"></i>
+                 </a>
             </div>
         </div>
     </section>
 
-    <section class="py-20 bg-gray-50 dark:bg-slate-800 transition-colors relative">
+    <section class="py-20 bg-white dark:bg-slate-900 transition-colors relative border-t border-gray-100 dark:border-slate-800" id="midias">
         <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
             <div class="text-center max-w-2xl mx-auto mb-16 scroll-card">
-                <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-xs">Acompanhe nossos canais digitais</p>
-                <h3 class="font-extrabold text-2xl lg:text-3xl text-gray-900 dark:text-white">Redes sociais</h3>
+                <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-xs">Canais Digitais</p>
+                <h3 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white">Nossas Redes Sociais</h3>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 scroll-card items-stretch" id="midias">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto scroll-card">
                 
-                <div class="w-full flex">
-                    <iframe title="Postagem do Instagram" class="rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300 w-full" id="insta-frame" src="https://www.instagram.com/p/C5HNDGuOdsB/embed" loading="lazy"></iframe>
-                </div>
-
-                <div class="w-full flex">
-                    <div class="bg-[#d7e0fd] dark:bg-slate-800 rounded-2xl p-8 flex flex-col items-center justify-center text-center w-full shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 min-h-[340px]">
-                        <i class="fa-brands fa-youtube text-[#ff0033] dark:text-[#ff4d6d] text-6xl mb-6"></i>
-                        <p class="font-bold text-[#3763f4] dark:text-[#7b98f9] mb-2 uppercase text-sm tracking-wide">Nosso youtube</p>
-                        <h5 class="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg leading-tight">Acompanhe nossos cultos ao vivo, eventos e muito mais</h5>
-                        <a href="https://www.youtube.com.br/@1ipimachado" target="_blank" rel="nofollow" class="bg-[#3763f4] text-white px-5 py-2 rounded-md font-medium hover:bg-blue-700 transition inline-block">
-                            Assistir
-                        </a>
+                <!-- Instagram Bento -->
+                <div class="bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] rounded-3xl p-8 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-white min-h-[300px] flex flex-col justify-between group overflow-hidden relative">
+                    <div class="absolute -right-4 -bottom-4 text-white/20 text-9xl group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500">
+                        <i class="fa-brands fa-instagram"></i>
                     </div>
-                </div>
-
-                <div class="w-full flex">
-                    <div class="bg-[#52a7af]/15 dark:bg-slate-800 rounded-2xl p-8 flex flex-col items-center justify-center text-center w-full shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 min-h-[340px]">
-                        <div class="w-16 h-16 bg-[#52a7af] dark:bg-[#6abfc7] rounded-full flex items-center justify-center mb-6">
-                            <i class="fa-solid fa-podcast text-white dark:text-slate-900 text-3xl"></i>
+                    <div>
+                        <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mb-6 backdrop-blur shadow-sm">
+                            <i class="fa-brands fa-instagram text-2xl"></i>
                         </div>
-                        <p class="font-bold text-[#52a7af] dark:text-[#88c5cb] mb-2 uppercase text-sm tracking-wide">Torre Cast</p>
-                        <h5 class="font-bold text-gray-900 dark:text-gray-100 mb-6 text-lg leading-tight">Nosso podcast: convidados especiais e temas diversos</h5>
-                        <a href="https://www.youtube.com/@TorreCast" target="_blank" rel="nofollow" class="bg-[#52a7af] text-white px-5 py-2 rounded-md font-medium hover:bg-teal-600 transition inline-block">
-                            Ouvir
-                        </a>
+                        <p class="font-bold uppercase tracking-widest text-[#ffe0b2] text-[10px] mb-1 opacity-90">Instagram</p>
+                        <h4 class="font-bold text-2xl mb-2">Fotos, vídeos e devocionais</h4>
                     </div>
+                    <a href="https://www.instagram.com/1ipim" target="_blank" rel="nofollow" class="bg-white text-[#bc1888] px-6 py-2.5 rounded-full font-bold text-sm w-max shadow-lg hover:scale-105 transition-transform z-10 mt-6">Seguir @1ipim</a>
                 </div>
 
-                <div class="w-full flex">
-                    <div class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col w-full min-h-[340px]">
-                        <div class="bg-[#008169] h-[55px] flex items-center px-4 shrink-0">
-                            <div class="w-8 h-8 flex items-center justify-center mr-3">
-                                <Image alt="Logo da igreja" src="/assets/img/logo_transp.png" class="w-full h-full object-contain drop-shadow-sm" width="32" height="32" />
-                            </div>
-                            <div class="leading-tight">
-                                <h5 class="text-white font-bold text-sm m-0 leading-none">1ipim</h5>
-                                <span class="text-white/80 text-xs mt-1 block">online</span>
-                            </div>
+                <!-- YouTube Bento -->
+                <div class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 min-h-[300px] flex flex-col justify-between group relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 text-gray-100 dark:text-slate-700 text-9xl group-hover:scale-110 group-hover:-rotate-12 transition-transform duration-500">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-red-50 dark:bg-red-900/30 text-red-600 rounded-full flex items-center justify-center mb-6 border border-red-100 dark:border-red-800/50 shadow-sm">
+                            <i class="fa-brands fa-youtube text-2xl"></i>
                         </div>
-                        <div class="flex-grow flex flex-col items-center justify-center text-center p-8 bg-cover bg-center relative" style="background-image: url('/assets/img/whatsapp.jpg');">
-                            <div class="absolute inset-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-[2px] transition-colors"></div>
-                            <div class="relative z-10 w-full">
-                                <p class="font-bold text-[#075e54] dark:text-[#28b4a2] mb-2 uppercase text-sm tracking-wide">Nosso grupo</p>
-                                <h5 class="font-bold text-gray-900 dark:text-white mb-6 text-lg leading-tight">Aqui é onde você verá o dia a dia da nossa igreja e as principais notícias</h5>
-                                <a href="https://chat.whatsapp.com/HUnj2vU8XRjLDLqQrjZsho" target="_blank" rel="nofollow" class="bg-[#075e54] text-white px-6 py-2 rounded-md font-medium hover:bg-green-800 transition shadow inline-block">
-                                    Participar
-                                </a>
-                            </div>
+                        <p class="font-bold uppercase tracking-widest text-[#ff0033] text-[10px] mb-1">YouTube</p>
+                        <h4 class="font-bold text-2xl mb-2 text-gray-900 dark:text-white">Cultos ao vivo e mensagens na íntegra</h4>
+                    </div>
+                    <a href="https://www.youtube.com.br/@1ipimachado" target="_blank" rel="nofollow" class="relative z-10 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2.5 rounded-full font-bold text-sm w-max hover:scale-105 transition-transform mt-6 shadow flex items-center gap-2"><i class="fa-solid fa-play text-xs text-red-500"></i> Inscrever-se</a>
+                </div>
+
+                <!-- TorreCast & WhatsApp Stacked column -->
+                <div class="grid grid-cols-1 grid-rows-2 gap-6 min-h-[300px]">
+                    <!-- TorreCast -->
+                    <div class="bg-[#e4fcfe] dark:bg-[#124b50] rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex items-center justify-between group overflow-hidden border border-[#52a7af]/20 relative">
+                        <div class="relative z-10">
+                            <p class="font-bold uppercase tracking-widest text-[#52a7af] dark:text-[#88c5cb] text-[10px] mb-1">Podcast</p>
+                            <h4 class="font-bold text-lg text-gray-900 dark:text-white leading-tight">TorreCast</h4>
+                            <a href="https://www.youtube.com/@TorreCast" target="_blank" rel="nofollow" class="text-sm font-medium mt-2 block text-[#408a91] dark:text-[#88c5cb] hover:underline">Ouvir série <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                        </div>
+                        <div class="w-14 h-14 bg-[#52a7af] dark:bg-[#6abfc7] rounded-full flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform shadow-md relative z-10">
+                            <i class="fa-solid fa-headphones-simple text-xl"></i>
+                        </div>
+                        <div class="absolute -right-4 -top-4 text-[#52a7af]/10 text-6xl rotate-45 pointer-events-none">
+                            <i class="fa-solid fa-podcast"></i>
+                        </div>
+                    </div>
+                    <!-- WhatsApp -->
+                    <div class="bg-[#e6f7e9] dark:bg-[#075e54]/30 rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex items-center justify-between group border border-[#25d366]/20 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <p class="font-bold uppercase tracking-widest text-[#075e54] dark:text-[#28b4a2] text-[10px] mb-1">Comunidade</p>
+                            <h4 class="font-bold text-lg text-gray-900 dark:text-white leading-tight">Grupo de Avisos</h4>
+                            <a href="https://chat.whatsapp.com/HUnj2vU8XRjLDLqQrjZsho" target="_blank" rel="nofollow" class="text-sm font-medium mt-2 block text-[#075e54] dark:text-[#25d366] hover:underline">Entrar no grupo <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                        </div>
+                        <div class="w-14 h-14 bg-[#25d366] rounded-full flex items-center justify-center text-white shrink-0 group-hover:scale-110 transition-transform shadow-lg shadow-[#25d366]/30 relative z-10">
+                            <i class="fa-brands fa-whatsapp text-2xl ml-0.5"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 </Layout>

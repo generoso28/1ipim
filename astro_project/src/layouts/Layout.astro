@@ -8,9 +8,10 @@ interface Props {
 	title: string;
 	description?: string;
 	image?: string;
+    isImmersive?: boolean;
 }
 
-const { title, description = "Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.", image = "/assets/img/historia/150anos1.webp" } = Astro.props;
+const { title, description = "Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.", image = "/assets/img/historia/150anos1.webp", isImmersive = false } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -95,10 +96,74 @@ const { title, description = "Igreja Presbiteriana Independente de Machado – H
     <ClientRouter />
 </head>
 <body class="font-['Inter'] antialiased text-gray-800 bg-gray-50 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
-    <Navbar />
+    <Navbar isImmersive={isImmersive} />
     <main>
         <slot />
     </main>
     <Footer />
+    
+    <!-- YouTube Modal Pop-up Global -->
+    <div id="yt-modal" class="fixed inset-0 z-[2000] hidden bg-black/90 backdrop-blur-sm flex-col items-center justify-center p-4 sm:p-8 opacity-0 transition-opacity duration-300">
+        <div class="relative w-full max-w-5xl aspect-video bg-black rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/20 transform scale-95 transition-transform duration-300" id="yt-modal-content">
+            <button id="close-modal" aria-label="Fechar vídeo" class="absolute top-4 right-4 text-white hover:text-white bg-black/50 hover:bg-[#ff0033] rounded-full w-10 h-10 flex items-center justify-center transition-all z-[2010]">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <iframe id="yt-iframe" class="w-full h-full" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('astro:page-load', () => {
+            const btns = document.querySelectorAll('.open-yt-modal');
+            const modal = document.getElementById('yt-modal');
+            const iframe = document.getElementById('yt-iframe');
+            const closeBtn = document.getElementById('close-modal');
+            const modalContent = document.getElementById('yt-modal-content');
+
+            if (!modal || !iframe) return;
+
+            const closeModal = () => {
+                modal.classList.add('opacity-0');
+                modalContent?.classList.add('scale-95');
+                modalContent?.classList.remove('scale-100');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    iframe.src = ""; // Stop video playing immediately
+                }, 300);
+            };
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = e.currentTarget;
+                    const videoId = target.getAttribute('data-videoid');
+                    
+                    if (videoId && iframe) {
+                        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        
+                        setTimeout(() => {
+                            modal.classList.remove('opacity-0');
+                            modalContent?.classList.remove('scale-95');
+                            modalContent?.classList.add('scale-100');
+                        }, 10);
+                    }
+                });
+            });
+
+            closeBtn?.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

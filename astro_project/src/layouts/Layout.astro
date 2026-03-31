@@ -1,0 +1,104 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description?: string;
+	image?: string;
+}
+
+const { title, description = "Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.", image = "/assets/img/historia/150anos1.webp" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>{title}</title>
+    
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site || 'https://1ipim.online')} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:type" content="website" />
+    <meta name="robots" content="index, follow" />
+    
+    <link rel="canonical" href={Astro.url} />
+    <link rel="icon" type="image/png" href="/assets/img/logo_transp.png" />
+    <link rel="icon" type="image/x-icon" href="/assets/img/logo_transp.ico" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" />
+    
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script is:inline src="/assets/js/scroll.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Church",
+      "name": "Igreja Presbiteriana Independente de Machado",
+      "url": "https://1ipim.online",
+      "logo": "https://1ipim.online/assets/img/logo_transp.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+55-35-98861-3046",
+        "contactType": "Inquiries",
+        "areaServed": "BR",
+        "availableLanguage": "Portuguese"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rua Airton Rodrigues Leite, 26",
+        "addressLocality": "Machado",
+        "addressRegion": "Minas Gerais",
+        "postalCode": "37700-000",
+        "addressCountry": "BR"
+      },
+      "sameAs": [
+        "https://www.instagram.com/1ipim",
+        "https://www.youtube.com/@1ipimachado"
+      ]
+    }
+    </script>
+    <script is:inline>
+        const theme = (() => {
+            if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                return localStorage.getItem('theme');
+            }
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                return 'dark';
+            }
+            return 'light';
+        })();
+        
+        if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+        window.localStorage.setItem('theme', theme);
+
+        // Keep theme sync after view transitions
+        document.addEventListener('astro:after-swap', () => {
+             if (localStorage.getItem('theme') === 'dark') {
+                 document.documentElement.classList.add('dark');
+             }
+        });
+    </script>
+    <ClientRouter />
+</head>
+<body class="font-['Inter'] antialiased text-gray-800 bg-gray-50 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
+    <Navbar />
+    <main>
+        <slot />
+    </main>
+    <Footer />
+</body>
+</html>

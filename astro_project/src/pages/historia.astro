@@ -1,0 +1,140 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+const timeline = [
+    {
+        title: "A fundação",
+        image: "/assets/img/historia/ata-fundacao.jpeg",
+        text: "No dia 27 de setembro de 1874, por volta das 18 horas, foi organizada a “Igreja Presbyteriana na Freguesia de Santo Antônio de Machado”, termo de Alfenas, Província de Minas Gerais, na residência de Severo Augusto Pereira, com 10 membros, 8 de Machado e 2 de outra Igreja. Nessa preciosa data, algumas pessoas foram batizadas, foi celebrada a Ceia do Senhor; estando presentes o licenciado Miguel Gonçalves Torres, que seria ordenado ministro no ano seguinte, e o, já Pastor, Rev. Modesto Perestrello Barros de Carvalhosa.",
+        reverse: false
+    },
+    {
+        title: "Formação da Igreja Presbiteriana Independente do Brasil",
+        image: "/assets/img/historia/caetaninho.png",
+        text: "Em 1903, um grupo de 7 pastores e 15 presbíteros resolveu separar-se do Sínodo da Igreja Presbiteriana do Brasil, o que deu origem à IPI do Brasil. Nesse momento, nossa igreja era liderada pelo Rev. Caetano Luiz Gomes Nogueira Júnior, que estava entre os que saíram. O Rev. Caetaninho, como era chamado, foi o primeiro moderador do Presbitério Independente e do posterior Sínodo da nova denominação. Dessa forma, a Igreja de Machado tornou-se uma das fundadoras da IPI do Brasil.",
+        reverse: true
+    },
+    {
+        title: "Os primeiros templos",
+        image: "/assets/img/historia/primeiro-templo.png",
+        text: "De 1925 a 1927, sendo a maioria da membresia residentes da zona rural, foi construído e consagrado, na Fazenda Serra Negra, o primeiro templo evangélico do município de Machado. <br/><br/>Posteriormente, foi consagrado, em 1946, o templo da Congregação da Barra, também na zona rural do município.<br/><br/>Somente em 24 de janeiro de 1934 foi consagrado o primeiro templo na cidade de Machado, que se vê na foto ao lado, para cerca de 110 pessoas.",
+        reverse: false
+    },
+    {
+        title: "A igreja e a cidade",
+        image: "/assets/img/historia/criancas.png",
+        text: "Entre 1947 e 1952, a igreja foi pastoreada pelo Rev. Rossini Sales Fernandes, com o auxílio de sua esposa, Yedda Novaes Fernandes. O casal compôs a letra e a melodia do Hino Oficial de Machado, sendo reconhecido com o título de cidadãos honorários do município. Esse é apenas um exemplo do compromisso da igreja com a cidade. Ao longo desses 150 anos, estivemos presentes na história de Machado, contribuindo em diversas áreas, da assistência social à cultura.",
+        reverse: true
+    },
+    {
+        title: "Uma igreja missionária",
+        image: "/assets/img/historia/missoes.jpg",
+        text: "A igreja, inicialmente visitada anualmente a cavalo pelo Rev. Miguel Gonçalves Torres, desenvolveu um forte ímpeto missionário. Em 1960, começaram os acampamentos, culminando na inauguração do Acampamento Maanaim em 1973. Além disso, foram estabelecidos projetos como a Missão Vida Nova e a Creche Sinai. Ao longo das décadas, diversas igrejas foram plantadas – não apenas em Machado, mas em toda a região – e, por meio da Secretaria de Missões, a igreja mantém presença até os confins da Terra.",
+        reverse: false
+    },
+    {
+        title: "Os 150 anos da igreja",
+        image: "/assets/img/historia/150anos-Isaias.webp",
+        text: "Em 2024, à ocasião do seu centésimo quinquagésimo aniversário, formou-se uma comissão para as festividades. Ao longo do ano, a história da igreja foi redescoberta, por meio de atas, boletins e escritos há muito esquecidos. Contamos com a presença de irmãos queridos de outros rebanhos e, para coroar essa data tão especial, realizou-se, em 29 de setembro, um culto de gratidão a Deus por sua providência, contando com a presença das igrejas filhas dessa comunidade de fé.",
+        reverse: true
+    }
+];
+
+const pastores = [
+"Ablandino Saturnino Sousa", "Adonias de Andrade", "Alécio Inácio da Silva", "Alex Sandro dos Santos", "Alfeu Zilli Silveira", "André Ferreira", "Artur Scalco Neto", "Carlos Alberto Falseti", "Carlos Eduardo Vilas Boas dos Santos", "Carlos Roberto Pereira da Silva", "Clayton Leal da Silva", "Daniel de Oliveira Correa", "Daniel Velloso Brust", "Denis de Almeida Pinto", "Deusdete Fonseca Queiroz", "Eldo Fernando Machado", "Elias Leite Generoso", "Felipe Niel", "Francisco Elias Delfino", "Geraldo Luciano dos Santos", "Gesse Generoso Júnior", "Giovani de Ávila Magalhães", "Giovani Eduardo de Sousa Brito", "Hugo Felix Costa", "Isaías Barbosa Caixeta", "Isaías Garcia Vieira", "João Batista de Sousa", "Jônatas Henrique Lucas", "Jonathan Domingues de Sousa", "José Eduardo Bornelli", "Kennede Soares", "Laércio de Sousa Ribeiro", "Leandro Batista da Silva", "Luiz Antônio do Lago", "Luiz Caixeta", "Marcelo Adriano Bugni", "Marinaldo Santos da Silva", "Marlon Bruno Nery Scalco", "Maurício Ferraz Abade", "Michel Plattiny Gonçalves Leite", "Natã Damineli Conde", "Nélson Martins Assis", "Nicodemo Lázaro Boldori", "Orlando Braidotti", "Raphael Paiva Pereira de Sousa", "Reynaldo Mendes Junior", "Rodrigo Lima Ferreira", "Sebastião Machado Arruda", "Thiago Quintino Dias", "Tiago Nogueira"
+];
+---
+<Layout title="Nossa história - Primeira Igreja Presbiteriana Independente de Machado">
+    <!-- Hero Section -->
+    <div class="relative pt-32 pb-20 overflow-hidden bg-white dark:bg-slate-900 transition-colors min-h-[600px] flex items-center">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="w-full lg:w-1/2 text-center lg:text-left scroll-card">
+                    <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-xs">Nossa história</p>
+                    <h1 class="font-extrabold text-2xl md:text-4xl leading-tight text-gray-900 dark:text-gray-100">
+                        "<span class="text-black dark:text-white">Nenhuma promessa falhou de todas as boas palavras que o Senhor havia falado à casa de Israel; tudo se cumpriu.</span>"<br/>
+                        <span class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mt-4 inline-block font-normal italic">Josué 21:45</span>
+                    </h1>
+                </div>
+                <!-- Images collage mapped from absolute translations -->
+                <div class="w-full lg:w-1/2 relative h-[400px] md:h-[500px] flex items-center justify-center">
+                    <div class="relative w-full h-full max-w-[600px] mx-auto">
+                        <Image src="/assets/img/historia/150anos2.webp" class="absolute w-[45%] rounded-2xl shadow-xl border-4 border-white dark:border-slate-800 z-20 left-[5%] top-[10%] hover:z-50 hover:scale-105 transition-all duration-300" alt="150 anos - Foto 1" width={600} height={400} />
+                        <Image src="/assets/img/historia/150anos3.webp" class="absolute w-[45%] rounded-2xl shadow-xl border-4 border-white dark:border-slate-800 z-30 right-[5%] top-[5%] hover:z-50 hover:scale-105 transition-all duration-300" alt="150 anos - Foto 2" width={600} height={400} />
+                        <Image src="/assets/img/historia/img-4.jpg" class="absolute w-[60%] rounded-2xl shadow-xl border-4 border-white dark:border-slate-800 z-10 left-[20%] bottom-[5%] hover:z-50 hover:scale-105 transition-all duration-300" alt="150 anos - Foto 3" width={800} height={600} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline -->
+    <section class="py-20 bg-gray-50 dark:bg-slate-800 border-t border-gray-100 dark:border-slate-700 relative transition-colors">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-20 scroll-card">
+                <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-sm">Há 150 anos...</p>
+                <h3 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white">Nascia a Igreja Presbiteriana de Machado</h3>
+            </div>
+
+            <div class="space-y-24 max-w-5xl mx-auto border-l-2 border-[var(--color-brand)]/20 pl-4 md:pl-0 md:border-l-0">
+                {timeline.map((item) => (
+                    <div class={`flex flex-col md:flex-row gap-8 lg:gap-16 items-center scroll-card relative ${item.reverse ? 'md:flex-row-reverse' : ''}`}>
+                        <!-- Optional timeline dot for desktop -->
+                        <div class="hidden md:block absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--color-brand)] rounded-full border-4 border-white shadow-sm z-10"></div>
+                        <div class="hidden md:block absolute left-1/2 top-0 bottom-[-6rem] w-px bg-[var(--color-brand)]/20 -translate-x-1/2 z-0"></div>
+
+                        <div class="w-full md:w-1/2 relative z-10">
+                            <div class="rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-slate-700 group bg-white dark:bg-slate-900 p-2">
+                                <Image src={item.image} alt={item.title} class="w-full h-auto aspect-[4/3] object-cover rounded-xl group-hover:scale-[1.03] transition-transform duration-500" loading="lazy" width={800} height={600} />
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/2 flex flex-col justify-center relative z-10">
+                            <div class="bg-white/80 dark:bg-slate-900/80 md:bg-transparent md:dark:bg-transparent backdrop-blur-sm p-6 md:p-0 rounded-2xl md:rounded-none shadow-sm md:shadow-none -mt-10 md:mt-0 ml-4 md:ml-0 border border-gray-100 dark:border-slate-700 md:border-transparent md:dark:border-transparent">
+                                <h5 class="font-extrabold text-2xl text-[var(--color-brand-dark)] dark:text-[var(--color-brand-light)] mb-4">{item.title}</h5>
+                                <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed text-justify" set:html={item.text}></p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- Pastores List -->
+    <section class="py-20 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 transition-colors">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-4xl mx-auto mb-16 scroll-card">
+                <h3 class="font-extrabold text-3xl text-gray-900 dark:text-white mb-6">Nossos Líderes</h3>
+                <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                    Nesses anos todos de história, contamos com diversos pastores, evangelistas, obreiros e licenciados que pastorearam esse rebanho.<br/>
+                    Mencionam-se aqui aqueles que cooperaram na Primeira Igreja desde a década de 1980 até hoje:
+                </p>
+            </div>
+            
+            <div class="max-w-6xl mx-auto bg-gray-50 dark:bg-slate-800 rounded-2xl p-8 md:p-12 border border-gray-100 dark:border-slate-700 shadow-sm scroll-card">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
+                    {pastores.map(pastor => (
+                        <div class="flex items-center space-x-2 py-1 border-b border-gray-200/50 dark:border-slate-700/50 last:border-0 hover:bg-white dark:hover:bg-slate-700 hover:px-2 transition-all rounded">
+                            <i class="fa-solid fa-check text-[var(--color-brand)]/60 dark:text-[var(--color-brand)] text-xs shrink-0"></i>
+                            <span class="text-gray-700 dark:text-gray-200 text-sm font-medium">{pastor}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <!-- Conclusion -->
+            <div class="max-w-4xl mx-auto mt-20 text-center scroll-card">
+                <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-12 italic">
+                    "Muitas páginas dessa história não puderam ser escritas aqui, mas cremos que, pela graça de Deus, muitas outras ainda serão redigidas. Ao longo desses 150 anos, inúmeros homens e mulheres de Deus passaram por esta igreja, servindo-a com zelo e amor, e incontáveis foram as providências divinas. Para relembrar essa trajetória, a igreja conta com um memorial e uma edição especial da Bíblia que, em algumas páginas, registra essa rica história."
+                </p>
+                <div class="inline-block px-8 py-6 bg-gray-50 dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm">
+                    <h5 class="font-bold text-xl md:text-2xl text-gray-800 dark:text-gray-200 m-0">
+                        <span class="text-gray-500 dark:text-gray-400 font-medium block mb-2">"Até aqui nos ajudou o Senhor"</span>
+                        <span class="text-[var(--color-brand)] dark:text-[var(--color-brand-light)] uppercase tracking-widest text-sm">1 Samuel 7:12</span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

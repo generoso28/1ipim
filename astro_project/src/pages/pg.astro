@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+const pgs = [
+  { name: "Porção de fé", image: "/assets/img/pgs/porçao-de-fe.jpeg", publico: "Mulheres", responsavel: "Rita e Mayra", horario: "Segunda-feira às 19:30", frequencia: "Quinzenal" },
+  { name: "Koinonia", image: "/assets/img/pgs/koinonia.jpeg", publico: "Mulheres", responsavel: "Milka", horario: "Terça-feira às 14:00", frequencia: "Semanal" },
+  { name: "Peniel", image: "/assets/img/pgs/PG.png", publico: "Mulheres", responsavel: "Ester", horario: "Terça-feira às 14:30", frequencia: "Semanal" },
+  { name: "Entre Meninas e Deus", image: "/assets/img/pgs/entre-meninas-e-Deus.jpeg", publico: "Meninas de 9 a 11 anos", responsavel: "Tati, Thays, Manuela e Anne", horario: "Terça-feira às 19:00", frequencia: "Semanal" },
+  { name: "Entre Meninas e Deus", image: "/assets/img/pgs/entre-meninas-e-Deus.jpeg", publico: "Meninas de 12 a 14 anos", responsavel: "Iara, Cris e Fabi", horario: "Terça-feira às 19:00", frequencia: "Semanal" },
+  { name: "PG dos meninos", image: "/assets/img/pgs/pg-pedro.jpeg", publico: "Pré-adolescência e juventude", responsavel: "Pedro Luz e Davi Bertelli", horario: "Terça-feira às 19:30", frequencia: "Semanal" },
+  { name: "PG Online", image: "/assets/img/pgs/pg-online.jpeg", publico: "Estudantes que moram fora", responsavel: "Lucas Generoso, Lucas Sodré e Nathan", horario: "Terça-feira às 21:30", frequencia: "Semanal" },
+  { name: "PG das meninas", image: "/assets/img/pgs/pg-lara.jpeg", publico: "Juventude", responsavel: "Larah e Alicia", horario: "Quarta-feira às 19:30", frequencia: "Semanal" },
+  { name: "Mulheres com Propósito", image: "/assets/img/pgs/mulheres-com-proposito.jpeg", publico: "Mulheres acima de 30 anos", responsavel: "Karina e Maressa", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
+  { name: "Famílias em Cristo", image: "/assets/img/pgs/pg-da-familia.jpeg", publico: "Casais", responsavel: "Rodrigo Coelho e Lucyara", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
+  { name: "PG Enrico", image: "/assets/img/pgs/pg-enrico.jpeg", publico: "Jovens/Adultos", responsavel: "Enrico", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
+  { name: "Guerreiros", image: "/assets/img/pgs/pg-homens-rubens-site.png", publico: "Homens", responsavel: "Pr. Arruda e Pr. Rubens", horario: "Quinta-feira às 19:30", frequencia: "Quinzenal" },
+  { name: "Florescer", image: "/assets/img/pgs/florescer.jpeg", publico: "Jovens adultas", responsavel: "Paulinha, Sandrinha e Eluan", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
+  { name: "Casa de oração", image: "/assets/img/pgs/pg-eliza.jpeg", publico: "Mulheres", responsavel: "Eliza", horario: "Sexta-feira às 19:15", frequencia: "Quinzenal" },
+  { name: "PG Toshiba", image: "/assets/img/pgs/pg-toshiba.jpeg", publico: "Casais", responsavel: "Pr. Arruda", horario: "Sexta-feira às 19:30", frequencia: "Semanal" }
+];
+---
+<Layout title="Pequenos Grupos - Primeira Igreja Presbiteriana Independente de Machado">
+    <section class="py-20 mt-16 bg-white dark:bg-slate-900 transition-colors min-h-screen">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-16 scroll-card">
+                <h2 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-2">Nossos Pequenos Grupos</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">A vida cristã é feita em comunidade. Encontre o grupo que mais se adequa ao seu momento.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {pgs.map(pg => (
+                    <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col scroll-card group">
+                        <div class="aspect-video w-full overflow-hidden bg-gray-200 dark:bg-slate-700">
+                            <Image src={pg.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={pg.name} loading="lazy" width={800} height={450} />
+                        </div>
+                        <div class="p-6 md:p-8 flex flex-col flex-1">
+                            <h5 class="font-bold text-xl text-gray-900 dark:text-white mb-4">{pg.name}</h5>
+                            <div class="space-y-3 mt-auto">
+                                <p class="text-sm text-gray-600 dark:text-gray-400"><strong class="text-gray-800 dark:text-gray-200">Público:</strong> {pg.publico}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400"><strong class="text-gray-800 dark:text-gray-200">Responsável:</strong> {pg.responsavel}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400"><strong class="text-gray-800 dark:text-gray-200">Horário:</strong> {pg.horario}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-slate-700 pt-3 mt-3"><strong class="text-gray-800 dark:text-gray-200">Frequência:</strong> <span class="bg-[var(--color-brand)]/10 dark:bg-[var(--color-brand)]/20 text-[var(--color-brand-dark)] dark:text-[var(--color-brand-light)] px-2 py-0.5 rounded text-xs font-semibold">{pg.frequencia}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div class="mt-20">
+                <hr class="border-gray-200 dark:border-slate-800 mb-12">
+                <div class="text-center bg-gray-50 dark:bg-slate-800 rounded-2xl p-8 md:p-12 border border-gray-100 dark:border-slate-700 max-w-4xl mx-auto scroll-card">
+                    <h4 class="font-bold text-2xl md:text-3xl text-gray-900 dark:text-white mb-6">Quer saber mais ou participar de um grupo?</h4>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">Em caso de dúvidas nos contate na secretaria via whatsapp. Venha fazer parte do grupo que mais combina com você!</p>
+                    <a href="https://wa.me/5535988613046" target="_blank" rel="nofollow" class="inline-flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-lg font-bold hover:bg-[#128C7E] transition-colors shadow-md hover:shadow-lg hover:-translate-y-0.5 w-full sm:w-auto justify-center">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> Falar com a Secretaria
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

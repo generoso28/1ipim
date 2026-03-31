@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+---
+<footer class="bg-gradient-to-br from-[var(--color-brand-light)] to-[var(--color-brand)] text-white dark:bg-none dark:bg-[#00241d] transition-colors py-8">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <div class="flex flex-wrap justify-between lg:items-center">
+            
+            <!-- Saiba mais -->
+            <div class="w-full sm:w-1/3 lg:w-1/4 mb-6 lg:mb-0 text-center sm:text-left flex flex-col">
+                <h3 class="text-white text-lg font-bold mb-3">Saiba mais</h3>
+                <ul class="text-white/80 space-y-1.5 text-sm">
+                    <li><a href="/cremos" class="hover:text-white transition-colors">O que nós cremos?</a></li>
+                    <li><a href="/historia" class="hover:text-white transition-colors">Nossa história</a></li>
+                    <li><a href="/pastores" class="hover:text-white transition-colors">Nossos pastores</a></li>
+                    <li><a href="/contato" class="hover:text-white transition-colors">Entre em contato</a></li>
+                </ul>
+            </div>
+            
+            <!-- Social Icons and Main brand info -->
+            <div class="w-full lg:w-2/5 text-center sm:text-left flex flex-col items-center lg:items-start order-first lg:order-last mb-6 lg:mb-0">
+                <div class="flex items-center mb-3">
+                    <Image alt="Logo da igreja" class="w-10 h-auto mr-3" src="/assets/img/logo_transp.png" width="40" height="40" />
+                    <span class="text-white font-bold leading-tight text-sm sm:text-base">Primeira Igreja Presbiteriana<br/>Independente de Machado</span>
+                </div>
+                <p class="text-white/70 text-xs italic text-center lg:text-left">
+                    'E perseveravam na doutrina dos apóstolos e na comunhão, no partir do pão e nas orações.' Atos 2:42
+                </p>
+            </div>
+        </div>
+
+        <hr class="border-white/10 my-6">
+
+        <div class="flex flex-col md:flex-row justify-between items-center text-white/50 text-xs">
+            <p class="mb-4 md:mb-0 text-center md:text-left">Copyright © 2025 Primeira Igreja Presbiteriana Independente de Machado</p>
+            
+            <div class="flex space-x-5 text-lg text-white/80">
+                <a aria-label="YouTube" title="YouTube" href="https://www.youtube.com/@1ipimachado" target="_blank" rel="nofollow" class="hover:text-white transition-colors">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a aria-label="Podcast" title="Podcast TorreCast" href="https://www.youtube.com/@TorreCast" target="_blank" rel="nofollow" class="hover:text-white transition-colors">
+                    <i class="fa-solid fa-podcast"></i>
+                </a>
+                <a aria-label="Instagram" title="Instagram" href="https://www.instagram.com/1ipim/" target="_blank" rel="nofollow" class="hover:text-white transition-colors">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>

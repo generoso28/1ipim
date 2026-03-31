@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+const pastores = [
+  {
+    name: "Marinaldo",
+    role: "Partir do Pão",
+    roleColor: "#b8e466",
+    image: "/assets/img/pastores/marinaldo.jpg",
+    bio: "Bacharel em Teologia pelo Seminário Teológico Presbiteriano Rev. Denoel Nicodemos Eller, em Belo Horizonte, e pós-graduando em Teologia Reformada pelo Instituto Reformado de São Paulo. Presidente da Missão Vida Nova, instituição de recuperação para dependentes químicos, e responsável pelo projeto de implantação da Oitava Igreja Presbiteriana Independente de Machado. Preside o conselho da igreja e lidera os ministérios \"Partir o Pão\", apoiando órfãos, viúvas, pobres e enfermos da igreja, além de exercer o cuidado diaconal e missionário. Casado com Keiler e pai de Sarah e Johannes."
+  },
+  {
+    name: "Sebastião Arruda",
+    role: "Doutrina",
+    roleColor: "#7ccece",
+    image: "/assets/img/pastores/Arruda.jpg",
+    bio: "Formado em Teologia pelo Seminário Presbiteriano Conservador e mestre em Teologia com especialização em Hebraico e Antigo Testamento pelo Centro de Pós-graduação Andrew Jumper. Ordenado em 1984, foi revisor na Casa Editora Cultura Cristã e editor do Jornal “O Presbiteriano Conservador”. Lecionou no Seminário Presbiteriano José Manoel da Conceição (JMC) e no Seminário Presbiteriano Conservador, nas áreas de Hebraico, Exegese do Antigo Testamento e Teologia Bíblica, e como professor convidado no SETECEB e SPR em Anápolis, GO. É pastor jubilado da Igreja Presbiteriana Conservadora e fundador do Projeto Edukáris em Machado, MG. Atualmente atua como pastor auxiliar, supervisionando os ministérios doutrinários da igreja, como a EBD, a Superintendência de Ensino, a Junta Teológica, entre outros. Casado com Miriam e pai de Mateus e Priscila."
+  },
+  {
+    name: "Fellipe Conti",
+    role: "Comunhão",
+    roleColor: "#6fc7b0",
+    image: "/assets/img/pastores/Conti.jpg",
+    bio: "Evangelista da Primeira Igreja Presbiteriana Independente de Machado - MG, líder do ministério de jovens GetUp, presidente do Acampamento Maanaim e supervisor de pequenos grupos da igreja. Também é responsável pelo Torrecast - podcast da igreja - e os demais ministérios de comunhão. É graduado em Administração de Empresas e está atualmente graduando-se na Faculdade de Teologia de São Paulo (FATIPI) e no Instituto CREIA de Machado-MG. Fellipe é casado com Ana Paula e pai de Tito e Rute."
+  },
+  {
+    name: "Rubens Luz",
+    role: "Orações",
+    roleColor: "#7ace9f",
+    image: "/assets/img/pastores/Rubens.png",
+    bio: "Bacharel em teologia com concentração em Educação Cristã pelo Seminário Bíblico Palavra da Vida. Licenciado em Pedagogia pela Faculdade Campos Salles. Mestre em Educação pela Universidade Presbiteriana Mackenzie. É missionário da SEPAL (Servindo Pastores e Líderes) e integra a lideraçã dos ministérios LIMIAR e T-LINK. Atua como pastor auxiliar, sendo responsável pela vida de oração da igreja e pelo cuidado pastoral. Preside a secretaria de missões e o Instituto Creia, entre outros. Rubens é casado com Evana e pai."
+  }
+];
+---
+<Layout title="Pastores - Primeira Igreja Presbiteriana Independente de Machado">
+    <section class="py-20 mt-16 bg-white dark:bg-slate-900 transition-colors min-h-screen">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-16 scroll-card">
+                <h2 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-2">Nossos Pastores</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">E perseveravam...</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto space-y-8">
+                {pastores.map(pastor => (
+                    <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-slate-700 scroll-card">
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                            <div class="shrink-0">
+                                <Image src={pastor.image} alt={pastor.name} class="w-[150px] h-[150px] object-cover rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm" width={150} height={150} />
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <h5 class="font-bold text-2xl text-gray-900 dark:text-white mb-1">{pastor.name}</h5>
+                                <p class="font-medium mb-4" style={`color: ${pastor.roleColor}`}>{pastor.role}</p>
+                                <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm md:text-base">{pastor.bio}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gray-50 dark:bg-slate-800 transition-colors">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-3xl mx-auto mb-12 scroll-card">
+                <h2 class="font-extrabold text-3xl text-gray-900 dark:text-white mb-4">Pilares ministeriais</h2>
+                <p class="text-gray-600 dark:text-gray-400 text-lg">Confira como as responsabilidades ministeriais da nossa igreja são divididas, de acordo com os quatro pilares de Atos 2.42</p>
+            </div>
+            
+            <div class="max-w-5xl mx-auto mb-12 scroll-card">
+                <Image src="/assets/img/pastores/pilares-ministeriais.png" class="w-full h-auto rounded-2xl shadow-sm border border-gray-100" alt="Pilares ministeriais" width={800} height={600} />
+            </div>
+            
+            <div class="text-center scroll-card">
+                <a href="https://wa.me/5535988613046" target="_blank" rel="nofollow" class="inline-block bg-[var(--color-brand)] text-white px-8 py-3.5 rounded-lg font-bold hover:bg-[var(--color-brand-dark)] transition-colors shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
+                    Entre em contato com um de nossos pastores
+                </a>
+            </div>
+        </div>
+    </section>
+</Layout>

@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+const pilares = [
+    {
+        title: "Doutrina",
+        color: "#7ccece",
+        image: "/assets/img/cremos/doutrina.jpg",
+        text: "Cremos que todo cristão deve estar ancorado na Palavra de Deus, na sã doutrina dos apóstolos. Zelamos pelo ensino fiel das Escrituras, reconhecendo que a verdade revelada é a base para a vida cristã e a edificação da Igreja. A doutrina dos apóstolos é nossa guia e fundamento, sendo a autoridade final para fé e prática.",
+        reverse: false
+    },
+    {
+        title: "Comunhão",
+        color: "#6fc7b0",
+        image: "/assets/img/cremos/comunhao.jpg",
+        text: "Cremos que a comunhão entre os cristãos é vital para a vida da Igreja. Acreditamos na importância do apoio mútuo, do cuidado e da edificação dos irmãos em Cristo. A comunhão reflete o amor de Deus e deve ser uma marca visível em nosso relacionamento, sendo expressão da unidade do corpo de Cristo.",
+        reverse: true
+    },
+    {
+        title: "Partir do pão",
+        color: "#beeb69",
+        image: "/assets/img/cremos/ceia.jpg",
+        text: "Cremos que a Ceia do Senhor é um meio sagrado de lembrar e proclamar a morte de Cristo até que Ele venha. Ao partirmos do pão, somos fortalecidos na fé, renovamos nossa comunhão com Cristo e com a Igreja, e expressamos nossa dependência de Sua obra redentora.",
+        reverse: false
+    },
+    {
+        title: "Orações",
+        color: "#7bcfa0",
+        image: "/assets/img/cremos/oracoes.jpg",
+        text: "Cremos que a oração é o pilar da Igreja, essencial para o crescimento espiritual do cristão e para a comunhão com Deus. Por meio da oração, buscamos a direção divina, intercedemos uns pelos outros e expressamos nossa total dependência do Senhor. Como Igreja, perseveramos na oração, confiantes no poder e na fidelidade de Deus.",
+        reverse: true
+    }
+];
+
+const subscrevemos = [
+    {
+        title: "Confissão de fé de Westminster",
+        image: "/assets/img/cremos/Westminster.webp",
+        text: "A <strong>Confissão de Fé de Westminster</strong> (1646) é um dos principais documentos reformados, sistematizando doutrinas como a autoridade das Escrituras, a soberania de Deus, a salvação pela graça e a organização da Igreja. Redigida por teólogos puritanos, tornou-se a base teológica de muitas igrejas presbiterianas ao redor do mundo.",
+        link: "https://ipib.org.br/confissao-de-fe-de-westminster/",
+        buttonText: "Leia",
+        reverse: false
+    },
+    {
+        title: "Constituição da IPI do Brasil",
+        image: "/assets/img/cremos/catedral.jpg",
+        text: "A <strong>Constituição da IPI do Brasil</strong> define sua identidade reformada, governo presbiteriano e organização em igreja local, presbitério, sínodo e Assembleia Geral. Regula ofícios ministeriais, disciplina e administração, seguindo a Confissão de Fé de Westminster.",
+        link: "https://drive.google.com/file/d/10czyUbZbkKe67QQcWLXoKN2CA1dCXCJP/view?usp=sharing",
+        buttonText: "Acesse",
+        reverse: true
+    }
+];
+---
+<Layout title="O que cremos? - Primeira Igreja Presbiteriana Independente de Machado">
+    <section class="py-20 mt-16 bg-white dark:bg-slate-900 transition-colors overflow-hidden">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-16 scroll-card">
+                <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-sm">Sobre nós</p>
+                <h3 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-6">As quatro cores da igreja</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-lg md:px-12 italic leading-relaxed">
+                    'E perseveravam na doutrina dos apóstolos e na comunhão, no partir do pão e nas orações.'<br/>Atos 2:42
+                </p>
+            </div>
+
+            <div class="space-y-16 lg:space-y-24 max-w-5xl mx-auto">
+                {pilares.map(pilar => (
+                    <div class={`flex flex-col md:flex-row gap-10 items-center scroll-card ${pilar.reverse ? 'md:flex-row-reverse' : ''}`}>
+                        <div class="w-full md:w-1/2">
+                            <div class="rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-slate-700 group">
+                                <Image src={pilar.image} alt={pilar.title} class="w-full h-auto aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" width={800} height={600} />
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/2 flex flex-col justify-center">
+                            <h5 class="font-bold text-3xl mb-4" style={`color: ${pilar.color};`}>{pilar.title}</h5>
+                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">{pilar.text}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gray-50 dark:bg-slate-800 border-t border-gray-100 dark:border-slate-800 transition-colors overflow-hidden">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-16 scroll-card">
+                <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-sm">Além disso</p>
+                <h3 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white">Também subscrevemos</h3>
+            </div>
+
+            <div class="space-y-16 lg:space-y-24 max-w-5xl mx-auto">
+                {subscrevemos.map(sub => (
+                    <div class={`flex flex-col md:flex-row gap-10 items-center scroll-card ${sub.reverse ? 'md:flex-row-reverse' : ''}`}>
+                        <div class="w-full md:w-1/2">
+                            <div class="rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-slate-700 group">
+                                <Image src={sub.image} alt={sub.title} class="w-full h-auto aspect-video object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" width={800} height={450} />
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/2 flex flex-col justify-center items-start">
+                            <h5 class="font-bold text-2xl text-gray-900 dark:text-white mb-4">{sub.title}</h5>
+                            <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed" set:html={sub.text}></p>
+                            <a href={sub.link} target="_blank" rel="nofollow" class="inline-block bg-[var(--color-brand)] text-white px-8 py-3 rounded-lg font-bold hover:bg-[var(--color-brand-dark)] transition-colors shadow hover:shadow-lg hover:-translate-y-0.5">
+                                {sub.buttonText}
+                            </a>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+</Layout>

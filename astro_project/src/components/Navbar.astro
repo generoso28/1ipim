@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+const currentPath = Astro.url.pathname;
+
+const links = [
+    { href: "/", text: "Home" },
+    { href: "/programacao", text: "Programação" },
+    { href: "/pg", text: "Pequenos Grupos" },
+    { href: "/pastores", text: "Pastores" },
+    { href: "/cremos", text: "O que cremos?" },
+    { href: "/historia", text: "Nossa história" },
+    { href: "/contato", text: "Contato" }
+];
+---
+<nav class="fixed top-0 left-0 w-full z-[1000] bg-white/95 dark:bg-slate-900/95 dark:border-b dark:border-slate-800 backdrop-blur-sm shadow-sm transition-all duration-300 py-3" id="mainNav">
+    <div class="container mx-auto px-4 lg:px-8 flex justify-between items-center max-w-7xl">
+        <a class="flex justify-center items-center" href="/">
+            <!-- Add brightness/invert filter on dark mode for the specific logo if needed -->
+            <Image alt="Logo da igreja" class="max-w-[40px] h-auto hover:scale-105 transition-transform" src="/assets/img/logo_transp.png" width="40" height="40" loading="eager" />
+        </a>
+        
+        <div class="flex items-center space-x-2 md:space-x-6 lg:space-x-8">
+            <div class="hidden md:flex items-center space-x-6 lg:space-x-8">
+                {links.map(link => (
+                    <a 
+                        href={link.href} 
+                        class={`font-medium transition-colors hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] ${currentPath === link.href || (currentPath === '/' && link.href === '/') ? 'text-[var(--color-brand)] dark:text-[var(--color-brand-light)]' : 'text-gray-600 dark:text-gray-300'}`}
+                    >
+                        {link.text}
+                    </a>
+                ))}
+            </div>
+
+            <button id="theme-toggle" type="button" aria-label="Alternar tema" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2 transition-colors">
+                <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden text-lg"></i>
+                <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden text-lg"></i>
+            </button>
+            
+            <div class="md:hidden flex">
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" aria-label="Menu" class="p-2 text-gray-600 dark:text-gray-300 hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] focus:outline-none transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Menu Content -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 mt-3 absolute w-full left-0 px-4 py-2 shadow-lg transition-all duration-300">
+        <div class="flex flex-col space-y-2 pb-4">
+            {links.map(link => (
+                <a 
+                    href={link.href} 
+                    class={`block py-2 px-2 rounded-md font-medium transition-colors hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] ${currentPath === link.href ? 'text-[var(--color-brand)] dark:text-[var(--color-brand-light)] bg-gray-50 dark:bg-slate-800' : 'text-gray-600 dark:text-gray-300'}`}
+                >
+                    {link.text}
+                </a>
+            ))}
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Usa 'astro:page-load' no lugar de 'DOMContentLoaded' para SPA view transitions
+    document.addEventListener('astro:page-load', () => {
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        if (themeToggleBtn && themeToggleDarkIcon && themeToggleLightIcon) {
+            let currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark' || (!currentTheme && document.documentElement.classList.contains('dark'))) {
+                themeToggleLightIcon.classList.remove('hidden');
+                themeToggleDarkIcon.classList.add('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+                themeToggleLightIcon.classList.add('hidden');
+            }
+
+            themeToggleBtn.onclick = () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                if (isDark) {
+                    localStorage.setItem('theme', 'dark');
+                    themeToggleLightIcon.classList.remove('hidden');
+                    themeToggleDarkIcon.classList.add('hidden');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    themeToggleDarkIcon.classList.remove('hidden');
+                    themeToggleLightIcon.classList.add('hidden');
+                }
+            };
+        }
+
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        if (btn && menu) {
+            btn.onclick = () => {
+                menu.classList.toggle('hidden');
+            };
+        }
+    });
+</script>

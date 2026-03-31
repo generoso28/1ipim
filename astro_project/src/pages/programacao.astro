@@ -1,0 +1,155 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+const schedule = [
+  {
+    day: "Domingo",
+    events: [
+      {
+        title: "Escola Bíblica Dominical",
+        tag: "Doutrina",
+        tagColor: "#7ccece",
+        description: "Às 9:00, no templo. A Escola Bíblica Dominical (EBD) é um ministério de ensino da igreja, dedicado ao estudo sistemático da Bíblia. Ela tem o propósito de instruir crianças, jovens e adultos na fé cristã, promovendo o crescimento espiritual e a aplicação prática das Escrituras na vida diária."
+      },
+      {
+        title: "Culto Solene",
+        tag: "Orações",
+        tagColor: "#7ace9f",
+        description: "Às 19:00, no Templo. O Culto Solene é o momento central de adoração da igreja, onde os crentes se reúnem para glorificar a Deus por meio da oração, do louvor, da pregação da Palavra e da comunhão."
+      }
+    ]
+  },
+  {
+    day: "Quarta-feira",
+    events: [
+      {
+        title: "Reunião de Oração",
+        tag: "Orações",
+        tagColor: "#7ace9f",
+        description: "Às 18:30, no espaço Get Up, nos reunimos semanalmente com o propósito de orar pela igreja, pelas missões, pelos enfermos e uns pelos outros, fortalecendo a comunhão e a fé da congregação. A prática contínua da oração mantém a igreja centrada na dependência de Deus e no fortalecimento espiritual de todos os membros, sendo o pilar sustentador de todos os demais ministérios da igreja."
+      }
+    ]
+  },
+  {
+    day: "Sábado",
+    events: [
+      {
+        title: "Get Up",
+        link: "https://www.instagram.com/juventude_getup/",
+        tag: "Comunhão",
+        tagColor: "#6fc7b0",
+        description: "Às 19:30, no Espaço Get Up, o Get Up, ministério de jovens da igreja, se reúne para louvar a Deus, estudar Sua Palavra e ter um tempo de comunhão entre os irmãos. É um ministério dedicado ao fortalecimento espiritual dos jovens, buscando crescer na fé e no serviço a Deus."
+      }
+    ]
+  }
+];
+
+const specialEvents = [
+    { title: "Acampamento Maanaim", link: "https://acampamaanaim.com.br" },
+    { title: "Semana Jovem", link: "https://www.instagram.com/juventude_getup/" },
+    { title: "Conferência da Fé Reformada", link: "https://www.instagram.com/1ipim/" },
+    { title: "Conferência Missionária", link: "https://www.instagram.com/sec.missoes.1ipi.machado/" },
+    { title: "C3: Centro de Convivência Cristã", link: "https://www.instagram.com/c3.machado/" }
+];
+---
+<Layout title="Programação - Primeira Igreja Presbiteriana Independente de Machado">
+    <section class="py-20 mt-16 bg-white dark:bg-slate-900 transition-colors min-h-screen">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-16 scroll-card">
+                <h2 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-2">Nossa programação</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">Confira todos os eventos que acontecem na nossa igreja</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Schedule Column -->
+                <div class="w-full lg:w-3/4">
+                    <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 md:p-10 shadow-sm border border-gray-100 dark:border-slate-700 flex flex-col space-y-10">
+                        {schedule.map(group => (
+                            <div class="scroll-card">
+                                <h3 class="font-bold text-2xl text-gray-900 dark:text-white mb-6">{group.day}</h3>
+                                <div class="space-y-8 pl-0 md:pl-2">
+                                    {group.events.map(event => (
+                                        <div class="flex flex-col space-y-3">
+                                            <div class="flex items-center gap-3">
+                                                <div class="text-[var(--color-brand)]">
+                                                    <i class="fa-regular fa-clock text-xl"></i>
+                                                </div>
+                                                <div class="flex items-center flex-wrap gap-2">
+                                                    {(event as any).link ? (
+                                                        <a href={(event as any).link} target="_blank" rel="nofollow" class="font-semibold text-lg text-gray-900 dark:text-gray-100 hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] transition-colors">
+                                                            {event.title}
+                                                        </a>
+                                                    ) : (
+                                                        <h6 class="font-semibold text-lg text-gray-900 dark:text-gray-100 m-0">{event.title}</h6>
+                                                    )}
+                                                    <span class="text-white text-xs px-2 py-0.5 rounded-full font-medium" style={`background-color: ${event.tagColor};`}>
+                                                        {event.tag}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="pl-8 max-w-2xl">
+                                                <p class="text-gray-600 dark:text-gray-300 text-base leading-relaxed">{event.description}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <!-- Special Events & PGs Column -->
+                <div class="w-full lg:w-1/4 flex flex-col gap-6">
+                    <!-- Special Events -->
+                    <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-slate-700 scroll-card">
+                        <h5 class="font-bold text-xl text-gray-900 dark:text-white mb-4">Eventos especiais</h5>
+                        <ul class="space-y-3">
+                            {specialEvents.map(ev => (
+                                <li class="flex items-start">
+                                    <span class="text-[var(--color-brand)] mr-2 mt-1"><i class="fa-solid fa-chevron-right text-xs"></i></span>
+                                    <a href={ev.link} target="_blank" rel="nofollow" class="text-gray-700 dark:text-gray-300 hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] transition-colors font-medium">
+                                        {ev.title}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    
+                    <!-- PGs -->
+                    <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-slate-700 scroll-card">
+                        <h5 class="font-bold text-xl text-gray-900 dark:text-white mb-4">Pequenos grupos</h5>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 text-justify text-sm leading-relaxed">
+                            Os pequenos grupos são locais em que nos reunimos semanalmente para aprofundar o conhecimento da Palavra de Deus e fortalecer a comunhão. Temos diversos grupos distribuídos pela cidade e podemos te ajudar a encontrar o mais próximo de você. Entre em contato e venha fazer parte!
+                        </p>
+                        <div class="text-center">
+                            <a href="/pg" class="inline-block bg-[var(--color-brand)] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[var(--color-brand-dark)] transition-colors shadow-sm w-full">
+                                Conhecer Grupos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section class="py-20 bg-gray-50 dark:bg-slate-800 transition-colors">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-12 scroll-card">
+                <h2 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-2">Calendário Anual</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">Confira todos os eventos que acontecem na nossa igreja durante o ano</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto mb-12 scroll-card">
+                <Image src="/assets/img/agenda_2026.jpeg" class="w-full h-auto rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 dark:brightness-90" alt="Calendário Anual 2026" width={800} height={1131} />
+            </div>
+            
+            <div class="text-center scroll-card">
+                <a href="https://wa.me/5535988613046" target="_blank" rel="nofollow" class="inline-block bg-[var(--color-brand)] text-white px-8 py-3.5 rounded-lg font-bold hover:bg-[var(--color-brand-dark)] transition-colors shadow-md hover:-translate-y-0.5">
+                    Dúvidas sobre o calendário? Fale conosco
+                </a>
+            </div>
+        </div>
+    </section>
+</Layout>

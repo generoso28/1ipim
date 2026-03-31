@@ -1,0 +1,209 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const specialEvents = [
+    { title: "Acampamento Maanaim", link: "https://acampamaanaim.com.br", description: "O retiro anual da Igreja para jovens e adultos resgatarem o ânimo e a fé de forma imersiva e vibrante — com temporadas ao longo do ano.", icon: "fa-solid fa-fire", color: "from-orange-500 to-red-500", glow: "bg-orange-500/30" },
+    { title: "Semana Jovem", link: "https://www.instagram.com/juventude_getup/", description: "Uma semana intensa com música, louvor e fortalecimento cristão com a juventude Get Up.", icon: "fa-solid fa-bolt", color: "from-blue-500 to-cyan-400", glow: "bg-cyan-500/30" },
+    { title: "Conferência da Fé Reformada", link: "https://www.instagram.com/1ipim/", description: "Um encontro profundo focado na robustez teológica e no retorno às raízes da sã doutrina.", icon: "fa-solid fa-book-bible", color: "from-[var(--color-brand)] to-[#0c705b]", glow: "bg-[var(--color-brand)]/30" },
+    { title: "Conferência Missionária", link: "https://www.instagram.com/sec.missoes.1ipi.machado/", description: "Dias separados para reacender a chama por missões em nossa comunidade e além-fronteiras.", icon: "fa-solid fa-earth-americas", color: "from-purple-500 to-indigo-600", glow: "bg-purple-500/30" }
+];
+
+interface CalendarEvent {
+    date: string;
+    label: string;
+    sub?: string;
+    type: 'camp' | 'worship' | 'education' | 'special' | 'ministry' | 'youth' | 'conference' | 'celebration';
+}
+interface CalendarMonth {
+    month: string;
+    abbrev: string;
+    events: CalendarEvent[];
+}
+
+const calendarMonths: CalendarMonth[] = [
+    {
+        month: "Fevereiro", abbrev: "FEV",
+        events: [
+            { date: "14–17 Fev", label: "Acampamento Maanaim", sub: "Temporada de Verão", type: "camp" }
+        ]
+    },
+    {
+        month: "Março", abbrev: "MAR",
+        events: [
+            { date: "Março", label: "Retorno às Aulas do CREIA", type: "education" },
+            { date: "14 Mar", label: "Encontro da Família", sub: "c/ Rachel Novaes", type: "special" }
+        ]
+    },
+    {
+        month: "Abril", abbrev: "ABR",
+        events: [
+            { date: "2–5 Abr", label: "Acampamento Maanaim", sub: "Temporada de Páscoa", type: "camp" },
+            { date: "29 Abr", label: "Culto Especial", sub: "c/ Hernandes Dias Lopes", type: "worship" }
+        ]
+    },
+    {
+        month: "Maio", abbrev: "MAI",
+        events: [
+            { date: "16–17 Mai", label: "Visita do Rev. Sergio Gini", sub: "Presidente da IPI do Brasil", type: "special" }
+        ]
+    },
+    {
+        month: "Junho", abbrev: "JUN",
+        events: [
+            { date: "Junho", label: "Congresso de Casais", type: "ministry" }
+        ]
+    },
+    {
+        month: "Julho", abbrev: "JUL",
+        events: [
+            { date: "4–5 Jul", label: "Educação Reformada", sub: "c/ Pr. Davi Manso", type: "education" },
+            { date: "20–25 Jul", label: "Semana Jovem 2026", type: "youth" }
+        ]
+    },
+    {
+        month: "Agosto", abbrev: "AGO",
+        events: [
+            { date: "22–25 Ago", label: "Acampamento Maanaim", sub: "Temporada de Festa", type: "camp" }
+        ]
+    },
+    {
+        month: "Setembro", abbrev: "SET",
+        events: [
+            { date: "4–6 Set", label: "Conferência da Fé Reformada", type: "conference" },
+            { date: "Setembro", label: "152 Anos da 1IPIM", sub: "Culto especial c/ Vitor Quevedo", type: "celebration" }
+        ]
+    },
+    {
+        month: "Outubro", abbrev: "OUT",
+        events: [
+            { date: "23–25 Out", label: "Conferência Missionária", type: "conference" },
+            { date: "Outubro", label: "Acampamento Maanaim", sub: "Temporada Kids", type: "camp" }
+        ]
+    },
+    {
+        month: "Nov / Dez", abbrev: "NOV–DEZ",
+        events: [
+            { date: "Nov / Dez", label: "Cultos de Formatura", type: "celebration" },
+            { date: "Dezembro", label: "Culto de Natal", type: "celebration" },
+            { date: "Dezembro", label: "Culto de Ano Novo", type: "celebration" }
+        ]
+    }
+];
+
+const typeConfig: Record<CalendarEvent['type'], { badge: string; dot: string; label: string }> = {
+    camp:         { badge: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",   dot: "bg-orange-500",  label: "Acampamento" },
+    worship:      { badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", dot: "bg-emerald-500", label: "Culto Especial" },
+    education:    { badge: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",           dot: "bg-blue-500",    label: "Educação" },
+    special:      { badge: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",   dot: "bg-purple-500",  label: "Visita Especial" },
+    ministry:     { badge: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300",           dot: "bg-pink-500",    label: "Ministério" },
+    youth:        { badge: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",           dot: "bg-cyan-500",    label: "Juventude" },
+    conference:   { badge: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300",           dot: "bg-teal-500",    label: "Conferência" },
+    celebration:  { badge: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-700",   dot: "bg-yellow-500",  label: "Celebração" },
+};
+---
+<Layout title="Eventos e Calendário - Primeira Igreja Presbiteriana Independente de Machado" isImmersive={true}>
+    <header class="bg-white dark:bg-slate-900 relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-center transition-colors overflow-hidden border-b border-gray-100 dark:border-slate-800">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--color-brand)_0%,transparent_40%)] opacity-5 dark:opacity-10 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--color-brand)]/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="container mx-auto px-4 lg:px-8 max-w-4xl text-center relative z-10" id="fadeDiv">
+            <h1 class="font-extrabold text-4xl md:text-5xl lg:text-7xl text-gray-900 dark:text-white mb-6 leading-tight select-none">
+                Nossos grandes <br><span class="text-[var(--color-brand)]">encontros anuais.</span>
+            </h1>
+            <p class="text-gray-600 dark:text-gray-300 text-lg md:text-2xl leading-relaxed max-w-2xl mx-auto">
+                Acompanhe o calendário completo da igreja e fique por dentro dos acampamentos, conferências e atividades especiais que moldam o nosso ano.
+            </p>
+        </div>
+
+        <!-- Scroll indicator -->
+        <a aria-label="Role para baixo" href="#conteudo" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce text-gray-400 dark:text-gray-500 hover:text-[var(--color-brand)] select-none hidden lg:flex cursor-pointer no-underline transition-colors z-20">
+            <i class="fa-solid fa-chevron-down text-3xl"></i>
+        </a>
+    </header>
+
+    <section id="conteudo" class="py-20 bg-gray-50 dark:bg-slate-800 transition-colors">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            
+            <!-- Eventos Especiais -->
+            <div class="text-center max-w-2xl mx-auto mb-12 scroll-card">
+                <h2 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-2">Eventos Especiais</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">Retiros, congressos e conferências imperdíveis</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-28 max-w-5xl mx-auto">
+                {specialEvents.map(ev => (
+                    <a href={ev.link} target="_blank" rel="nofollow" class="group relative bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 md:p-12 shadow-xl border border-gray-100 dark:border-slate-700 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col scroll-card">
+                        <div class={`absolute right-0 top-0 w-64 h-64 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity duration-700 ${ev.glow}`}></div>
+                        
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class={`w-16 h-16 rounded-2xl bg-gradient-to-br ${ev.color} text-white flex items-center justify-center text-2xl shadow-lg mb-8 group-hover:scale-110 transition-transform duration-500`}>
+                                <i class={ev.icon}></i>
+                            </div>
+                            <h3 class="font-extrabold text-2xl md:text-3xl text-gray-900 dark:text-white mb-4 transition-colors leading-tight">{ev.title}</h3>
+                            <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-8 flex-1 text-lg">{ev.description}</p>
+                            
+                            <div class="mt-auto flex items-center gap-2 font-bold text-sm tracking-widest text-gray-900 dark:text-white uppercase transition-colors group-hover:text-[var(--color-brand)] dark:group-hover:text-[var(--color-brand-light)]">
+                                Saiba mais <i class="fa-solid fa-arrow-right opacity-50 group-hover:opacity-100 group-hover:translate-x-2 transition-all"></i>
+                            </div>
+                        </div>
+                    </a>
+                ))}
+            </div>
+
+            <!-- Calendário Anual -->
+            <div class="text-center max-w-2xl mx-auto mb-6 scroll-card">
+                <h2 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-2">Calendário 2026</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">Todos os eventos do ano, mês a mês</p>
+            </div>
+
+            <!-- Grade de Meses -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 max-w-6xl mx-auto">
+                {calendarMonths.map(m => (
+                    <div class="bg-white dark:bg-slate-900 rounded-[2rem] p-6 shadow-md border border-gray-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 scroll-card group flex flex-col gap-4 relative overflow-hidden">
+                        <!-- Decoração de fundo com o mês -->
+                        <div class="absolute right-4 top-2 font-black text-6xl text-gray-100 dark:text-slate-800 select-none pointer-events-none group-hover:scale-110 transition-transform duration-500 leading-none">
+                            {m.abbrev}
+                        </div>
+
+                        <h3 class="font-extrabold text-xl text-gray-900 dark:text-white relative z-10 flex items-center justify-between">
+                            {m.month}
+                            <span class="text-xs font-bold bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full">
+                                {m.events.length} evento{m.events.length !== 1 ? 's' : ''}
+                            </span>
+                        </h3>
+
+                        <div class="flex flex-col gap-3 relative z-10">
+                            {m.events.map(ev => {
+                                const cfg = typeConfig[ev.type];
+                                return (
+                                    <div class="flex items-start gap-3">
+                                        <span class={`mt-1 w-2 h-2 rounded-full shrink-0 ${cfg.dot}`}></span>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex flex-wrap items-center gap-2 mb-0.5">
+                                                <span class="text-xs font-bold text-gray-400 dark:text-gray-500 tabular-nums whitespace-nowrap">{ev.date}</span>
+                                                <span class={`text-[10px] font-bold px-2 py-0.5 rounded-full ${cfg.badge}`}>{cfg.label}</span>
+                                            </div>
+                                            <p class="text-sm font-semibold text-gray-800 dark:text-gray-100 leading-snug">{ev.label}</p>
+                                            {ev.sub && <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{ev.sub}</p>}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <!-- CTA Final -->
+            <div class="text-center scroll-card relative overflow-hidden bg-white dark:bg-slate-900 rounded-[3rem] p-12 shadow-xl border border-gray-100 dark:border-slate-700 max-w-4xl mx-auto group hover:shadow-2xl transition-all duration-300">
+                <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-brand)]/5 to-transparent pointer-events-none"></div>
+                <h3 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-4 relative z-10">Dúvidas sobre o calendário?</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-8 text-lg relative z-10">Nossa equipe adora ajudar. Entre em contato pelo WhatsApp!</p>
+                <a href="https://wa.me/5535988613046" target="_blank" rel="nofollow" class="relative z-10 inline-flex items-center gap-3 bg-[var(--color-brand)] text-white px-10 py-5 rounded-full font-extrabold hover:bg-[var(--color-brand-dark)] transition-colors shadow-lg hover:shadow-2xl hover:-translate-y-1 justify-center text-lg active:scale-95">
+                    <i class="fa-brands fa-whatsapp text-3xl"></i> Fale conosco
+                </a>
+            </div>
+
+        </div>
+    </section>
+</Layout>

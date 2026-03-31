@@ -5,6 +5,7 @@ const currentPath = Astro.url.pathname;
 const links = [
     { href: "/", text: "Home" },
     { href: "/programacao", text: "Programação" },
+    { href: "/eventos", text: "Eventos" },
     { href: "/pg", text: "Pequenos Grupos" },
     { href: "/pastores", text: "Pastores" },
     { href: "/cremos", text: "O que cremos?" },
@@ -14,15 +15,14 @@ const links = [
 ];
 const { isImmersive = false } = Astro.props || {};
 ---
-<nav class={`fixed top-0 left-0 w-full z-[1000] bg-white/95 dark:bg-slate-900/95 dark:border-b dark:border-slate-800 backdrop-blur-sm shadow-sm transition-all duration-700 py-3 ${isImmersive ? 'opacity-0 -translate-y-[150%] pointer-events-none is-immersive' : ''}`} id="mainNav">
-    <div class="container mx-auto px-4 lg:px-8 flex justify-between items-center max-w-7xl">
-        <a class="flex justify-center items-center" href="/">
-            <!-- Add brightness/invert filter on dark mode for the specific logo if needed -->
-            <Image alt="Logo da igreja" class="max-w-[40px] h-auto hover:scale-105 transition-transform" src="/assets/img/logo_transp.png" width="40" height="40" loading="eager" />
+<nav class={`fixed top-0 left-0 w-full z-[1000] transition-all duration-700 pt-3 md:pt-5 px-4 pointer-events-none ${isImmersive ? 'opacity-0 -translate-y-[150%] is-immersive' : ''}`} id="mainNav">
+    <div class="container mx-auto px-6 py-3 flex justify-between items-center max-w-6xl bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg rounded-2xl xl:rounded-full shadow-lg border border-white/50 dark:border-slate-700/50 pointer-events-auto transition-colors">
+        <a class="flex justify-center items-center shrink-0" href="/">
+            <Image alt="Logo da igreja" class="max-w-[40px] h-auto hover:scale-105 transition-transform drop-shadow-sm" src="/assets/img/logo_transp.png" width="40" height="40" loading="eager" />
         </a>
         
         <div class="flex items-center space-x-2 md:space-x-6 lg:space-x-8">
-            <div class="hidden xl:flex items-center space-x-6">
+            <div class="hidden xl:flex items-center space-x-7">
                 {links.map(link => (
                     link.special ? (
                         <a href={link.href} class="bg-[var(--color-brand)] text-white px-5 py-2.5 rounded-lg font-bold hover:bg-[var(--color-brand-dark)] transition-colors shadow-md animate-pulse hover:animate-none flex items-center gap-2">
@@ -54,16 +54,18 @@ const { isImmersive = false } = Astro.props || {};
     </div>
     
     <!-- Mobile Menu Content -->
-    <div id="mobile-menu" class="xl:hidden hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 mt-3 absolute w-full left-0 px-4 py-2 shadow-lg transition-all duration-300">
-        <div class="flex flex-col space-y-2 pb-4">
-            {links.map(link => (
-                <a 
-                    href={link.href} 
-                    class={`block py-2 px-2 rounded-md font-medium transition-colors hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] ${currentPath === link.href ? 'text-[var(--color-brand)] dark:text-[var(--color-brand-light)] bg-gray-50 dark:bg-slate-800' : 'text-gray-600 dark:text-gray-300'}`}
-                >
-                    {link.text}
-                </a>
-            ))}
+    <div class="container mx-auto px-0 max-w-6xl pointer-events-auto">
+        <div id="mobile-menu" class="xl:hidden hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 mt-2 absolute w-[calc(100%-2rem)] md:w-full left-4 md:left-0 px-4 py-4 rounded-2xl shadow-2xl transition-all duration-300 z-[900]">
+            <div class="flex flex-col space-y-1">
+                {links.map(link => (
+                    <a 
+                        href={link.href} 
+                        class={`block py-3 px-4 rounded-xl font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-[var(--color-brand)] dark:hover:text-[var(--color-brand-light)] hover:pl-6 ${currentPath === link.href ? 'text-[var(--color-brand)] dark:text-[var(--color-brand-light)] bg-gray-50 dark:bg-slate-800/80' : 'text-gray-700 dark:text-gray-200'}`}
+                    >
+                        {link.special ? <span class="flex items-center gap-2 text-[var(--color-brand)] font-bold"><i class="fa-solid fa-hand-wave"></i> {link.text}</span> : link.text}
+                    </a>
+                ))}
+            </div>
         </div>
     </div>
 </nav>

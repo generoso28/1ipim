@@ -112,11 +112,11 @@ const pastores = [
                 </p>
             </div>
             
-            <div class="max-w-6xl mx-auto bg-gray-50 dark:bg-slate-800 rounded-2xl p-8 md:p-12 border border-gray-100 dark:border-slate-700 shadow-sm scroll-card">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3">
+            <div class="max-w-6xl mx-auto bg-gray-50/80 dark:bg-slate-800/80 rounded-[2.5rem] p-10 md:p-14 border border-gray-100 dark:border-slate-700 shadow-xl scroll-card backdrop-blur-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-2">
                     {pastores.map(pastor => (
-                        <div class="flex items-center space-x-2 py-1 border-b border-gray-200/50 dark:border-slate-700/50 last:border-0 hover:bg-white dark:hover:bg-slate-700 hover:px-2 transition-all rounded">
-                            <i class="fa-solid fa-check text-[var(--color-brand)]/60 dark:text-[var(--color-brand)] text-xs shrink-0"></i>
+                        <div class="flex items-center space-x-3 py-1.5 border-b border-gray-200/50 dark:border-slate-700/50 last:border-0 hover:bg-white dark:hover:bg-slate-700 hover:pl-3 hover:translate-x-1 transition-all rounded-lg group">
+                            <i class="fa-solid fa-check text-[var(--color-brand)]/60 dark:text-[var(--color-brand)] text-xs shrink-0 group-hover:scale-125 transition-transform"></i>
                             <span class="text-gray-700 dark:text-gray-200 text-sm font-medium">{pastor}</span>
                         </div>
                     ))}
@@ -124,14 +124,20 @@ const pastores = [
             </div>
 
             <!-- Conclusion -->
-            <div class="max-w-4xl mx-auto mt-20 text-center scroll-card">
-                <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-12 italic">
+            <div class="max-w-4xl mx-auto mt-24 text-center scroll-card relative group">
+                <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-brand-light)] to-[var(--color-brand)] opacity-5 blur-3xl rounded-full group-hover:opacity-10 transition-opacity duration-1000 -z-10 pointer-events-none"></div>
+                
+                <p class="text-gray-600 dark:text-gray-300 text-lg md:text-xl leading-relaxed mb-12 italic font-serif">
                     "Muitas páginas dessa história não puderam ser escritas aqui, mas cremos que, pela graça de Deus, muitas outras ainda serão redigidas. Ao longo desses 150 anos, inúmeros homens e mulheres de Deus passaram por esta igreja, servindo-a com zelo e amor, e incontáveis foram as providências divinas. Para relembrar essa trajetória, a igreja conta com um memorial e uma edição especial da Bíblia que, em algumas páginas, registra essa rica história."
                 </p>
-                <div class="inline-block px-8 py-6 bg-gray-50 dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm">
-                    <h5 class="font-bold text-xl md:text-2xl text-gray-800 dark:text-gray-200 m-0">
-                        <span class="text-gray-500 dark:text-gray-400 font-medium block mb-2">"Até aqui nos ajudou o Senhor"</span>
-                        <span class="text-[var(--color-brand)] dark:text-[var(--color-brand-light)] uppercase tracking-widest text-sm">1 Samuel 7:12</span>
+                
+                <div class="inline-block px-12 py-8 bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-2xl overflow-hidden relative transition-transform duration-500 hover:-translate-y-1">
+                    <div class="absolute left-0 top-0 w-2 h-full bg-gradient-to-b from-[var(--color-brand-light)] to-[var(--color-brand-dark)]"></div>
+                    <div class="absolute right-0 top-0 w-32 h-32 bg-[var(--color-brand)]/10 rounded-full blur-2xl translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                    
+                    <h5 class="font-extrabold text-2xl md:text-3xl text-gray-900 dark:text-white m-0 relative z-10 flex flex-col gap-4">
+                        <span class="text-gray-700 dark:text-gray-200 font-medium">Até aqui nos ajudou o Senhor</span>
+                        <span class="bg-gray-100 dark:bg-slate-700 text-[var(--color-brand-dark)] dark:text-[var(--color-brand-light)] px-4 py-1.5 rounded-full text-xs tracking-widest uppercase font-bold w-max mx-auto shadow-sm">1 Samuel 7:12</span>
                     </h5>
                 </div>
             </div>

@@ -89,6 +89,128 @@ try {
         </div>
     </section>
 
+    <!-- PRÓXIMO EVENTO -->
+    <section class="py-10 bg-gray-50 dark:bg-slate-800 transition-colors border-y border-gray-100 dark:border-slate-700">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
+            <div id="next-event-card" class="rounded-[2.5rem] overflow-hidden shadow-xl scroll-card" style="opacity:0;transition:opacity .5s"></div>
+        </div>
+    </section>
+
+    <script>
+    document.addEventListener('astro:page-load', () => {
+        const typeStyle = {
+            camp:        { gradient: 'linear-gradient(135deg,#f97316,#dc2626)',   label: 'Acampamento' },
+            worship:     { gradient: 'linear-gradient(135deg,#059669,#0d9488)',   label: 'Culto Especial' },
+            education:   { gradient: 'linear-gradient(135deg,#2563eb,#4f46e5)',   label: 'Educação' },
+            special:     { gradient: 'linear-gradient(135deg,#7c3aed,#6d28d9)',   label: 'Visita Especial' },
+            ministry:    { gradient: 'linear-gradient(135deg,#db2777,#e11d48)',   label: 'Ministério' },
+            youth:       { gradient: 'linear-gradient(135deg,#0891b2,#0284c7)',   label: 'Juventude' },
+            conference:  { gradient: 'linear-gradient(135deg,#0f766e,#047857)',   label: 'Conferência' },
+            celebration: { gradient: 'linear-gradient(135deg,#d97706,#b45309)',   label: 'Celebração' },
+        };
+
+        const events = [
+            { date:'2026-02-14', endDate:'2026-02-17', label:'Acampamento Maanaim', sub:'Temporada de Verão',           type:'camp',        url:'https://acampamaanaim.com.br' },
+            { date:'2026-03-14',                       label:'Encontro da Família',  sub:'c/ Rachel Novaes',            type:'special',     url:'/eventos' },
+            { date:'2026-04-02', endDate:'2026-04-05', label:'Acampamento Maanaim', sub:'Temporada de Páscoa',          type:'camp',        url:'https://acampamaanaim.com.br' },
+            { date:'2026-04-29',                       label:'Culto Especial',       sub:'c/ Hernandes Dias Lopes',     type:'worship',     url:'/eventos' },
+            { date:'2026-05-16', endDate:'2026-05-17', label:'Visita do Rev. Sergio Gini', sub:'Presidente da IPI do Brasil', type:'special', url:'/eventos' },
+            { date:'2026-06-15',                       label:'Congresso de Casais',  sub:null,                         type:'ministry',    url:'/eventos' },
+            { date:'2026-07-04', endDate:'2026-07-05', label:'Educação Reformada',   sub:'c/ Pr. Davi Manso',          type:'education',   url:'/eventos' },
+            { date:'2026-07-20', endDate:'2026-07-25', label:'Semana Jovem 2026',    sub:null,                         type:'youth',       url:'/eventos' },
+            { date:'2026-08-22', endDate:'2026-08-25', label:'Acampamento Maanaim', sub:'Temporada de Festa',           type:'camp',        url:'https://acampamaanaim.com.br' },
+            { date:'2026-09-04', endDate:'2026-09-06', label:'Conferência da Fé Reformada', sub:null,                  type:'conference',  url:'/eventos' },
+            { date:'2026-09-15',                       label:'152 Anos da 1IPIM',    sub:'Culto especial c/ Vitor Quevedo', type:'celebration', url:'/eventos' },
+            { date:'2026-10-01',                       label:'Acampamento Maanaim', sub:'Temporada Kids',               type:'camp',        url:'https://acampamaanaim.com.br' },
+            { date:'2026-10-23', endDate:'2026-10-25', label:'Conferência Missionária', sub:null,                      type:'conference',  url:'/eventos' },
+            { date:'2026-11-20',                       label:'Cultos de Formatura',  sub:null,                         type:'celebration', url:'/eventos' },
+            { date:'2026-12-25',                       label:'Culto de Natal',       sub:null,                         type:'celebration', url:'/eventos' },
+            { date:'2026-12-31',                       label:'Culto de Ano Novo',    sub:null,                         type:'celebration', url:'/eventos' },
+        ];
+
+        const card = document.getElementById('next-event-card');
+        if (!card) return;
+
+        const today = new Date(); today.setHours(0,0,0,0);
+        const next = events
+            .map(e => ({ ...e, _end: new Date(e.endDate || e.date) }))
+            .filter(e => e._end >= today)
+            .sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+
+        if (!next) { card.parentElement?.closest('section')?.remove(); return; }
+
+        const st = typeStyle[next.type] || typeStyle.celebration;
+
+        // Format date label
+        const start = new Date(next.date);
+        const fmt = (d) => d.toLocaleDateString('pt-BR', { day:'numeric', month:'long', year:'numeric' });
+        const dateLabel = next.endDate
+            ? `${start.getDate()} a ${fmt(new Date(next.endDate))}`
+            : fmt(start);
+
+        card.innerHTML = `
+            <div style="background:${st.gradient}" class="text-white p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+                <div class="absolute right-0 top-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/3 translate-x-1/3"></div>
+                <div class="absolute left-0 bottom-0 w-64 h-64 bg-black/10 rounded-full blur-[60px] pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
+
+                <div class="text-center md:text-left relative z-10">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white/90 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                        </span>
+                        ${st.label} &nbsp;·&nbsp; Próximo Evento
+                    </div>
+                    <h3 class="font-extrabold text-3xl md:text-4xl lg:text-5xl mb-2 drop-shadow leading-tight">${next.label}</h3>
+                    ${next.sub ? `<p class="text-white/75 text-lg font-medium mb-3">${next.sub}</p>` : ''}
+                    <p class="text-white/60 text-sm font-semibold tracking-wide mt-2"><i class="fa-regular fa-calendar mr-2"></i>${dateLabel}</p>
+                </div>
+
+                <div class="flex flex-col items-center gap-6 relative z-10 shrink-0">
+                    <div class="flex items-end gap-3 md:gap-4">
+                        <div class="text-center">
+                            <div id="cnt-days" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
+                            <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">dias</div>
+                        </div>
+                        <div class="font-black text-3xl text-white/30 mb-3">:</div>
+                        <div class="text-center">
+                            <div id="cnt-hours" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
+                            <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">horas</div>
+                        </div>
+                        <div class="font-black text-3xl text-white/30 mb-3">:</div>
+                        <div class="text-center">
+                            <div id="cnt-mins" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
+                            <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">min</div>
+                        </div>
+                    </div>
+                    <a href="${next.url}" class="inline-flex items-center gap-2 bg-white/15 hover:bg-white text-white hover:text-gray-900 backdrop-blur-sm border border-white/30 hover:border-transparent px-7 py-3 rounded-full font-bold transition-all duration-300 text-sm hover:-translate-y-0.5 shadow-lg">
+                        Ver calendário completo <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        `;
+        card.style.opacity = '1';
+
+        function tick() {
+            const target = new Date(next.date); target.setHours(19,0,0,0);
+            const diff = target.getTime() - Date.now();
+            if (diff <= 0) return;
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const pad = n => String(n).padStart(2,'0');
+            const dEl = document.getElementById('cnt-days');
+            const hEl = document.getElementById('cnt-hours');
+            const mEl = document.getElementById('cnt-mins');
+            if (dEl) dEl.textContent = pad(d);
+            if (hEl) hEl.textContent = pad(h);
+            if (mEl) mEl.textContent = pad(m);
+        }
+        tick();
+        if (!window._nextEventTimer) window._nextEventTimer = setInterval(tick, 30000);
+    });
+    </script>
+
     <section class="py-24 relative bg-[var(--color-brand)] dark:bg-[var(--color-brand-dark)] overflow-hidden transition-colors">
         <!-- Decoration -->
         <div class="absolute inset-0 opacity-10 mix-blend-overlay" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>

@@ -63,17 +63,19 @@ const subscrevemos = [
                 </p>
             </div>
 
-            <div class="space-y-16 lg:space-y-24 max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
                 {pilares.map(pilar => (
-                    <div class={`flex flex-col md:flex-row gap-10 items-center scroll-card ${pilar.reverse ? 'md:flex-row-reverse' : ''}`}>
-                        <div class="w-full md:w-1/2">
-                            <div class="rounded-2xl overflow-hidden shadow-lg border border-gray-100 dark:border-slate-700 group">
-                                <Image src={pilar.image} alt={pilar.title} class="w-full h-auto aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" width={800} height={600} />
-                            </div>
+                    <div class="rounded-[2rem] p-8 lg:p-10 shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden relative group flex flex-col justify-end min-h-[400px] md:min-h-[500px] border border-gray-100 dark:border-slate-800 scroll-card">
+                        <div class="absolute inset-0 z-0">
+                            <Image src={pilar.image} alt={pilar.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-90 dark:opacity-50" loading="lazy" width={800} height={800} />
+                            <!-- Novo degradê poderoso de baixo para cima -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent"></div>
+                            <!-- Máscara superior suave -->
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500"></div>
                         </div>
-                        <div class="w-full md:w-1/2 flex flex-col justify-center">
-                            <h5 class="font-bold text-3xl mb-4" style={`color: ${pilar.color};`}>{pilar.title}</h5>
-                            <p class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">{pilar.text}</p>
+                        <div class="relative z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <h5 class="font-extrabold text-3xl lg:text-4xl mb-4 drop-shadow-md" style={`color: ${pilar.color};`}>{pilar.title}</h5>
+                            <p class="text-gray-200 text-sm lg:text-base leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 h-0 group-hover:h-auto overflow-hidden text-shadow-lg drop-shadow">{pilar.text}</p>
                         </div>
                     </div>
                 ))}
@@ -88,21 +90,20 @@ const subscrevemos = [
                 <h3 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white">Também subscrevemos</h3>
             </div>
 
-            <div class="space-y-16 lg:space-y-24 max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 {subscrevemos.map(sub => (
-                    <div class={`flex flex-col md:flex-row gap-10 items-center scroll-card ${sub.reverse ? 'md:flex-row-reverse' : ''}`}>
-                        <div class="w-full md:w-1/2">
-                            <div class="rounded-2xl overflow-hidden shadow-lg border border-gray-200 dark:border-slate-700 group">
-                                <Image src={sub.image} alt={sub.title} class="w-full h-auto aspect-video object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" width={800} height={450} />
+                    <div class="bg-gray-100 dark:bg-slate-700 rounded-[2.5rem] p-8 lg:p-12 shadow-md hover:shadow-xl transition-all duration-300 scroll-card flex flex-col justify-between group overflow-hidden relative min-h-[400px]">
+                        <div class="absolute right-0 top-0 w-64 h-64 bg-[var(--color-brand)]/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:scale-150 transition-transform duration-1000"></div>
+                        <div class="relative z-10">
+                            <div class="w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:rotate-12 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-file-contract text-2xl text-[var(--color-brand-dark)] dark:text-[var(--color-brand-light)]"></i>
                             </div>
+                            <h5 class="font-extrabold text-2xl lg:text-3xl text-gray-900 dark:text-white mb-4 leading-tight">{sub.title}</h5>
+                            <div class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed text-sm lg:text-base prose dark:prose-invert" set:html={sub.text}></div>
                         </div>
-                        <div class="w-full md:w-1/2 flex flex-col justify-center items-start">
-                            <h5 class="font-bold text-2xl text-gray-900 dark:text-white mb-4">{sub.title}</h5>
-                            <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed" set:html={sub.text}></p>
-                            <a href={sub.link} target="_blank" rel="nofollow" class="inline-block bg-[var(--color-brand)] text-white px-8 py-3 rounded-lg font-bold hover:bg-[var(--color-brand-dark)] transition-colors shadow hover:shadow-lg hover:-translate-y-0.5">
-                                {sub.buttonText}
-                            </a>
-                        </div>
+                        <a href={sub.link} target="_blank" rel="nofollow" class="relative z-10 mt-auto inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-black dark:hover:bg-gray-100 transition-all shadow-lg hover:-translate-y-1 w-max">
+                            {sub.buttonText} <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-70"></i>
+                        </a>
                     </div>
                 ))}
             </div>

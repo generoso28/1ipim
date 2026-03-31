@@ -1,49 +1,61 @@
 ---
 import { Image } from 'astro:assets';
 ---
-<footer class="bg-gradient-to-br from-[var(--color-brand-light)] to-[var(--color-brand)] text-white dark:bg-none dark:bg-[#00241d] transition-colors py-8">
-    <div class="container mx-auto px-4 max-w-7xl">
-        <div class="flex flex-wrap justify-between lg:items-center">
-            
-            <!-- Saiba mais -->
-            <div class="w-full sm:w-1/3 lg:w-1/4 mb-6 lg:mb-0 text-center sm:text-left flex flex-col">
-                <h3 class="text-white text-lg font-bold mb-3">Saiba mais</h3>
-                <ul class="text-white/80 space-y-1.5 text-sm">
-                    <li><a href="/cremos" class="hover:text-white transition-colors">O que nós cremos?</a></li>
-                    <li><a href="/historia" class="hover:text-white transition-colors">Nossa história</a></li>
-                    <li><a href="/pastores" class="hover:text-white transition-colors">Nossos pastores</a></li>
-                    <li><a href="/contato" class="hover:text-white transition-colors">Entre em contato</a></li>
-                </ul>
-            </div>
+<footer class="bg-slate-900 dark:bg-[#04201b] text-white transition-colors py-8 md:py-10 rounded-t-3xl md:rounded-t-[2.5rem] mt-12 relative overflow-hidden border-t border-white/10 dark:border-[var(--color-brand-dark)]">
+    <!-- Efeito de brilho de fundo -->
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-brand)]/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/3 pointer-events-none"></div>
+
+    <div class="container mx-auto px-6 lg:px-12 max-w-7xl relative z-10">
+        <div class="flex flex-col lg:flex-row flex-wrap justify-between items-start gap-8 lg:gap-6">
             
             <!-- Social Icons and Main brand info -->
-            <div class="w-full lg:w-2/5 text-center sm:text-left flex flex-col items-center lg:items-start order-first lg:order-last mb-6 lg:mb-0">
-                <div class="flex items-center mb-3">
-                    <Image alt="Logo da igreja" class="w-10 h-auto mr-3" src="/assets/img/logo_transp.png" width="40" height="40" />
-                    <span class="text-white font-bold leading-tight text-sm sm:text-base">Primeira Igreja Presbiteriana<br/>Independente de Machado</span>
+            <div class="w-full lg:w-2/5 flex flex-col items-start order-first">
+                <div class="flex items-center mb-4">
+                    <div class="bg-white/10 p-2.5 rounded-xl mr-3 backdrop-blur-md shadow-lg border border-white/5">
+                        <Image alt="Logo da igreja" class="w-10 h-auto" src="/assets/img/logo_transp.png" width="40" height="40" />
+                    </div>
+                    <span class="text-white font-extrabold leading-tight text-base sm:text-lg tracking-tight">Primeira Igreja Presbiteriana<br/><span class="text-white/70 font-semibold text-sm">Independente de Machado</span></span>
                 </div>
-                <p class="text-white/70 text-xs italic text-center lg:text-left">
-                    'E perseveravam na doutrina dos apóstolos e na comunhão, no partir do pão e nas orações.' Atos 2:42
+                <p class="text-white/60 text-xs italic border-l-2 border-[var(--color-brand)] pl-3 py-1 leading-relaxed max-w-sm">
+                    'E perseveravam na doutrina dos apóstolos... e nas orações.' <strong class="text-white/80 not-italic ml-1">Atos 2:42</strong>
                 </p>
+            </div>
+
+            <!-- Saiba mais / Tags -->
+            <div class="w-full sm:w-1/2 lg:w-1/3 flex flex-col items-start lg:items-center">
+                <p class="font-bold text-[var(--color-brand-light)] mb-3 uppercase tracking-widest text-[10px]">Páginas</p>
+                <div class="flex flex-wrap gap-2 lg:justify-center">
+                    <a href="/cremos" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white/90 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:scale-105">O que cremos</a>
+                    <a href="/historia" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white/90 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:scale-105">História</a>
+                    <a href="/pastores" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white/90 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:scale-105">Pastores</a>
+                    <a href="/pg" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white/90 px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:scale-105">Grupos</a>
+                    <a href="/visitantes" class="bg-[var(--color-brand)] text-white px-3 py-1.5 rounded-full text-xs font-bold transition-all hover:scale-105 shadow">Visite-nos</a>
+                </div>
+            </div>
+            
+            <!-- Midias Bento-lite -->
+            <div class="w-full sm:w-1/2 lg:w-auto flex flex-col items-start lg:items-end flex-1">
+                 <p class="font-bold text-[var(--color-brand-light)] mb-3 uppercase tracking-widest text-[10px]">Redes</p>
+                 <div class="flex gap-2 text-white">
+                    <a aria-label="YouTube" title="YouTube" href="https://www.youtube.com/@1ipimachado" target="_blank" rel="nofollow" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-[#ff0033]/20 border border-white/10 hover:border-[#ff0033]/50 flex items-center justify-center text-lg transition-all hover:scale-110 hover:-translate-y-1 group hover:text-[#ff4d6d]">
+                        <i class="fa-brands fa-youtube opacity-80 group-hover:opacity-100"></i>
+                    </a>
+                    <a aria-label="Podcast" title="Podcast TorreCast" href="https://www.youtube.com/@TorreCast" target="_blank" rel="nofollow" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-[#52a7af]/20 border border-white/10 hover:border-[#52a7af]/50 flex items-center justify-center text-lg transition-all hover:scale-110 hover:-translate-y-1 group hover:text-[#52a7af]">
+                        <i class="fa-solid fa-podcast opacity-80 group-hover:opacity-100"></i>
+                    </a>
+                    <a aria-label="Instagram" title="Instagram" href="https://www.instagram.com/1ipim/" target="_blank" rel="nofollow" class="w-10 h-10 rounded-xl bg-white/5 hover:bg-[#e6683c]/20 border border-white/10 hover:border-[#e6683c]/50 flex items-center justify-center text-lg transition-all hover:scale-110 hover:-translate-y-1 group hover:text-[#f09433]">
+                        <i class="fa-brands fa-instagram opacity-80 group-hover:opacity-100"></i>
+                    </a>
+                 </div>
             </div>
         </div>
 
         <hr class="border-white/10 my-6">
 
-        <div class="flex flex-col md:flex-row justify-between items-center text-white/50 text-xs">
-            <p class="mb-4 md:mb-0 text-center md:text-left">Copyright © 2025 Primeira Igreja Presbiteriana Independente de Machado</p>
-            
-            <div class="flex space-x-5 text-lg text-white/80">
-                <a aria-label="YouTube" title="YouTube" href="https://www.youtube.com/@1ipimachado" target="_blank" rel="nofollow" class="hover:text-white transition-colors">
-                    <i class="fa-brands fa-youtube"></i>
-                </a>
-                <a aria-label="Podcast" title="Podcast TorreCast" href="https://www.youtube.com/@TorreCast" target="_blank" rel="nofollow" class="hover:text-white transition-colors">
-                    <i class="fa-solid fa-podcast"></i>
-                </a>
-                <a aria-label="Instagram" title="Instagram" href="https://www.instagram.com/1ipim/" target="_blank" rel="nofollow" class="hover:text-white transition-colors">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-            </div>
+        <div class="flex flex-col md:flex-row justify-between items-center text-white/40 text-xs">
+            <p class="mb-4 md:mb-0 text-center md:text-left">© 2025 Primeira Igreja Presbiteriana Independente de Machado. Todos os direitos reservados.</p>
+            <p>Construído com <i class="fa-solid fa-heart text-red-500/50 mx-1"></i> para o Reino</p>
         </div>
     </div>
 </footer>

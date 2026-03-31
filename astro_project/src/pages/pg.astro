@@ -30,19 +30,20 @@ const pgs = [
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {pgs.map(pg => (
-                    <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col scroll-card group">
-                        <div class="aspect-video w-full overflow-hidden bg-gray-200 dark:bg-slate-700">
-                            <Image src={pg.image} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={pg.name} loading="lazy" width={800} height={450} />
+                    <div class="rounded-3xl border border-gray-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden flex flex-col scroll-card group relative min-h-[480px]">
+                        <div class="absolute inset-0 z-0">
+                            <Image src={pg.image} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-90 dark:opacity-70" alt={pg.name} loading="lazy" width={800} height={800} />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10"></div>
                         </div>
-                        <div class="p-6 md:p-8 flex flex-col flex-1">
-                            <h5 class="font-bold text-xl text-gray-900 dark:text-white mb-4">{pg.name}</h5>
-                            <div class="space-y-3 mt-auto">
-                                <p class="text-sm text-gray-600 dark:text-gray-400"><strong class="text-gray-800 dark:text-gray-200">Público:</strong> {pg.publico}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400"><strong class="text-gray-800 dark:text-gray-200">Responsável:</strong> {pg.responsavel}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400"><strong class="text-gray-800 dark:text-gray-200">Horário:</strong> {pg.horario}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 border-t border-gray-100 dark:border-slate-700 pt-3 mt-3 mb-5"><strong class="text-gray-800 dark:text-gray-200">Frequência:</strong> <span class="bg-[var(--color-brand)]/10 dark:bg-[var(--color-brand)]/20 text-[var(--color-brand-dark)] dark:text-[var(--color-brand-light)] px-2 py-0.5 rounded text-xs font-semibold">{pg.frequencia}</span></p>
-                                <a href={`https://wa.me/5535988613046?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20Pequeno%20Grupo:%20${pg.name}`} target="_blank" rel="nofollow" class="mt-auto block w-full text-center bg-[var(--color-brand)] text-white py-2.5 rounded-lg font-bold shadow hover:bg-[var(--color-brand-dark)] transition-colors">
-                                    Tenho interesse <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
+                        <div class="p-6 md:p-8 flex flex-col flex-1 relative z-10 justify-end">
+                            <h5 class="font-extrabold text-3xl text-white mb-6 drop-shadow-md">{pg.name}</h5>
+                            <div class="space-y-2 mt-auto bg-black/40 backdrop-blur-md rounded-2xl p-5 border border-white/10 group-hover:bg-black/50 transition-colors">
+                                <p class="text-xs text-gray-300 flex justify-between border-b border-white/10 pb-2"><strong class="text-white uppercase tracking-wider text-[10px]">Público</strong> <span class="text-right">{pg.publico}</span></p>
+                                <p class="text-xs text-gray-300 flex justify-between border-b border-white/10 pb-2 pt-1"><strong class="text-white uppercase tracking-wider text-[10px]">Líder</strong> <span class="text-right">{pg.responsavel}</span></p>
+                                <p class="text-xs text-gray-300 flex justify-between border-b border-white/10 pb-2 pt-1"><strong class="text-white uppercase tracking-wider text-[10px]">Horário</strong> <span class="text-right">{pg.horario}</span></p>
+                                <p class="text-xs text-gray-300 flex justify-between pt-1 mb-2 items-center"><strong class="text-white uppercase tracking-wider text-[10px]">Frequência</strong> <span class="bg-[var(--color-brand)] text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">{pg.frequencia}</span></p>
+                                <a href={`https://wa.me/5535988613046?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20Pequeno%20Grupo:%20${pg.name}`} target="_blank" rel="nofollow" class="mt-4 block w-full text-center bg-white text-gray-900 py-3 rounded-xl font-bold hover:bg-gray-200 transition-colors text-sm shadow">
+                                    Tenho interesse
                                 </a>
                             </div>
                         </div>
@@ -51,13 +52,21 @@ const pgs = [
             </div>
 
             <div class="mt-20">
-                <hr class="border-gray-200 dark:border-slate-800 mb-12">
-                <div class="text-center bg-gray-50 dark:bg-slate-800 rounded-2xl p-8 md:p-12 border border-gray-100 dark:border-slate-700 max-w-4xl mx-auto scroll-card">
-                    <h4 class="font-bold text-2xl md:text-3xl text-gray-900 dark:text-white mb-6">Quer saber mais ou participar de um grupo?</h4>
-                    <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">Em caso de dúvidas nos contate na secretaria via whatsapp. Venha fazer parte do grupo que mais combina com você!</p>
-                    <a href="https://wa.me/5535988613046" target="_blank" rel="nofollow" class="inline-flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-lg font-bold hover:bg-[#128C7E] transition-colors shadow-md hover:shadow-lg hover:-translate-y-0.5 w-full sm:w-auto justify-center">
-                        <i class="fa-brands fa-whatsapp text-xl"></i> Falar com a Secretaria
-                    </a>
+                <hr class="border-gray-100 dark:border-slate-800 mb-16 hidden">
+                <div class="text-center bg-gradient-to-br from-[#128C7E] to-[#25D366] text-white rounded-[2.5rem] md:rounded-[4rem] p-10 md:p-16 shadow-2xl max-w-5xl mx-auto scroll-card overflow-hidden relative group">
+                    <div class="absolute -right-8 -bottom-8 text-black/10 text-[12rem] group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700 pointer-events-none">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-6 backdrop-blur shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-whatsapp text-4xl"></i>
+                        </div>
+                        <h4 class="font-extrabold text-3xl md:text-5xl mb-6 leading-tight">Quer saber mais?</h4>
+                        <p class="text-white/90 mb-10 max-w-2xl mx-auto text-lg leading-relaxed font-medium">Não importa sua idade ou onde você mora, sempre tem um grupo esperando de braços abertos. Fale com nossa secretaria e encontre o seu lugar.</p>
+                        <a href="https://wa.me/5535988613046" target="_blank" rel="nofollow" class="inline-flex items-center gap-3 bg-white text-[#128C7E] px-10 py-5 rounded-full font-extrabold hover:scale-105 transition-transform shadow-xl">
+                            Chamar no WhatsApp <i class="fa-solid fa-arrow-right text-sm"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

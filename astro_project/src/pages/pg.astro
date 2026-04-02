@@ -1,23 +1,37 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import pgGuerreiros from '../assets/img/pgs/pg-homens-rubens-site.png';
+import pgPorcaoFe from '../assets/img/pgs/porcao_de_fe.jpeg';
+import pgKoinonia from '../assets/img/pgs/koinonia.jpeg';
+import pgPeniel from '../assets/img/pgs/peniel.jpeg';
+import pgMeninasDeus from '../assets/img/pgs/entre-meninas-e-Deus.jpeg';
+import pgMeninos from '../assets/img/pgs/pg-pedro.jpeg';
+import pgOnline from '../assets/img/pgs/pg-online.jpeg';
+import pgLara from '../assets/img/pgs/pg-lara.jpeg';
+import pgMulheresProp from '../assets/img/pgs/mulheres-com-proposito.jpeg';
+import pgFamilia from '../assets/img/pgs/pg-da-familia.jpeg';
+import pgEnrico from '../assets/img/pgs/pg-enrico.jpeg';
+import pgFlorescer from '../assets/img/pgs/florescer.jpeg';
+import pgEliza from '../assets/img/pgs/pg-eliza.jpeg';
+import pgToshiba from '../assets/img/pgs/pg-toshiba.jpeg';
 
 const pgs = [
-  { name: "Porção de fé", image: "/assets/img/pgs/porçao-de-fe.jpeg", publico: "Mulheres", responsavel: "Rita e Mayra", horario: "Segunda-feira às 19:30", frequencia: "Quinzenal" },
-  { name: "Koinonia", image: "/assets/img/pgs/koinonia.jpeg", publico: "Mulheres", responsavel: "Milka", horario: "Terça-feira às 14:00", frequencia: "Semanal" },
-  { name: "Peniel", image: "/assets/img/pgs/peniel.jpeg", publico: "Mulheres", responsavel: "Ester", horario: "Terça-feira às 14:30", frequencia: "Semanal" },
-  { name: "Entre Meninas e Deus", image: "/assets/img/pgs/entre-meninas-e-Deus.jpeg", publico: "Meninas de 9 a 11 anos", responsavel: "Tati, Thays, Manuela e Anne", horario: "Terça-feira às 19:00", frequencia: "Semanal" },
-  { name: "Entre Meninas e Deus", image: "/assets/img/pgs/entre-meninas-e-Deus.jpeg", publico: "Meninas de 12 a 14 anos", responsavel: "Iara, Cris e Fabi", horario: "Terça-feira às 19:00", frequencia: "Semanal" },
-  { name: "PG dos meninos", image: "/assets/img/pgs/pg-pedro.jpeg", publico: "Pré-adolescência e juventude", responsavel: "Pedro Luz e Davi Bertelli", horario: "Terça-feira às 19:30", frequencia: "Semanal" },
-  { name: "PG Online", image: "/assets/img/pgs/pg-online.jpeg", publico: "Estudantes que moram fora", responsavel: "Lucas Generoso, Lucas Sodré e Nathan", horario: "Terça-feira às 21:30", frequencia: "Semanal" },
-  { name: "PG das meninas", image: "/assets/img/pgs/pg-lara.jpeg", publico: "Juventude", responsavel: "Larah e Alicia", horario: "Quarta-feira às 19:30", frequencia: "Semanal" },
-  { name: "Mulheres com Propósito", image: "/assets/img/pgs/mulheres-com-proposito.jpeg", publico: "Mulheres acima de 30 anos", responsavel: "Karina e Maressa", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
-  { name: "Famílias em Cristo", image: "/assets/img/pgs/pg-da-familia.jpeg", publico: "Casais", responsavel: "Rodrigo Coelho e Lucyara", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
-  { name: "PG Enrico", image: "/assets/img/pgs/pg-enrico.jpeg", publico: "Jovens/Adultos", responsavel: "Enrico", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
-  { name: "Guerreiros", image: "/assets/img/pgs/pg-homens-rubens-site.png", publico: "Homens", responsavel: "Pr. Arruda e Pr. Rubens", horario: "Quinta-feira às 19:30", frequencia: "Quinzenal" },
-  { name: "Florescer", image: "/assets/img/pgs/florescer.jpeg", publico: "Jovens adultas", responsavel: "Paulinha, Sandrinha e Eluan", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
-  { name: "Casa de oração", image: "/assets/img/pgs/pg-eliza.jpeg", publico: "Mulheres", responsavel: "Eliza", horario: "Sexta-feira às 19:15", frequencia: "Quinzenal" },
-  { name: "PG Toshiba", image: "/assets/img/pgs/pg-toshiba.jpeg", publico: "Casais", responsavel: "Pr. Arruda", horario: "Sexta-feira às 19:30", frequencia: "Semanal" }
+  { name: "Porção de fé", image: pgPorcaoFe, publico: "Mulheres", responsavel: "Rita e Mayra", horario: "Segunda-feira às 19:30", frequencia: "Quinzenal" },
+  { name: "Koinonia", image: pgKoinonia, publico: "Mulheres", responsavel: "Milka", horario: "Terça-feira às 14:00", frequencia: "Semanal" },
+  { name: "Peniel", image: pgPeniel, publico: "Mulheres", responsavel: "Ester", horario: "Terça-feira às 14:30", frequencia: "Semanal" },
+  { name: "Entre Meninas e Deus", image: pgMeninasDeus, publico: "Meninas de 9 a 11 anos", responsavel: "Tati, Thays, Manuela e Anne", horario: "Terça-feira às 19:00", frequencia: "Semanal" },
+  { name: "Entre Meninas e Deus", image: pgMeninasDeus, publico: "Meninas de 12 a 14 anos", responsavel: "Iara, Cris e Fabi", horario: "Terça-feira às 19:00", frequencia: "Semanal" },
+  { name: "PG dos meninos", image: pgMeninos, publico: "Pré-adolescência e juventude", responsavel: "Pedro Luz e Davi Bertelli", horario: "Terça-feira às 19:30", frequencia: "Semanal" },
+  { name: "PG Online", image: pgOnline, publico: "Estudantes que moram fora", responsavel: "Lucas Generoso, Lucas Sodré e Nathan", horario: "Terça-feira às 21:30", frequencia: "Semanal" },
+  { name: "PG das meninas", image: pgLara, publico: "Juventude", responsavel: "Larah e Alicia", horario: "Quarta-feira às 19:30", frequencia: "Semanal" },
+  { name: "Mulheres com Propósito", image: pgMulheresProp, publico: "Mulheres acima de 30 anos", responsavel: "Karina e Maressa", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
+  { name: "Famílias em Cristo", image: pgFamilia, publico: "Casais", responsavel: "Rodrigo Coelho e Lucyara", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
+  { name: "PG Enrico", image: pgEnrico, publico: "Jovens/Adultos", responsavel: "Enrico", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
+  { name: "Guerreiros", image: pgGuerreiros, publico: "Homens", responsavel: "Pr. Arruda e Pr. Rubens", horario: "Quinta-feira às 19:30", frequencia: "Quinzenal" },
+  { name: "Florescer", image: pgFlorescer, publico: "Jovens adultas", responsavel: "Paulinha, Sandrinha e Eluan", horario: "Quinta-feira às 19:30", frequencia: "Semanal" },
+  { name: "Casa de oração", image: pgEliza, publico: "Mulheres", responsavel: "Eliza", horario: "Sexta-feira às 19:15", frequencia: "Quinzenal" },
+  { name: "PG Toshiba", image: pgToshiba, publico: "Casais", responsavel: "Pr. Arruda", horario: "Sexta-feira às 19:30", frequencia: "Semanal" }
 ];
 ---
 <Layout title="Pequenos Grupos - Primeira Igreja Presbiteriana Independente de Machado" footerBgClass="bg-white dark:bg-slate-900">

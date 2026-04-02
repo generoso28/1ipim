@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import logoImage from '../assets/img/logo_transp.png';
 ---
 <footer class="bg-slate-900 dark:bg-[#04201b] text-white transition-colors py-8 md:py-10 rounded-t-3xl md:rounded-t-[2.5rem] relative overflow-hidden border-t border-white/10 dark:border-[var(--color-brand-dark)]">
     <!-- Efeito de brilho de fundo -->
@@ -13,7 +14,7 @@ import { Image } from 'astro:assets';
             <div class="w-full lg:w-2/5 flex flex-col items-start order-first">
                 <div class="flex items-center mb-4">
                     <div class="bg-white/10 p-2.5 rounded-xl mr-3 backdrop-blur-md shadow-lg border border-white/5">
-                        <Image alt="Logo da igreja" class="w-10 h-auto" src="/assets/img/logo_transp.png" width="40" height="40" />
+                        <Image alt="Logo da igreja" class="w-10 h-auto" src={logoImage} width={40} height={40} />
                     </div>
                     <span class="text-white font-extrabold leading-tight text-base sm:text-lg tracking-tight">Primeira Igreja Presbiteriana<br/><span class="text-white/70 font-semibold text-sm">Independente de Machado</span></span>
                 </div>
@@ -53,9 +54,9 @@ import { Image } from 'astro:assets';
 
         <hr class="border-white/10 my-6">
 
-        <div class="flex flex-col md:flex-row justify-between items-center text-white/40 text-xs">
+        <div class="flex flex-col md:flex-row justify-between items-center text-white/70 text-xs">
             <p class="mb-4 md:mb-0 text-center md:text-left">© 2025 Primeira Igreja Presbiteriana Independente de Machado. Todos os direitos reservados.</p>
-            <p>Construído com <i class="fa-solid fa-heart text-red-500/50 mx-1"></i> para o Reino</p>
+            <p>Construído com <i class="fa-solid fa-heart text-red-500/80 mx-1"></i> para o Reino</p>
         </div>
     </div>
 </footer>

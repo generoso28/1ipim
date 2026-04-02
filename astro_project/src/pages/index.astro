@@ -1,6 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import historiaImg from '../assets/img/historia/img-4.jpg';
+import pgOnline from '../assets/img/pgs/pg-online.jpeg';
+import pgMulheres from '../assets/img/pgs/mulheres-com-proposito.jpeg';
+import pgEnrico from '../assets/img/pgs/pg-enrico.jpeg';
+import pgPedro from '../assets/img/pgs/pg-pedro.jpeg';
 
 const API_KEY = import.meta.env.YOUTUBE_API_KEY;
 const PLAYLIST_ID = 'UUo1LQoyw17iaoL3y0TnDP9g';
@@ -34,8 +39,11 @@ try {
                 playsinline
                 class="absolute w-full h-full object-cover opacity-90 scale-[1.02]"
                 preload="auto"
-                src="/assets/video/hero.mp4"
-            ></video>
+            >
+                <source src="/assets/video/hero.webm" type="video/webm" />
+                <source src="/assets/video/hero.mp4" type="video/mp4" />
+                <track kind="captions" src="" label="Português" srclang="pt" />
+            </video>
             <!-- Sombreamento de base apenas para destacar os botões -->
             <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
         </div>
@@ -55,55 +63,6 @@ try {
         </a>
     </header>
 
-    <!-- MISSÃO, VISÃO E SLOGAN -->
-    <section class="py-20 bg-gray-50 dark:bg-slate-900 transition-colors relative overflow-hidden">
-        <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
-            <!-- Slogan Highlight (Header) -->
-            <div class="text-center scroll-card px-4 mb-20">
-                <div class="relative inline-block">
-                    <!-- Aspas com contraste reforçado -->
-                    <span class="absolute -top-6 -left-4 md:-left-8 text-amber-500/40 dark:text-amber-400/30 text-5xl select-none">
-                        <i class="fa-solid fa-quote-left"></i>
-                    </span>
-                    <h2 class="font-medium text-2xl md:text-3xl lg:text-4xl text-[var(--color-brand)] dark:text-[var(--color-brand-light)] italic tracking-tight leading-tight max-w-4xl mx-auto py-2">
-                        Mais de um século perseverando e propagando a Palavra
-                    </h2>
-                    <span class="absolute -bottom-1 -right-4 md:-right-8 text-amber-500/40 dark:text-amber-400/30 text-5xl select-none">
-                        <i class="fa-solid fa-quote-right"></i>
-                    </span>
-                </div>
-                <div class="mt-8 flex justify-center gap-1.5">
-                    <div class="w-12 h-1 bg-amber-500/40 dark:bg-amber-400/30 rounded-full"></div>
-                    <div class="w-4 h-1 bg-[var(--color-brand)] rounded-full"></div>
-                    <div class="w-12 h-1 bg-amber-500/40 dark:bg-amber-400/30 rounded-full"></div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Mission Card -->
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 scroll-card flex flex-col items-start group">
-                    <div class="w-14 h-14 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center mb-6 border border-amber-100 dark:border-amber-800/50 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-bullseye text-2xl"></i>
-                    </div>
-                    <h3 class="font-extrabold text-2xl text-gray-900 dark:text-white mb-4">Nossa Missão</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed">
-                        Perseverar na doutrina, na comunhão, no partir do pão e nas orações <span class="text-xs font-bold text-gray-400 block mt-2 opacity-75">(Atos 2.42)</span>
-                    </p>
-                </div>
-
-                <!-- Vision Card -->
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 scroll-card flex flex-col items-start group">
-                    <div class="w-14 h-14 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center mb-6 border border-emerald-100 dark:border-emerald-800/50 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-eye text-2xl"></i>
-                    </div>
-                    <h3 class="font-extrabold text-2xl text-gray-900 dark:text-white mb-4">Nossa Visão</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-base md:text-lg leading-relaxed">
-                        Ser uma igreja missionária que equipa seus membros, por meio da Palavra, para o cumprimento do "Ide e fazei discípulos" <span class="text-xs font-bold text-gray-400 block mt-2 opacity-75">(Mateus 28.19)</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- ÚLTIMO CULTO SECTION -->
     <section class="py-24 bg-white dark:bg-slate-900 transition-colors relative border-b border-gray-100 dark:border-slate-800" id="ultimo-culto">
@@ -226,27 +185,39 @@ try {
                     <p class="text-white/60 text-sm font-semibold tracking-wide mt-2"><i class="fa-regular fa-calendar mr-2"></i>${dateLabel}</p>
                 </div>
 
-                <div class="flex flex-col items-center gap-6 relative z-10 shrink-0">
-                    <div class="flex items-end gap-3 md:gap-4">
-                        <div class="text-center">
-                            <div id="cnt-days" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
-                            <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">dias</div>
+                    <div class="flex flex-col items-center gap-4 relative z-10 shrink-0">
+                        <div class="flex items-end gap-3 md:gap-4">
+                            <div class="text-center">
+                                <div id="cnt-days" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
+                                <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">dias</div>
+                            </div>
+                            <div class="font-black text-3xl text-white/30 mb-3">:</div>
+                            <div class="text-center">
+                                <div id="cnt-hours" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
+                                <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">horas</div>
+                            </div>
+                            <div class="font-black text-3xl text-white/30 mb-3">:</div>
+                            <div class="text-center">
+                                <div id="cnt-mins" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
+                                <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">min</div>
+                            </div>
                         </div>
-                        <div class="font-black text-3xl text-white/30 mb-3">:</div>
-                        <div class="text-center">
-                            <div id="cnt-hours" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
-                            <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">horas</div>
-                        </div>
-                        <div class="font-black text-3xl text-white/30 mb-3">:</div>
-                        <div class="text-center">
-                            <div id="cnt-mins" class="font-black text-5xl md:text-6xl tabular-nums leading-none drop-shadow-xl">--</div>
-                            <div class="text-white/55 text-[10px] font-bold uppercase tracking-widest mt-1.5">min</div>
-                        </div>
+
+                        ${next.url.startsWith('http') ? `
+                            <div class="flex flex-col items-center gap-3">
+                                <a href="${next.url}" target="_blank" rel="nofollow" class="inline-flex items-center gap-2 bg-white text-gray-900 border border-transparent px-8 py-3.5 rounded-full font-bold transition-all duration-300 text-sm hover:-translate-y-0.5 shadow-xl hover:bg-gray-100">
+                                    Inscrições e Informações <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-70"></i>
+                                </a>
+                                <a href="/eventos" class="text-white/60 hover:text-white text-xs font-bold transition-colors border-b border-white/20 hover:border-white pb-0.5">
+                                    Ver calendário completo da igreja
+                                </a>
+                            </div>
+                        ` : `
+                            <a href="/eventos" class="inline-flex items-center gap-2 bg-white/15 hover:bg-white text-white hover:text-gray-900 backdrop-blur-sm border border-white/30 hover:border-transparent px-7 py-3 rounded-full font-bold transition-all duration-300 text-sm hover:-translate-y-0.5 shadow-lg">
+                                Ver calendário completo <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        `}
                     </div>
-                    <a href="${next.url}" class="inline-flex items-center gap-2 bg-white/15 hover:bg-white text-white hover:text-gray-900 backdrop-blur-sm border border-white/30 hover:border-transparent px-7 py-3 rounded-full font-bold transition-all duration-300 text-sm hover:-translate-y-0.5 shadow-lg">
-                        Ver calendário completo <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
             </div>
         `;
         card.style.opacity = '1';
@@ -297,12 +268,12 @@ try {
                 <div class="w-full lg:w-1/2 scroll-card">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-4 mt-12">
-                            <Image src="/assets/img/pgs/pg-online.jpeg" alt="Pequeno Grupo em Casa" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[220px] object-cover ring-4 ring-white/10" />
-                            <Image src="/assets/img/pgs/mulheres-com-proposito.jpeg" alt="Pessoas sorrindo" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[280px] object-cover ring-4 ring-white/10" />
+                            <Image src={pgOnline} alt="Pequeno Grupo em Casa" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[220px] object-cover ring-4 ring-white/10" />
+                            <Image src={pgMulheres} alt="Pessoas sorrindo" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[280px] object-cover ring-4 ring-white/10" />
                         </div>
                         <div class="space-y-4">
-                            <Image src="/assets/img/pgs/pg-enrico.jpeg" alt="Grupo de jovens" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[280px] object-cover ring-4 ring-white/10" />
-                            <Image src="/assets/img/pgs/pg-pedro.jpeg" alt="Estudo bíblico" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[220px] object-cover ring-4 ring-white/10" />
+                            <Image src={pgEnrico} alt="Grupo de jovens" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[280px] object-cover ring-4 ring-white/10" />
+                            <Image src={pgPedro} alt="Estudo bíblico" width={400} height={500} class="rounded-2xl shadow-2xl w-full h-[220px] object-cover ring-4 ring-white/10" />
                         </div>
                     </div>
                 </div>
@@ -316,12 +287,50 @@ try {
                 <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-xs">A nossa identidade</p>
                 <h3 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white">Conheça a 1IPIM</h3>
             </div>
+
+            <!-- Slogan Highlight -->
+            <div class="text-center scroll-card px-4 mb-20">
+                <div class="relative inline-block px-10 md:px-16">
+                    <!-- Aspas com contraste reforçado -->
+                    <span class="absolute -top-8 left-0 md:-left-4 text-amber-500/60 dark:text-amber-400/50 text-5xl md:text-7xl select-none">
+                        <i class="fa-solid fa-quote-left"></i>
+                    </span>
+                    <h2 class="font-medium text-xl md:text-2xl lg:text-3xl text-[var(--color-brand)] dark:text-[var(--color-brand-light)] italic tracking-tight leading-tight max-w-4xl mx-auto py-4">
+                        Mais de um século perseverando e propagando a Palavra
+                    </h2>
+                    <span class="absolute -bottom-4 right-0 md:-right-4 text-amber-500/60 dark:text-amber-400/50 text-5xl md:text-7xl select-none">
+                        <i class="fa-solid fa-quote-right"></i>
+                    </span>
+                </div>
+            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto auto-rows-min">
+                <!-- Bento Block: Missão -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 scroll-card border border-gray-100 dark:border-slate-700 flex flex-col items-start group">
+                    <div class="w-12 h-12 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center mb-6 border border-amber-100 dark:border-amber-800/50 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bullseye text-xl"></i>
+                    </div>
+                    <h5 class="font-bold text-xl text-gray-900 dark:text-white mb-2">Nossa Missão</h5>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                        Perseverar na doutrina, na comunhão, no partir do pão e nas orações.
+                    </p>
+                </div>
+
+                <!-- Bento Block: Visão -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 scroll-card border border-gray-100 dark:border-slate-700 md:col-span-2 flex flex-col items-start group">
+                    <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center mb-6 border border-emerald-100 dark:border-emerald-800/50 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-eye text-xl"></i>
+                    </div>
+                    <h5 class="font-bold text-xl text-gray-900 dark:text-white mb-2">Nossa Visão</h5>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                        Ser uma igreja missionária que equipa seus membros, por meio da Palavra, para o cumprimento do "Ide e fazei discípulos".
+                    </p>
+                </div>
+
                 <!-- Bento Block 1: História (Large/Tall) -->
                 <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 scroll-card border border-gray-100 dark:border-slate-700 md:col-span-2 md:row-span-2 relative overflow-hidden group flex flex-col justify-end min-h-[300px] md:min-h-[400px]">
                     <div class="absolute inset-0">
-                        <Image src="/assets/img/historia/img-4.jpg" alt="História da igreja" width={800} height={600} class="w-full h-full object-cover opacity-60 dark:opacity-40 group-hover:scale-105 transition-transform duration-700 object-center" />
+                        <Image src={historiaImg} alt="História da igreja" width={800} height={600} class="w-full h-full object-cover opacity-60 dark:opacity-40 group-hover:scale-105 transition-transform duration-700 object-center" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
                     </div>
                     <h5 class="font-bold text-2xl text-white relative z-10 mb-2 drop-shadow-lg">A nossa História</h5>
@@ -400,7 +409,7 @@ try {
                 </div>
 
                 <!-- TorreCast & WhatsApp Stacked column -->
-                <div class="grid grid-cols-1 grid-rows-2 gap-6 min-h-[300px]">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 grid-rows-2 md:grid-rows-1 lg:grid-rows-2 md:col-span-2 lg:col-span-1 gap-6 min-h-[300px]">
                     <!-- TorreCast -->
                     <div class="bg-[#e4fcfe] dark:bg-[#124b50] rounded-3xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all flex items-center justify-between group overflow-hidden border border-[#52a7af]/20 relative">
                         <div class="relative z-10">

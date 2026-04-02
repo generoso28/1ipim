@@ -116,6 +116,8 @@ function initializeZoomEffect() {
 // Evento de carregamento da página
 document.addEventListener("astro:page-load", function () {
     // Inicializa o efeito de zoom se a largura for maior que 600px
-    initScrollAnimations();
-    initializeZoomEffect();
+    requestAnimationFrame(() => {
+        initScrollAnimations();
+        initializeZoomEffect();
+    });
 });

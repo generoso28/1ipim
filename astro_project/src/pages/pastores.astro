@@ -2,62 +2,70 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 
+// Imports de imagens dos pastores
+import arrudaImg from '../assets/img/pastores/Arruda.jpg';
+import contiImg from '../assets/img/pastores/Conti.jpg';
+import marinaldoImg from '../assets/img/pastores/marinaldo.jpg';
+import rubensImg from '../assets/img/pastores/Rubens.png';
+
+// Imports de imagens da homenagem ao Pr. Isaías
+import isaiasMissoes from '../assets/img/pastores/isaias/isaias_missoes.jpg';
+import homenagemIsaias from '../assets/img/pastores/isaias/homenagem_isaias.jpg';
+import isaiasJane from '../assets/img/pastores/isaias/isaias_e_jane.jpg';
+
 const pastores = [
   {
     name: "Sebastião Arruda",
     role: "Doutrina",
     roleColor: "#7ccece",
-    roleColorDark: "#3aabac",
-    image: "/assets/img/pastores/Arruda.jpg",
-    bio: "Formado em Teologia pelo Seminário Presbiteriano Conservador e mestre em Teologia com especialização em Hebraico e Antigo Testamento pelo Centro de Pós-graduação Andrew Jumper. Ordenado em 1984, foi revisor na Casa Editora Cultura Cristã e editor do Jornal \u201CO Presbiteriano Conservador\u201D. Lecionou no Seminário Presbiteriano José Manoel da Conceição (JMC) e no Seminário Presbiteriano Conservador, nas áreas de Hebraico, Exegese do Antigo Testamento e Teologia Bíblica, e como professor convidado no SETECEB e SPR em Anápolis, GO. É pastor jubilado da Igreja Presbiteriana Conservadora e fundador do Projeto Edukáris em Machado, MG. Atualmente atua como pastor auxiliar, supervisionando os ministérios doutrinários da igreja, como a EBD, a Superintendência de Ensino, a Junta Teológica, entre outros. Casado com Miriam e pai de Mateus e Priscila.",
+    image: arrudaImg,
+    bio: "Formado em Teologia pelo Seminário Presbiteriano Conservador e mestre em Teologia com especialização em Hebraico e Antigo Testamento pelo Centro de Pós-graduação Andrew Jumper. Ordenado em 1984, foi revisor na Casa Editora Cultura Cristã e editor do Jornal “O Presbiteriano Conservador”. Lecionou no Seminário Presbiteriano José Manoel da Conceição (JMC) e no Seminário Presbiteriano Conservador, nas áreas de Hebraico, Exegese do Antigo Testamento e Teologia Bíblica, e como professor convidado no SETECEB e SPR em Anápolis, GO. É pastor jubilado da Igreja Presbiteriana Conservadora e fundador do Projeto Edukáris em Machado, MG. Atualmente atua como pastor auxiliar, supervisionando os ministérios doutrinários da igreja, como a EBD, a Superintendência de Ensino, a Junta Teológica, entre outros. Casado com Miriam e pai de Mateus e Priscila.",
+    pilar: "1º Pilar",
+    pilarTitle: "Doutrina dos Apóstolos",
+    pilarDesc: "Ensino sistemático e expositivo da Palavra de Deus: EBD, Superintendência de Ensino, Junta Teológica e ministérios teológicos da igreja.",
     pilarIcon: "fa-solid fa-scroll",
-    pilarNum: "1º Pilar",
-    pilarName: "Doutrina dos Apóstolos",
-    pilarDesc: "Ensino sistemático e expositivo da Palavra de Deus: EBD, Superintendência de Ensino, Junta Teológica e ministérios teológicos da igreja."
+    highlightColor: "#3aabac"
   },
   {
     name: "Fellipe Conti",
     role: "Comunhão",
     roleColor: "#6fc7b0",
-    roleColorDark: "#3aab91",
-    image: "/assets/img/pastores/Conti.jpg",
+    image: contiImg,
     bio: "Evangelista da Primeira Igreja Presbiteriana Independente de Machado - MG, líder do ministério de jovens GetUp, presidente do Acampamento Maanaim e supervisor de pequenos grupos da igreja. Também é responsável pelo Torrecast - podcast da igreja - e os demais ministérios de comunhão. É graduado em Administração de Empresas e está atualmente graduando-se na Faculdade de Teologia de São Paulo (FATIPI) e no Instituto CREIA de Machado-MG. Fellipe é casado com Ana Paula e pai de Tito e Rute.",
+    pilar: "2º Pilar",
+    pilarTitle: "Comunhão",
+    pilarDesc: "Pequenos Grupos, Ministério Jovem GetUp, Acampamento Maanaim, TorreCast e todos os ministérios de conexão e relacionamento da Igreja.",
     pilarIcon: "fa-solid fa-users",
-    pilarNum: "2º Pilar",
-    pilarName: "Comunhão",
-    pilarDesc: "Pequenos Grupos, Ministério Jovem GetUp, Acampamento Maanaim, TorreCast e todos os ministérios de conexão e relacionamento da Igreja."
+    highlightColor: "#3aab91"
   },
   {
     name: "Marinaldo",
     role: "Partir do Pão",
     roleColor: "#b8e466",
-    roleColorDark: "#7daf0e",
-    image: "/assets/img/pastores/marinaldo.jpg",
+    image: marinaldoImg,
     bio: "Bacharel em Teologia pelo Seminário Teológico Presbiteriano Rev. Denoel Nicodemos Eller, em Belo Horizonte, e pós-graduando em Teologia Reformada pelo Instituto Reformado de São Paulo. Presidente da Missão Vida Nova, instituição de recuperação para dependentes químicos, e responsável pelo projeto de implantação da Oitava Igreja Presbiteriana Independente de Machado. Preside o conselho da igreja e lidera os ministérios \"Partir o Pão\", apoiando órfãos, viúvas, pobres e enfermos da igreja, além de exercer o cuidado diaconal e missionário. Casado com Keiler e pai de Sarah e Johannes.",
+    pilar: "3º Pilar",
+    pilarTitle: "Partir do Pão",
+    pilarDesc: "Cuidado diaconal e missionário: apoio a órfãos, viúvas, enfermos e pobres da comunidade, além do projeto de implantação de novas igrejas.",
     pilarIcon: "fa-solid fa-bread-slice",
-    pilarNum: "3º Pilar",
-    pilarName: "Partir do Pão",
-    pilarDesc: "Cuidado diaconal e missionário: apoio a órfãos, viúvas, enfermos e pobres da comunidade, além do projeto de implantação de novas igrejas."
+    highlightColor: "#7daf0e"
   },
   {
     name: "Rubens Luz",
     role: "Orações",
     roleColor: "#7ace9f",
-    roleColorDark: "#29a060",
-    image: "/assets/img/pastores/Rubens.png",
-    bio: "Bacharel em teologia com concentração em Educação Cristã pelo Seminário Bíblico Palavra da Vida. Licenciado em Pedagogia pela Faculdade Campos Salles. Mestre em Educação pela Universidade Presbiteriana Mackenzie. É missionário da SEPAL (Servindo Pastores e Líderes) e integra a liderança dos ministérios LIMIAR e T-LINK. Atua como pastor auxiliar, sendo responsável pela vida de oração da igreja e pelo cuidado pastoral. Preside a secretaria de missões e o Instituto Creia, entre outros. Rubens é casado com Evana e pai.",
+    image: rubensImg,
+    bio: "Bacharel em teologia com concentration em Educação Cristã pelo Seminário Bíblico Palavra da Vida. Licenciado em Pedagogia pela Faculdade Campos Salles. Mestre em Educação pela Universidade Presbiteriana Mackenzie. É missionário da SEPAL (Servindo Pastores e Líderes) e integra a liderança dos ministérios LIMIAR e T-LINK. Atua como pastor auxiliar, sendo responsável pela vida de oração da igreja e pelo cuidado pastoral. Preside a secretaria de missões e o Instituto Creia, entre outros. Rubens é casado com Evana e pai.",
+    pilar: "4º Pilar",
+    pilarTitle: "Orações",
+    pilarDesc: "Vida de oração da Igreja, cuidado pastoral, Secretaria de Missões e Instituto CREIA — formando intercessores e enviando missionários.",
     pilarIcon: "fa-solid fa-hands-praying",
-    pilarNum: "4º Pilar",
-    pilarName: "Orações",
-    pilarDesc: "Vida de oração da Igreja, cuidado pastoral, Secretaria de Missões e Instituto CREIA — formando intercessores e enviando missionários."
+    highlightColor: "#29a060"
   }
 ];
 ---
-<Layout title="Pastores - Primeira Igreja Presbiteriana Independente de Machado" isImmersive={true}>
 
-    <!-- ═══════════════════════════════════════════════════ -->
-    <!-- SEÇÃO: HOMENAGEM AO PASTOR EMÉRITO                -->
-    <!-- ═══════════════════════════════════════════════════ -->
+<Layout title="Pastores - Primeira Igreja Presbiteriana Independente de Machado" footerBgClass="bg-gray-50 dark:bg-slate-800">
     <section class="pt-32 md:pt-40 pb-20 bg-gradient-to-br from-amber-900 via-amber-950 to-slate-950 transition-colors relative overflow-hidden" id="pastor-emerito">
         <!-- Efeitos decorativos de fundo -->
         <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
@@ -74,29 +82,18 @@ const pastores = [
                 <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-amber-500/20 backdrop-blur-sm text-amber-200 font-bold text-xs uppercase tracking-widest mb-5 shadow-sm border border-amber-400/20">
                     <i class="fa-solid fa-crown text-amber-400"></i> Pastor Emérito
                 </div>
-                <h1 class="font-extrabold text-3xl md:text-5xl text-white mb-4 leading-tight">
-                    Vida e Ministério
-                </h1>
-                <p class="text-xl md:text-2xl font-semibold text-amber-300">
-                    Pr. Isaías Garcia Vieira
-                </p>
+                <h1 class="font-extrabold text-3xl md:text-5xl text-white mb-4 leading-tight">Vida e Ministério</h1>
+                <p class="text-xl md:text-2xl font-semibold text-amber-300">Pr. Isaías Garcia Vieira</p>
             </div>
 
             <!-- Card principal com hero photo -->
             <div class="bg-white/10 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-white/10 overflow-hidden scroll-card mb-10 relative group">
                 <!-- Glow decorativo -->
                 <div class="absolute right-0 top-0 w-80 h-80 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-20 group-hover:opacity-30 transition-opacity duration-700 bg-amber-400"></div>
-
                 <div class="flex flex-col lg:flex-row">
                     <!-- Foto principal -->
                     <div class="lg:w-[45%] relative overflow-hidden">
-                        <Image
-                            src="/assets/img/pastores/isaias/isaias_missoes.jpg"
-                            alt="Pr. Isaías Garcia Vieira em missões"
-                            width={800}
-                            height={900}
-                            class="w-full h-full object-cover min-h-[350px] lg:min-h-[500px]"
-                        />
+                        <Image src={isaiasMissoes} alt="Pr. Isaías Garcia Vieira em missões" width={800} height={900} class="w-full h-full object-cover min-h-[350px] lg:min-h-[500px]" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-black/20"></div>
                         <!-- Label sobre a foto -->
                         <div class="absolute bottom-6 left-6 right-6 lg:bottom-8 lg:left-8">
@@ -104,7 +101,6 @@ const pastores = [
                             <p class="text-white text-lg font-bold drop-shadow-lg">+ de 55 anos de ministério na 1IPIM</p>
                         </div>
                     </div>
-
                     <!-- Texto introdutório -->
                     <div class="lg:w-[55%] p-8 md:p-12 flex flex-col justify-center relative z-10">
                         <p class="text-gray-200 leading-relaxed text-base md:text-lg text-justify mb-6">
@@ -112,7 +108,7 @@ const pastores = [
                         </p>
                         <div class="flex items-center gap-4 pt-4 border-t border-white/10">
                             <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-amber-400/40 shadow-md shrink-0">
-                                <Image src="/assets/img/pastores/isaias/homenagem_isaias.jpg" alt="Pr. Isaías" width={80} height={80} class="w-full h-full object-cover" />
+                                <Image src={homenagemIsaias} alt="Pr. Isaías" width={80} height={80} class="w-full h-full object-cover" />
                             </div>
                             <div>
                                 <p class="font-bold text-white text-sm">Rev. Isaías Garcia Vieira</p>
@@ -125,7 +121,6 @@ const pastores = [
 
             <!-- Grid narrativo: Jornada + Família -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-
                 <!-- Card: Uma Jornada de Fé -->
                 <div class="bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-lg border border-white/10 scroll-card relative overflow-hidden group flex flex-col">
                     <div class="absolute right-0 top-0 w-48 h-48 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-15 group-hover:opacity-30 transition-opacity duration-700 bg-amber-400"></div>
@@ -134,17 +129,15 @@ const pastores = [
                     </div>
                     <div class="relative z-10 flex-1">
                         <p class="font-bold uppercase tracking-widest text-[10px] mb-2 text-amber-400/60">Conversão em 1952</p>
-                        <h3 class="font-extrabold text-2xl text-white mb-4 leading-tight">Uma Jornada<br/>de Fé</h3>
+                        <h3 class="font-extrabold text-2xl text-white mb-4 leading-tight">Uma Jornada<br>de Fé</h3>
                         <p class="text-gray-300 text-sm leading-relaxed text-justify">
                             Tudo começou em 18 de outubro de 1952, em Assis (SP), quando o Pr. Isaías entregou sua vida a Cristo. Logo no ano seguinte, o chamado para o sagrado ministério ardeu em seu coração. Sua formação sólida — passando pelo Seminário Teológico da IPI em São Paulo, complementação filosófica em Mogi das Cruzes e o curso de Letras aqui em Machado, na Fafima — pavimentou o caminho para uma visão pastoral marcada pelo serviço e pela plantação de novas igrejas.
                         </p>
                     </div>
-                    <!-- Foto no final do card -->
                     <div class="mt-8 rounded-2xl overflow-hidden shadow-md relative z-10">
-                        <Image src="/assets/img/pastores/isaias/homenagem_isaias.jpg" alt="Homenagem ao Pr. Isaías" width={600} height={400} class="w-full h-52 object-cover" />
+                        <Image src={homenagemIsaias} alt="Homenagem ao Pr. Isaías" width={600} height={400} class="w-full h-52 object-cover" />
                     </div>
                 </div>
-
                 <!-- Card: Família -->
                 <div class="bg-white/10 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-lg border border-white/10 scroll-card relative overflow-hidden group flex flex-col">
                     <div class="absolute right-0 top-0 w-48 h-48 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-15 group-hover:opacity-30 transition-opacity duration-700 bg-rose-400"></div>
@@ -153,14 +146,13 @@ const pastores = [
                     </div>
                     <div class="relative z-10 flex-1">
                         <p class="font-bold uppercase tracking-widest text-[10px] mb-2 text-rose-400/60">64 anos de matrimônio</p>
-                        <h3 class="font-extrabold text-2xl text-white mb-4 leading-tight">Família: O<br/>Primeiro Altar</h3>
+                        <h3 class="font-extrabold text-2xl text-white mb-4 leading-tight">Família: O<br>Primeiro Altar</h3>
                         <p class="text-gray-300 text-sm leading-relaxed text-justify">
                             Ao seu lado, durante 64 anos de matrimônio, está sua amada esposa, Jane. Juntos, construíram um legado que se estende por gerações: são 4 filhos e seus cônjuges, 9 netos e 12 bisnetos (contando com as novas vidas que estão a caminho). Para o Pastor Isaías, a família é o testemunho visível da promessa bíblica.
                         </p>
                     </div>
-                    <!-- Foto do casal -->
                     <div class="mt-8 rounded-2xl overflow-hidden shadow-md relative z-10">
-                        <Image src="/assets/img/pastores/isaias/isaias_e_jane.jpg" alt="Pr. Isaías e Jane" width={600} height={400} class="w-full h-80 object-cover" />
+                        <Image src={isaiasJane} alt="Pr. Isaías e Jane" width={600} height={400} class="w-full h-80 object-cover" />
                     </div>
                 </div>
             </div>
@@ -168,7 +160,6 @@ const pastores = [
             <!-- Card: Versículo / Lema -->
             <div class="bg-gradient-to-br from-amber-500/20 via-amber-600/10 to-transparent backdrop-blur-xl rounded-[2.5rem] p-10 md:p-14 shadow-2xl scroll-card relative overflow-hidden group border border-amber-400/15">
                 <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full blur-[100px] opacity-20 bg-amber-400 pointer-events-none"></div>
-                
                 <div class="relative z-10 max-w-3xl mx-auto text-center">
                     <div class="w-16 h-16 rounded-full bg-amber-500/20 backdrop-blur-sm flex items-center justify-center text-3xl mx-auto mb-8 group-hover:scale-110 transition-transform border border-amber-400/20">
                         <i class="fa-solid fa-book-bible text-amber-300"></i>
@@ -194,16 +185,12 @@ const pastores = [
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════ -->
-    <!-- SEÇÃO: NOSSOS PASTORES + PILARES (Bento Grid)     -->
-    <!-- ═══════════════════════════════════════════════════ -->
     <section class="py-20 bg-gray-50 dark:bg-slate-900 transition-colors relative overflow-hidden border-t border-gray-100 dark:border-slate-800">
         <!-- Efeitos decorativos -->
         <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
             <div class="absolute top-[20%] -right-40 w-[500px] h-[500px] rounded-full blur-[140px] opacity-10 dark:opacity-5 bg-emerald-400"></div>
             <div class="absolute bottom-[10%] -left-40 w-[400px] h-[400px] rounded-full blur-[120px] opacity-10 dark:opacity-5 bg-teal-300"></div>
         </div>
-
         <div class="container mx-auto px-4 lg:px-8 max-w-6xl relative z-10">
             <div class="text-center max-w-3xl mx-auto mb-16 scroll-card pt-16">
                 <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-bold text-xs uppercase tracking-widest mb-5 shadow-sm">
@@ -213,58 +200,56 @@ const pastores = [
                 <p class="text-gray-500 dark:text-gray-400 text-lg mb-2">E perseveravam...</p>
                 <p class="text-gray-500 dark:text-gray-500 text-sm max-w-xl mx-auto">Confira como as responsabilidades ministeriais da nossa igreja são divididas, de acordo com os quatro pilares de <strong class="text-gray-700 dark:text-gray-300">Atos 2.42</strong></p>
             </div>
-            
+
             <!-- Bento Grid: Cada pastor com seu pilar lado a lado -->
             <div class="space-y-10">
-                {pastores.map((pastor, idx) => (
-                    <div class={`grid grid-cols-1 lg:grid-cols-5 gap-6 scroll-card`}>
-                        
-                        <!-- Card do Pastor (ocupa 3 colunas) -->
-                        <div class={`lg:col-span-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 border border-gray-100/80 dark:border-slate-700/50 relative overflow-hidden group ${idx % 2 !== 0 ? 'lg:order-2' : ''}`}>
-                            <!-- Glow de fundo -->
+                {pastores.map((pastor, index) => (
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 scroll-card">
+                        <!-- Pastor Card -->
+                        <div class={`lg:col-span-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 border border-gray-100/80 dark:border-slate-700/50 relative overflow-hidden group ${index % 2 !== 0 ? 'lg:order-2' : ''}`}>
                             <div class="absolute right-0 top-0 w-72 h-72 rounded-full blur-[90px] -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-15 group-hover:opacity-30 transition-opacity duration-700" style={`background-color: ${pastor.roleColor};`}></div>
                             <div class="absolute left-0 bottom-0 w-48 h-48 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none opacity-10 group-hover:opacity-20 transition-opacity duration-700" style={`background-color: ${pastor.roleColor};`}></div>
-                            
                             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8 relative z-10">
                                 <div class="shrink-0 relative group/img">
                                     <div class="w-[150px] h-[150px] md:w-[180px] md:h-[180px] rounded-[2rem] overflow-hidden shadow-xl border-4 border-white dark:border-slate-700 z-10 relative">
-                                        <Image src={pastor.image} alt={pastor.name} class="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" width={400} height={400} />
+                                        <Image src={pastor.image} alt={pastor.name} width={400} height={400} class="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700" />
                                     </div>
                                     <div class="absolute inset-0 rounded-[2rem] blur-xl -z-10 translate-y-4 opacity-40" style={`background-color: ${pastor.roleColor};`}></div>
                                 </div>
                                 <div class="flex-1 text-center sm:text-left">
                                     <h3 class="font-extrabold text-2xl md:text-3xl text-gray-900 dark:text-white mb-2">{pastor.name}</h3>
-                                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4 font-bold text-sm shadow-sm transition-transform hover:scale-105" style={`background-color: ${pastor.roleColor}30; color: ${pastor.roleColorDark}; border: 1px solid ${pastor.roleColor}50;`}>
+                                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4 font-bold text-sm shadow-sm transition-transform hover:scale-105" style={`background-color: ${pastor.roleColor}30; color: ${pastor.highlightColor}; border: 1px solid ${pastor.roleColor}50;`}>
                                         <i class="fa-solid fa-crosshairs opacity-70"></i>{pastor.role}
                                     </div>
-                                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm text-justify sm:text-left selection:bg-[var(--color-brand)] selection:text-white">{pastor.bio}</p>
+                                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm text-justify sm:text-left selection:bg-[var(--color-brand)] selection:text-white">
+                                        {pastor.bio}
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Card do Pilar Ministerial (ocupa 2 colunas) -->
-                        <div class={`lg:col-span-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 border border-gray-100/80 dark:border-slate-700/50 relative overflow-hidden group flex flex-col ${idx % 2 !== 0 ? 'lg:order-1' : ''}`}>
+                        <!-- Pilar Card -->
+                        <div class={`lg:col-span-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 border border-gray-100/80 dark:border-slate-700/50 relative overflow-hidden group flex flex-col ${index % 2 !== 0 ? 'lg:order-1' : ''}`}>
                             <div class="absolute right-0 top-0 w-48 h-48 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-15 group-hover:opacity-30 transition-opacity duration-700" style={`background-color: ${pastor.roleColor};`}></div>
-                            
-                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm group-hover:scale-110 transition-transform relative z-10" style={`background-color: ${pastor.roleColor}22; color: ${pastor.roleColorDark}; border: 1px solid ${pastor.roleColor}30;`}>
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm group-hover:scale-110 transition-transform relative z-10" style={`background-color: ${pastor.roleColor}22; color: ${pastor.highlightColor}; border: 1px solid ${pastor.roleColor}30;`}>
                                 <i class={pastor.pilarIcon}></i>
                             </div>
                             <div class="relative z-10 flex-1 flex flex-col">
-                                <p class="font-bold uppercase tracking-widest text-[10px] mb-2 opacity-60 text-gray-500 dark:text-gray-400">Atos 2.42 — {pastor.pilarNum}</p>
-                                <h4 class="font-extrabold text-2xl text-gray-900 dark:text-white mb-3 leading-tight">{pastor.pilarName}</h4>
+                                <p class="font-bold uppercase tracking-widest text-[10px] mb-2 opacity-60 text-gray-500 dark:text-gray-400">Atos 2.42 — {pastor.pilar}</p>
+                                <h4 class="font-extrabold text-2xl text-gray-900 dark:text-white mb-3 leading-tight">{pastor.pilarTitle}</h4>
                                 <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed flex-1">{pastor.pilarDesc}</p>
                                 <div class="mt-6 flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-slate-700">
                                     <div class="w-9 h-9 rounded-full overflow-hidden shadow-sm shrink-0" style={`border: 2px solid ${pastor.roleColor};`}>
                                         <Image src={pastor.image} alt={pastor.name} width={40} height={40} class="w-full h-full object-cover" />
                                     </div>
-                                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Responsável: <span style={`color: ${pastor.roleColorDark};`}>{pastor.name}</span></span>
+                                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Responsável: <span style={`color: ${pastor.highlightColor};`}>{pastor.name}</span></span>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 ))}
             </div>
+
 
             <!-- CTA WhatsApp -->
             <div class="text-center scroll-card mt-16">
@@ -274,5 +259,4 @@ const pastores = [
             </div>
         </div>
     </section>
-
 </Layout>

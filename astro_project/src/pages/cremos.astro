@@ -2,32 +2,39 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 
+import doutrinaImg from '../assets/img/cremos/doutrina.jpg';
+import comunhaoImg from '../assets/img/cremos/comunhao.jpg';
+import ceiaImg from '../assets/img/cremos/ceia.jpg';
+import oracoesImg from '../assets/img/cremos/oracoes.jpg';
+import westminsterImg from '../assets/img/cremos/Westminster.webp';
+import catedralImg from '../assets/img/cremos/catedral.jpg';
+
 const pilares = [
     {
         title: "Doutrina",
         color: "#7ccece",
-        image: "/assets/img/cremos/doutrina.jpg",
+        image: doutrinaImg,
         text: "Cremos que todo cristão deve estar ancorado na Palavra de Deus, na sã doutrina dos apóstolos. Zelamos pelo ensino fiel das Escrituras, reconhecendo que a verdade revelada é a base para a vida cristã e a edificação da Igreja. A doutrina dos apóstolos é nossa guia e fundamento, sendo a autoridade final para fé e prática.",
         reverse: false
     },
     {
         title: "Comunhão",
         color: "#6fc7b0",
-        image: "/assets/img/cremos/comunhao.jpg",
+        image: comunhaoImg,
         text: "Cremos que a comunhão entre os cristãos é vital para a vida da Igreja. Acreditamos na importância do apoio mútuo, do cuidado e da edificação dos irmãos em Cristo. A comunhão reflete o amor de Deus e deve ser uma marca visível em nosso relacionamento, sendo expressão da unidade do corpo de Cristo.",
         reverse: true
     },
     {
         title: "Partir do pão",
         color: "#beeb69",
-        image: "/assets/img/cremos/ceia.jpg",
+        image: ceiaImg,
         text: "Cremos que a Ceia do Senhor é um meio sagrado de lembrar e proclamar a morte de Cristo até que Ele venha. Ao partirmos do pão, somos fortalecidos na fé, renovamos nossa comunhão com Cristo e com a Igreja, e expressamos nossa dependência de Sua obra redentora.",
         reverse: false
     },
     {
         title: "Orações",
         color: "#7bcfa0",
-        image: "/assets/img/cremos/oracoes.jpg",
+        image: oracoesImg,
         text: "Cremos que a oração é o pilar da Igreja, essencial para o crescimento espiritual do cristão e para a comunhão com Deus. Por meio da oração, buscamos a direção divina, intercedemos uns pelos outros e expressamos nossa total dependência do Senhor. Como Igreja, perseveramos na oração, confiantes no poder e na fidelidade de Deus.",
         reverse: true
     }
@@ -36,7 +43,7 @@ const pilares = [
 const subscrevemos = [
     {
         title: "Confissão de fé de Westminster",
-        image: "/assets/img/cremos/Westminster.webp",
+        image: westminsterImg,
         text: "A <strong>Confissão de Fé de Westminster</strong> (1646) é um dos principais documentos reformados, sistematizando doutrinas como a autoridade das Escrituras, a soberania de Deus, a salvação pela graça e a organização da Igreja. Redigida por teólogos puritanos, tornou-se a base teológica de muitas igrejas presbiterianas ao redor do mundo.",
         link: "https://ipib.org.br/confissao-de-fe-de-westminster/",
         buttonText: "Leia",
@@ -44,7 +51,7 @@ const subscrevemos = [
     },
     {
         title: "Constituição da IPI do Brasil",
-        image: "/assets/img/cremos/catedral.jpg",
+        image: catedralImg,
         text: "A <strong>Constituição da IPI do Brasil</strong> define sua identidade reformada, governo presbiteriano e organização em igreja local, presbitério, sínodo e Assembleia Geral. Regula ofícios ministeriais, disciplina e administração, seguindo a Confissão de Fé de Westminster.",
         link: "https://drive.google.com/file/d/10czyUbZbkKe67QQcWLXoKN2CA1dCXCJP/view?usp=sharing",
         buttonText: "Acesse",

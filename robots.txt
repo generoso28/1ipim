@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://1ipim.online/sitemap.xml

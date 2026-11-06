@@ -24,7 +24,17 @@ export const AUTH_KEYS = {
   ministries: "1ipim_user_ministries_approved",
 } as const;
 
+/** Chave do JWT antigo: removida para não confundir navegadores com cache velho. */
+const LEGACY_TOKEN_KEY = "1ipim_auth_token";
+
 const isBrowser = () => typeof window !== "undefined";
+
+function purgeLegacyToken(): void {
+  if (isBrowser()) localStorage.removeItem(LEGACY_TOKEN_KEY);
+}
+
+// Limpa o token do login antigo assim que o módulo novo carrega.
+purgeLegacyToken();
 
 function readKey(key: string): string | null {
   return isBrowser() ? localStorage.getItem(key) : null;
@@ -98,6 +108,7 @@ export const auth = {
   clear(): void {
     if (!isBrowser()) return;
     Object.values(AUTH_KEYS).forEach((key) => localStorage.removeItem(key));
+    purgeLegacyToken();
   },
 
   /**

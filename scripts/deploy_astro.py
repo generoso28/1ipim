@@ -48,6 +48,16 @@ ErrorDocument 404 /404.html
 
 <IfModule mod_headers.c>
     Header always set X-Robots-Tag "noindex, nofollow"
+
+    # Assets com hash no nome podem ficar em cache
+    <FilesMatch "\\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|webp|mp4|webm|woff|woff2|ttf|otf|svg)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+
+    # HTML sempre revalidado: evita misturar versões antiga/nova do portal
+    <FilesMatch "\\.html$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
 </IfModule>
 """
 

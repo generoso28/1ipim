@@ -66,3 +66,28 @@ npm run preview -- --port 4324
 - `http://localhost:4324/semana-jovem/`
 - `http://localhost:4324/portal/login/`
 - `http://localhost:4324/portal/` (redireciona para o login sem token)
+
+## Refatoração dos scripts do portal (2026-11-06)
+
+Os bundles compilados foram substituídos por módulos TypeScript legíveis:
+
+- `types.ts`: tipos de usuário, permissões e entidades do WordPress.
+- `auth.ts`: sessão em `localStorage` (mesmas chaves de antes).
+- `permissions.ts`: matriz de papéis (pastor/admin/líder/voluntário/membro).
+- `api.ts`: base da API, headers e tratamento de erros.
+- `ui.ts`: toasts, escape de HTML, iniciais e estado de botões.
+- `layout.ts`: guarda de autenticação, menu dinâmico, tema, menu mobile, logout.
+- Páginas: `dashboard`, `login`, `cadastro`, `escalas`, `gerenciar-reflexoes`,
+  `ministerios`, `usuarios`, `nova-reflexao`, `editar-reflexao`.
+
+Os arquivos `.js` antigos foram removidos; o snapshot em `deployed_snapshot/`
+continua como referência do bundle original.
+
+Validação feita com Playwright e API mockada:
+
+- login grava token/papel/id/ministérios e monta os 5 cards de admin;
+- escalas lista, filtra "minhas", abre modal, participa e cria escala recorrente;
+- voluntários aprova vínculo, promove a líder e exclui;
+- ministérios cria e exclui;
+- reflexões lista, move para lixeira e alterna filtro;
+- nova/editar reflexão publicam e redirecionam.

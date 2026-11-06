@@ -1,0 +1,241 @@
+{
+  "generated_at": "2026-11-06T01:26:02-0300",
+  "source": "https://1ipim.online",
+  "files": [
+    {
+      "path": "_astro/1.DuYGGdz1_Ll6sT.webp",
+      "bytes": 26132,
+      "sha256": "df2bae8da876014b4a0869cafab1a669bb8f639f3ddf832a6b9192c84d5ee0b5"
+    },
+    {
+      "path": "_astro/10.xFtASvmS_1kJK2q.webp",
+      "bytes": 23344,
+      "sha256": "b39f3433df73667c25dcdcc0f3fd3ce0f29f3307fc85df95829658538076027a"
+    },
+    {
+      "path": "_astro/11.DspCvfAa_13XKr1.webp",
+      "bytes": 24782,
+      "sha256": "bc3336837d6a726117d81b84fdc81d2883aba6ed80c2a44d48c8e477ad3d9fb1"
+    },
+    {
+      "path": "_astro/2.Dnkjg1HT_Z1QdAFL.webp",
+      "bytes": 27120,
+      "sha256": "f6b2f22c99d1c809d9df2e60c2150b6a6b54a49a8a0a84339a80187d536316c6"
+    },
+    {
+      "path": "_astro/3.CdCL70jT_Z3a0d9.webp",
+      "bytes": 46162,
+      "sha256": "a7cd6185e1ee7604a7520d4e6a9d987231798f2be4893397bf6e8314d7e5fe0f"
+    },
+    {
+      "path": "_astro/4.Bz0umreS_lOWY0.webp",
+      "bytes": 34138,
+      "sha256": "2d732da4906b255315e33890a6aca8afb2403ad33c99b42865db3e14d518c097"
+    },
+    {
+      "path": "_astro/5.C2VvCSE5_1N9FCB.webp",
+      "bytes": 12708,
+      "sha256": "8dd8f3d3699c35baa9a9337c19a3e64c550aa085fb905cba0c9f71c9e3a9f43e"
+    },
+    {
+      "path": "_astro/6.DVnaZqzv_Vmh0N.webp",
+      "bytes": 49798,
+      "sha256": "64ebcb81b44c2752fec2be2f3b81b5100d380f76ac58ebffe56a58fe1723133f"
+    },
+    {
+      "path": "_astro/7.DDGComwg_f55Ok.webp",
+      "bytes": 12792,
+      "sha256": "c861844acbb4a37cb012009bbfbb24fc041f16b227e72f6c2b5c846e1b13369b"
+    },
+    {
+      "path": "_astro/8.BhQ8rVnH_1QFWoE.webp",
+      "bytes": 37574,
+      "sha256": "1914dd9acf3093551cf105df1c50f6ed2d399b3d42910b8c53b640d4aa4dd49a"
+    },
+    {
+      "path": "_astro/9.D9pwKMyB_1ronP7.webp",
+      "bytes": 46726,
+      "sha256": "ac530872f5cda57f6dfcdcf134130c3a9c69ec500841df466436c81b48db72d8"
+    },
+    {
+      "path": "_astro/ClientRouter.astro_astro_type_script_index_0_lang.j56hQv-j.js",
+      "bytes": 15849,
+      "sha256": "a0751febb87361cd43f05db40304192a8a8e5b3af43191f12cd02336038b9009"
+    },
+    {
+      "path": "_astro/Layout.0Ud58-e2.css",
+      "bytes": 118808,
+      "sha256": "dacea53df04860dde8c62149fc84c97e78be6d689ce61baa580e02a7bd131766"
+    },
+    {
+      "path": "_astro/PortalLayout.astro_astro_type_script_index_0_lang.DyjpUl2y.js",
+      "bytes": 3745,
+      "sha256": "07379419ceb61f5b4a85c5f20bc0fd7328befa3dd6876ef414134e1a5277bd10"
+    },
+    {
+      "path": "_astro/Projeto Sola.3BWa7nv0_Z2h2LG5.webp",
+      "bytes": 43810,
+      "sha256": "6b75ea9a2bfb3404a7d4c294c5599620cb4ac15e19ee843ff1d7cfea8cfb51d7"
+    },
+    {
+      "path": "_astro/auth-store.Mdv7y9cp.js",
+      "bytes": 756,
+      "sha256": "68783fc77310fc843682ccc418dc0267d8de0b5c9262ba1c3217f8531525beec"
+    },
+    {
+      "path": "_astro/cadastro.astro_astro_type_script_index_0_lang.DfvwnZXV.js",
+      "bytes": 2945,
+      "sha256": "85494d9a63ef69e03f70a2de20ae0216fdcb13095e6d939b3bebf29d001e322f"
+    },
+    {
+      "path": "_astro/editar-reflexao.astro_astro_type_script_index_0_lang.CxX6ymUO.js",
+      "bytes": 1902,
+      "sha256": "b6de7a19c9578af606c73adee1be71c1227cf2380ce9a340a72aad8cbba43055"
+    },
+    {
+      "path": "_astro/escalas.astro_astro_type_script_index_0_lang.xGQlcyeN.js",
+      "bytes": 21083,
+      "sha256": "eeaaf7b828dd8db887e9925079c52533eb4734c0ef8f0e2f929fd531596cb16d"
+    },
+    {
+      "path": "_astro/gerenciar-reflexoes.astro_astro_type_script_index_0_lang.DGgI5Gp0.js",
+      "bytes": 5955,
+      "sha256": "f2931262819141c3e8575c2fda9cbac055db6c5abfbd624bf1c207a29f8fb8e5"
+    },
+    {
+      "path": "_astro/index.astro_astro_type_script_index_0_lang.DtQlV8r5.js",
+      "bytes": 2599,
+      "sha256": "532654db39cde55139c3e86d16c044fae20f0c10ac1fc302cdc4151c9f6fd8c6"
+    },
+    {
+      "path": "_astro/login.astro_astro_type_script_index_0_lang.CbUgn7uJ.js",
+      "bytes": 2260,
+      "sha256": "b022809047e5d78b290d24ba6fae11543fc542cab98f4dfe225eda84c6e0855d"
+    },
+    {
+      "path": "_astro/logo-getup.CtqbOWWD_2lY8sy.webp",
+      "bytes": 1054,
+      "sha256": "d4563c0c7e2481b64e95cdcb9d0399718860113aa2872807a37d433eff7ead84"
+    },
+    {
+      "path": "_astro/logo-getup.CtqbOWWD_TE1Kn.webp",
+      "bytes": 1358,
+      "sha256": "9bbd45830a584ec45fa62748c3873cbf69dd29cc873bbfc647da842980ea5f3b"
+    },
+    {
+      "path": "_astro/logo_transp.CasT6gh8_t0vlR.webp",
+      "bytes": 1266,
+      "sha256": "fbed932d9c1933d8e3ae4aa57ad0772016ffbdc214490a80fcfd4bec0a4a2dec"
+    },
+    {
+      "path": "_astro/ministerios.astro_astro_type_script_index_0_lang.DzVqnqVN.js",
+      "bytes": 6841,
+      "sha256": "850a729dad34a668c62d91a911dcba32530040623d7a0fe5b750597d784975a7"
+    },
+    {
+      "path": "_astro/nova-reflexao.astro_astro_type_script_index_0_lang.Cz1kSlnC.js",
+      "bytes": 1348,
+      "sha256": "19a72eb451f6ebc3065005e51863f94017c81c47bbeb78678e34ecf45e3d1d88"
+    },
+    {
+      "path": "_astro/portal-config.DrT3V5R5.js",
+      "bytes": 1085,
+      "sha256": "2ffe8bf2244e2c0bef3c8ca55933496209ba79928da48377cf29c5a11cc8eaee"
+    },
+    {
+      "path": "_astro/semana-jovem.astro_astro_type_script_index_0_lang.CUwviUoI.js",
+      "bytes": 4153,
+      "sha256": "5c1f172896b9c58ff564aa16c432be10eb306702c1e39a1c881f02d238fbde14"
+    },
+    {
+      "path": "_astro/semana-jovem@_@astro.DDRzy6_Y.css",
+      "bytes": 10957,
+      "sha256": "232c7c355d81d15417b61f444af4cf72a2563c10c41d88f1351c53f82b27185e"
+    },
+    {
+      "path": "_astro/usuarios.astro_astro_type_script_index_0_lang.C9IvluYj.js",
+      "bytes": 9989,
+      "sha256": "e80a02ac69d0b01939cd30876dc26e7cb45db0558ee13d473d13e8297029141f"
+    },
+    {
+      "path": "assets/img/logo_transp.ico",
+      "bytes": 252990,
+      "sha256": "fa5756e5aec9c07620da14407dc2b7ed0caadf33893564e9a19eb5b746d50b89"
+    },
+    {
+      "path": "assets/img/logo_transp.png",
+      "bytes": 34471,
+      "sha256": "fa0fdcd2a4a4f6eaf5bb95a9998c8dc6f9505faaa4e62e70664d49d0a5135459"
+    },
+    {
+      "path": "assets/video/sj-2026.mp4",
+      "bytes": 3100509,
+      "sha256": "ddcc8f3193aae23c845afb42feb187532407fe5b2ec78a64716461b35ea122ee"
+    },
+    {
+      "path": "portal/cadastro/index.html",
+      "bytes": 26653,
+      "sha256": "dd3710c8f6b44f6ca1cdabd90bb9faf3175904f1ee693125abc5424446b31181"
+    },
+    {
+      "path": "portal/editar-reflexao/index.html",
+      "bytes": 15795,
+      "sha256": "ebbec9a85061456dbaee21f529cb3252ee18028c2852fc6197525064efade921"
+    },
+    {
+      "path": "portal/escalas/index.html",
+      "bytes": 19564,
+      "sha256": "59f6c41128819b2dd4bbe75ea77bc5b352026a19c73097e7d1331e086e23e705"
+    },
+    {
+      "path": "portal/gerenciar-reflexoes/index.html",
+      "bytes": 15537,
+      "sha256": "fe0170a906e21358f4bdeea3c5641dd3d02afbe0d99f5bc719f568ea2e298292"
+    },
+    {
+      "path": "portal/index.html",
+      "bytes": 13767,
+      "sha256": "2d3e523f7cfe859f9ca177371545caa0538adf65508fbcceb5d74c9659df06c1"
+    },
+    {
+      "path": "portal/livraria/index.html",
+      "bytes": 15490,
+      "sha256": "1239267f0aa47ad0fb403eebc6a8322182ede3598135a99a9734f01340d07b57"
+    },
+    {
+      "path": "portal/login/index.html",
+      "bytes": 26854,
+      "sha256": "b5f2f0ec1d9ba9f990f7d9fe41e0017d81689be8f743d7b27aaa94e8c18a5e8d"
+    },
+    {
+      "path": "portal/ministerios/index.html",
+      "bytes": 15520,
+      "sha256": "272f82bd5eb7d5df1999b22f265fd200bf6d9181c8be265080d872bb7bff57c9"
+    },
+    {
+      "path": "portal/nova-reflexao/index.html",
+      "bytes": 15469,
+      "sha256": "4597354151ac46e70d841dd40dc8f82d885d2bedfc7216df39b314d75de8bc14"
+    },
+    {
+      "path": "portal/novo-usuario/index.html",
+      "bytes": 29992,
+      "sha256": "00b6bf1ad3afb071b0001a7d8dc284f53feed0476eb20d48ee9a5a6a4fe469c9"
+    },
+    {
+      "path": "portal/usuarios/index.html",
+      "bytes": 15035,
+      "sha256": "ac3cbd37c256cf26197356e1948fa7b0695fb2250794a2f496d0b4f08fcd1c95"
+    },
+    {
+      "path": "reflexoes/index.html",
+      "bytes": 33685,
+      "sha256": "bba51e39280c264dc7244a7a646db0d50d99219c1837735fe154f058a7436b74"
+    },
+    {
+      "path": "semana-jovem/index.html",
+      "bytes": 31374,
+      "sha256": "fa7b18da07b49c497f8184f39710ff149b20c284c612fa86d892ed1f30f53ef1"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+import{a as E}from"./auth-store.Mdv7y9cp.js";import{g as c}from"./portal-config.DrT3V5R5.js";document.addEventListener("astro:page-load",()=>{const b=document.getElementById("add-min-form"),m=document.getElementById("min-list"),n=document.getElementById("loading-min"),u=document.getElementById("no-min"),f=document.getElementById("add-btn"),p=document.getElementById("add-text"),h=document.getElementById("add-loader"),d=E.getToken(),l="https://1ipim.online/admin";let g=[];async function x(){try{const o=c(l);g=await(await fetch(`${o}/wp-json/wp/v2/users/?context=edit&per_page=100`,{headers:{Authorization:`Bearer ${d}`}})).json()}catch(o){console.error(o)}}async function w(){try{n&&n.classList.remove("hidden"),u&&u.classList.add("hidden"),m&&(m.innerHTML=""),await x();const o=c(l),i=await(await fetch(`${o}/wp-json/wp/v2/ministerio/?per_page=100`,{headers:{Authorization:`Bearer ${d}`}})).json();if(n&&n.classList.add("hidden"),!i||i.length===0){u&&u.classList.remove("hidden");return}m&&(m.innerHTML=i.map(e=>{const r=g.filter(t=>{try{return JSON.parse(t.meta.ministries_approved||"[]").includes(String(e.id))}catch{return!1}});return`
+                        <div class="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all group animate-slide-up">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-500 text-xl overflow-hidden shadow-inner">
+                                        <i class="fa-solid fa-users"></i>
+                                    </div>
+                                    <h3 class="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-xl">${e.title.rendered}</h3>
+                                </div>
+                                <button class="delete-min-btn text-gray-200 hover:text-red-500 transition-all p-3 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl" data-id="${e.id}">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-2 items-center">
+                                <span class="text-[9px] uppercase font-black text-gray-400 tracking-widest mr-2">Equipe:</span>
+                                ${r.length>0?r.map(t=>`
+                                    <div class="group/member flex items-center gap-1 bg-gray-50 dark:bg-slate-900 pl-3 pr-1 py-1 rounded-full border border-gray-100 dark:border-slate-700">
+                                        <div class="w-4 h-4 rounded-full bg-indigo-500 text-[8px] flex items-center justify-center text-white font-bold shrink-0">${t.name[0]}</div>
+                                        <span class="text-[10px] font-bold text-gray-700 dark:text-gray-300 mr-1">
+                                            ${t.name.split(" ")[0]}
+                                        </span>
+                                        <button class="remove-member-btn w-5 h-5 flex items-center justify-center rounded-full bg-transparent hover:bg-red-100 dark:hover:bg-red-900/40 text-transparent group-hover/member:text-red-500 transition-all ml-auto" data-uid="${t.id}" data-mid="${e.id}" data-uname="${t.name}" title="Remover do time">
+                                            <i class="fa-solid fa-xmark text-[10px]"></i>
+                                        </button>
+                                    </div>
+                                `).join(""):'<span class="text-[10px] text-gray-300 italic">Sem membros ativos</span>'}
+                                
+                                <button class="add-member-btn ml-2 w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700 text-gray-400 hover:bg-[var(--color-brand)] hover:text-white transition-all shadow-sm" data-mid="${e.id}" title="Adicionar Voluntário">
+                                    <i class="fa-solid fa-plus text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                        `}).join(""),document.querySelectorAll(".delete-min-btn").forEach(e=>{e.onclick=async()=>{if(!confirm("Excluir este ministério? Esta ação removerá o vínculo de todos os voluntários."))return;const r=e.getAttribute("data-id"),t=c(l);try{if(!(await fetch(`${t}/wp-json/wp/v2/ministerio/${r}/?force=true`,{method:"DELETE",headers:{Authorization:`Bearer ${d}`}})).ok)throw new Error;window.showToast("Ministério removido","success"),w()}catch{window.showToast("Erro ao remover ministério","error")}}}),document.querySelectorAll(".remove-member-btn").forEach(e=>{e.onclick=()=>{const r=e.getAttribute("data-uid"),t=e.getAttribute("data-mid"),a=e.getAttribute("data-uname");confirm(`Remover ${a} deste ministério?`)&&v(r,t,"remove")}}),document.querySelectorAll(".add-member-btn").forEach(e=>{e.onclick=()=>{const r=e.getAttribute("data-mid"),t=prompt("Digite o E-MAIL EXATO do voluntário que deseja adicionar:");if(!t)return;const a=g.find(y=>y.email.toLowerCase()===t.toLowerCase().trim());a?v(a.id,r,"add"):window.showToast("Usuário não encontrado por este email.","error")}}))}catch{n&&(n.innerText="Erro ao carregar estrutura."),window.showToast("Erro de conexão","error")}}async function v(o,s,i){if(!o||!s)return;const e=g.find(t=>t.id==o);if(!e)return;let r=[];try{r=JSON.parse(e.meta.ministries_approved||"[]")}catch{}if(i==="add"&&!r.includes(s))r.push(s);else if(i==="remove")r=r.filter(t=>t!==s);else return;try{const t=c(l);if(!(await fetch(`${t}/wp-json/wp/v2/users/${o}/`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${d}`},body:JSON.stringify({meta:{ministries_approved:JSON.stringify(r)}})})).ok)throw new Error;window.showToast(i==="add"?"Voluntário adicionado!":"Voluntário removido","success"),w()}catch{window.showToast("Erro de sincronização","error")}}w(),b&&(b.onsubmit=async o=>{o.preventDefault(),f&&(f.disabled=!0),h&&h.classList.remove("hidden"),p&&(p.innerText="Processando...");const i=document.getElementById("min-title").value,e=c(l);try{if(!(await fetch(`${e}/wp-json/wp/v2/ministerio/`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${d}`},body:JSON.stringify({title:i,status:"publish"})})).ok)throw new Error;window.showToast("Ministério criado!","success"),b.reset(),w()}catch{window.showToast("Erro ao criar ministério","error")}finally{f&&(f.disabled=!1),h&&h.classList.add("hidden"),p&&(p.innerText="Criar Ministério")}})});

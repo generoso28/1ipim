@@ -27,6 +27,7 @@ export const AUTH_KEYS = {
   isAdmin: "1ipim_user_is_admin",
   isPastor: "1ipim_user_is_pastor",
   isMinistryLeader: "1ipim_user_is_ministry_leader",
+  canManageLivraria: "1ipim_user_can_manage_livraria",
 } as const;
 
 /** Chave do JWT antigo: removida para não confundir navegadores com cache velho. */
@@ -100,6 +101,7 @@ export const auth = {
       isAdmin: readKey(AUTH_KEYS.isAdmin) === "1",
       isPastor: readKey(AUTH_KEYS.isPastor) === "1",
       isMinistryLeader: readKey(AUTH_KEYS.isMinistryLeader) === "1",
+      canManageLivraria: readKey(AUTH_KEYS.canManageLivraria) === "1",
     };
   },
 
@@ -124,6 +126,10 @@ export const auth = {
     writeKey(AUTH_KEYS.isAdmin, session.isAdmin ? "1" : "0");
     writeKey(AUTH_KEYS.isPastor, session.isPastor ? "1" : "0");
     writeKey(AUTH_KEYS.isMinistryLeader, session.isMinistryLeader ? "1" : "0");
+    writeKey(
+      AUTH_KEYS.canManageLivraria,
+      session.canManageLivraria ? "1" : "0",
+    );
   },
 
   setRole(role: string): void {

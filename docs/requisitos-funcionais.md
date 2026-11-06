@@ -19,8 +19,8 @@ visitantes, pedidos de oração e, se aprovado, doações.
 Prioridade recomendada (frente portal/comunidade):
 
 1. **RBAC/portal** — papéis, vínculos por ministério e guards (pré-requisito).
-2. **Bible Rats MVP** — leitura, check-in, diário, grupos e streak.
-3. **Livraria — catálogo** — acesso do assinante e gestão pelo admin.
+2. **Livraria — catálogo** — catálogo público e gestão pelo ministério Livraria.
+3. **Bible Rats MVP** — leitura, check-in, diário, grupos e streak.
 4. **Ministérios com escopo** — líder edita os seus; colaborador opera nos seus.
 5. **Notificações, badges e ranking** — depois dos canais definidos.
 6. **Conteúdo/SEO (trilha paralela)** — reflexões estáticas, eventos e demais módulos.
@@ -38,7 +38,7 @@ Prioridade recomendada (frente portal/comunidade):
 | Ministérios | 🟡 Parcial | Criar/excluir, vincular e definir líder/colaborador por ministério |
 | Usuários/voluntários | 🟡 Parcial | Aprovar, promover, excluir, criar; sem reset/2FA |
 | RBAC/portal | ✅ Base implantada | Papéis, vínculos, guards por ministério e auditoria |
-| Livraria | 🟡 Catálogo importado | 169 livros; 10 capas; página de consulta pendente |
+| Livraria | ✅ Catálogo e gestão | 169 livros, 10 capas, API pública, gestão e estoque interno |
 | Eventos | 🔴 Não iniciado | Agenda 2026 fixa no código |
 | Pequenos Grupos | 🟡 Parcial | Página pública informativa; sem diretório/inscrição |
 | Visitantes | 🟡 Parcial | Página + formulário de contato; sem fluxo de follow-up |
@@ -154,9 +154,9 @@ conflito de escalas).
 | FR-59 | Pastor com visão ampla e moderação | 🟡 | Visão ampla pronta; falta moderação Bible Rats |
 | FR-60 | Admin com acesso total | ✅ | Acessa usuários, configurações e livraria |
 | FR-61 | Testes automatizados da matriz | ✅ | Matriz PHP (25 cenários) + 77 E2E locais |
-| FR-62 | Catálogo público para consulta, sem login | 🔴 | Visitante vê a lista e busca |
-| FR-63 | Líder/colaborador do ministério Livraria cadastra/edita livros e capas | 🔴 | Só o vínculo no ministério Livraria e admin acessam a gestão |
-| FR-64 | Busca de capa no cadastro do livro (Google/Open Library) | 🔴 | Escolhe imagem, confirma e salva |
+| FR-62 | Catálogo público para consulta, sem login | ✅ | Visitante vê a lista e busca |
+| FR-63 | Líder/colaborador do ministério Livraria cadastra/edita livros e capas | ✅ | Só o vínculo no ministério Livraria e admin acessam a gestão |
+| FR-64 | Busca de capa no cadastro do livro (Google/Open Library) | ✅ | Escolhe imagem, confirma e salva |
 | FR-65 | Retenção de fotos configurável (padrão 90 dias) | 🔴 | Admin altera sem deploy |
 | FR-66 | Isolamento por ministério: líder do Som não acessa a Mídia | ✅ | 403 ao tentar outro `ministry_id` |
 | FR-67 | Configurações por ministério em `1ipim_ministry_settings` | 🔴 | Chave de um ministério não vaza para outro |
@@ -539,7 +539,7 @@ A ordem abaixo assume que o Bible Rats é a próxima frente e que o conteúdo
 |---|---|---|
 | **0. RBAC/portal** | FR-52 a FR-61: papéis, vínculos por ministério, migração, guards e testes | Pré-requisito de Bible Rats, livraria e ministérios |
 | **1. Bible Rats MVP** | BR-01 a BR-14 + BR-19 a BR-21: leitura, check-in, diário, grupos, streak, comentários, moderação, imagens | Valida o modelo de acesso e entrega a comunidade |
-| **2. Livraria — catálogo** | FR-25 (169 livros já importados); FR-26 a FR-28 depois | Consulta para assinantes; venda fica para depois |
+| **2. Livraria — catálogo** | FR-25, FR-62 a FR-64: catálogo público, gestão e capas | Banco próprio, estoque interno e API dinâmica |
 | **3. Ministérios com escopo** | FR-54, FR-59, FR-60: líder/colaborador nos seus ministérios; pastor com visão ampla | Reaproveita o RBAC da etapa 0 |
 | **4. Notificações, badges e ranking** | BR-09, BR-10, BR-23 | Dependem de canais e consentimento |
 | **5. PWA/app nativo** | BR-18 | Web-first; o IPA é referência |

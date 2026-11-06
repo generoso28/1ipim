@@ -12,6 +12,7 @@ const PAGES = [
   "/eventos/",
   "/mensagens/",
   "/reflexoes/",
+  "/livraria/",
   "/semana-jovem/",
   "/pg/",
   "/contato/",
@@ -40,7 +41,9 @@ test.describe("SEO — metadados por página", () => {
     test(`${path} tem título, descrição, canonical e JSON-LD`, async ({
       page,
     }) => {
-      await page.goto(`${path}?v=${Date.now()}`, { waitUntil: "domcontentloaded" });
+      await page.goto(`${path}?v=${Date.now()}`, {
+        waitUntil: "domcontentloaded",
+      });
 
       const title = await page.title();
       expect(title.length).toBeGreaterThan(10);
@@ -124,16 +127,13 @@ test.describe("SEO — entidade local", () => {
     expect(church.telephone).toContain("98861");
     expect(church.geo.latitude).toBeLessThan(0);
     expect(church.geo.longitude).toBeLessThan(0);
-    expect(
-      (church.sameAs as unknown[]).length,
-    ).toBeGreaterThanOrEqual(3);
+    expect((church.sameAs as unknown[]).length).toBeGreaterThanOrEqual(3);
     expect(
       (church.openingHoursSpecification as unknown[]).length,
     ).toBeGreaterThanOrEqual(4);
     expect(
       (church.areaServed as Array<{ name: string }>).map((item) => item.name),
     ).toContain("Machado");
-
   });
 
   test("visitantes tem FAQPage com as dúvidas visíveis", async ({ page }) => {

@@ -11,6 +11,7 @@ const PAGES = [
   "/eventos/",
   "/mensagens/",
   "/reflexoes/",
+  "/livraria/",
   "/semana-jovem/",
   "/pg/",
   "/contato/",
@@ -25,11 +26,13 @@ test.describe("Acessibilidade (axe)", () => {
       await page.evaluate(() => document.fonts.ready);
       await page.waitForTimeout(400);
 
-      const missingTitles = await page.locator("iframe").evaluateAll((frames) =>
-        frames
-          .filter((frame) => !frame.getAttribute("title"))
-          .map((frame) => frame.getAttribute("src") || frame.id),
-      );
+      const missingTitles = await page
+        .locator("iframe")
+        .evaluateAll((frames) =>
+          frames
+            .filter((frame) => !frame.getAttribute("title"))
+            .map((frame) => frame.getAttribute("src") || frame.id),
+        );
       expect(missingTitles).toEqual([]);
 
       const results = await new AxeBuilder({ page })

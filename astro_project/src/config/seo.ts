@@ -153,6 +153,14 @@ export const PAGE_SEO: Record<string, PageSeo> = {
       "semana jovem machado, get up 1ipim, jovens igreja presbiteriana machado, evento jovem machado mg",
     crumb: "Semana Jovem",
   },
+  "/livraria": {
+    title: "Livraria 1IPIM | Livros cristãos em Machado",
+    description:
+      "Catálogo da Livraria 1IPIM em Machado (MG): literatura cristã, teologia, família, devocionais e livros para todas as idades. Consulte títulos, autores e preços.",
+    keywords:
+      "livraria igreja machado, livros cristãos machado mg, literatura cristã, livraria 1ipim, livros evangélicos",
+    crumb: "Livraria",
+  },
   "/pg": {
     title: "Pequenos Grupos | Igreja Presbiteriana em Machado",
     description:

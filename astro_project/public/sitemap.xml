@@ -65,6 +65,13 @@
   </url>
 
   <url>
+    <loc>https://1ipim.online/livraria/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://1ipim.online/semana-jovem/</loc>
     <lastmod>2026-11-06</lastmod>
     <changefreq>monthly</changefreq>

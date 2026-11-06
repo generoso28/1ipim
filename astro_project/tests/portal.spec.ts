@@ -380,11 +380,22 @@ test.describe("Portal autenticado", () => {
         await json(route, [{ id: 5 }]);
         return true;
       }
+      if (path === "/1ipim/v1/admin/livros") {
+        await json(route, {
+          items: [],
+          total: 0,
+          page: 1,
+          pages: 1,
+          categorias: [],
+          stats: { total: 0, ativos: 0, com_capa: 0, estoque: 0 },
+        });
+        return true;
+      }
       return false;
     });
 
     const screens: Array<[string, RegExp]> = [
-      ["/portal/livraria/", /LIVRARIA/i],
+      ["/portal/livraria/", /Catálogo/i],
       ["/portal/novo-usuario/", /Novo Voluntário/i],
     ];
 

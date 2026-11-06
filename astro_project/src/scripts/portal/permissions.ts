@@ -112,6 +112,7 @@ interface PermissionUser {
   isAdmin?: boolean;
   isPastor?: boolean;
   isMinistryLeader?: boolean;
+  canManageLivraria?: boolean;
 }
 
 export function getPermissions(
@@ -144,7 +145,7 @@ export function getPermissions(
     canReflexoes: isAdmin || base.canReflexoes,
     canUsers: isAdmin,
     canMinistries: isAdmin || isMinistryLeader,
-    canLivraria: isAdmin || base.canLivraria,
+    canLivraria: isAdmin || Boolean(user.canManageLivraria),
     isAdmin,
     isPrivileged: isAdmin || isMinistryLeader,
     isMinistryLeader,

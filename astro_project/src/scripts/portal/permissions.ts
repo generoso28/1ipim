@@ -1,6 +1,6 @@
 import type { Permissions } from "./types";
 
-type PermissionSet = Omit<Permissions, "isPrivileged">;
+type PermissionSet = Omit<Permissions, "isPrivileged" | "isMinistryLeader">;
 
 const ROLE_PERMISSIONS: Record<string, PermissionSet> = {
   pastor: {
@@ -104,13 +104,51 @@ const ROLE_PERMISSIONS: Record<string, PermissionSet> = {
   },
 };
 
+interface PermissionUser {
+  role?: string | null;
+  nicename?: string | null;
+  roles?: string[];
+  memberships?: Array<{ role?: string }>;
+  isAdmin?: boolean;
+  isPastor?: boolean;
+  isMinistryLeader?: boolean;
+}
+
 export function getPermissions(
-  role?: string | null,
+  userOrRole?: string | PermissionUser | null,
   nicename?: string | null,
 ): Permissions {
-  const key = (role || nicename || "").toLowerCase();
+  const user: PermissionUser =
+    typeof userOrRole === "object" && userOrRole !== null
+      ? userOrRole
+      : { role: userOrRole, nicename };
+  const key = (user.role || user.nicename || "").toLowerCase();
   const base = ROLE_PERMISSIONS[key] || ROLE_PERMISSIONS.subscriber;
-  return { ...base, isPrivileged: base.isAdmin };
+  const roles = (user.roles || []).map((role) => role.toLowerCase());
+
+  const isAdmin =
+    Boolean(user.isAdmin) ||
+    base.isAdmin ||
+    roles.includes("administrator") ||
+    roles.includes("pastor");
+  const isMinistryLeader =
+    Boolean(user.isMinistryLeader) ||
+    roles.includes("lider_ministerio") ||
+    roles.includes("editor") ||
+    roles.includes("lider") ||
+    (user.memberships || []).some((membership) => membership.role === "lider");
+
+  return {
+    ...base,
+    label: isAdmin ? "Administrador" : isMinistryLeader ? "Líder" : base.label,
+    canReflexoes: isAdmin || base.canReflexoes,
+    canUsers: isAdmin,
+    canMinistries: isAdmin || isMinistryLeader,
+    canLivraria: isAdmin || base.canLivraria,
+    isAdmin,
+    isPrivileged: isAdmin || isMinistryLeader,
+    isMinistryLeader,
+  };
 }
 
 /** Remove barras finais para montar URLs da API sem duplicar "/". */

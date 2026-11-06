@@ -88,7 +88,29 @@ function user_payload(WP_User $user): array
     }
     $ministriesRaw = get_user_meta($user->ID, 'ministries_approved', true);
     $ministries = is_string($ministriesRaw) ? json_decode($ministriesRaw, true) : $ministriesRaw;
-    $ministries = is_array($ministries) ? array_values(array_map('strval', $ministries)) : [];
+    $ministries = is_array($ministries) ? array_values(array_map('intval', $ministries)) : [];
+
+    global $wpdb;
+    $membershipsTable = $wpdb->prefix . '1ipim_ministry_memberships';
+    $rows = $wpdb->get_results($wpdb->prepare(
+        "SELECT ministry_id, role, status FROM {$membershipsTable}
+         WHERE user_id = %d AND status = 'active' ORDER BY ministry_id",
+        $user->ID
+    ), ARRAY_A);
+    $memberships = array_map(static fn (array $row): array => [
+        'ministry_id' => (int) $row['ministry_id'],
+        'role' => (string) $row['role'],
+        'status' => (string) $row['status'],
+    ], $rows ?: []);
+
+    $membershipIds = array_map(static fn (array $row): int => (int) $row['ministry_id'], $memberships);
+    $ministries = array_values(array_unique(array_merge($ministries, $membershipIds)));
+
+    $isAdmin = current_user_can('manage_options');
+    $isPastor = current_user_can('view_all_ministries');
+    $isMinistryLeader = in_array('lider_ministerio', $roles, true)
+        || in_array('editor', $roles, true)
+        || (bool) array_filter($memberships, static fn (array $row): bool => $row['role'] === 'lider');
 
     return [
         'id' => (string) $user->ID,
@@ -97,7 +119,11 @@ function user_payload(WP_User $user): array
         'email' => (string) $user->user_email,
         'role' => $primaryRole,
         'roles' => $roles,
+        'memberships' => $memberships,
         'ministries' => $ministries,
+        'isAdmin' => $isAdmin,
+        'isPastor' => $isPastor,
+        'isMinistryLeader' => $isMinistryLeader,
         'nonce' => wp_create_nonce('wp_rest'),
     ];
 }

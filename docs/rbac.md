@@ -4,7 +4,7 @@
 por **papel global + vínculo por ministério**, com escopo no servidor, para
 sustentar Bible Rats, livraria e gestão de ministérios.
 
-**Escopo deste passo:** especificação e schema. Nenhuma alteração em produção.
+**Status:** passos 1–3 implementados e validados em produção.
 
 ---
 
@@ -27,9 +27,27 @@ O passo 2 foi aplicado em produção:
 - Configurações criadas: retenção de fotos 90 dias, tradução padrão
   `almeida1819`, traduções habilitadas e duração padrão de escala 120 min.
 
-**Pendente:** guards nos endpoints (passo 3), tela completa de gestão de
-papéis, testes automatizados da matriz e uso efetivo dos novos papéis no
-front-end.
+### Passo 3 — guards e gestão (06/11/2026)
+
+- Plugin `1ipim-rbac-rest.php` com o namespace `1ipim/v1`:
+  - `GET /me`, `GET/POST/DELETE /ministries`, `GET/POST/DELETE /ministries/{id}/members`;
+  - `GET /users`, `POST /users/{id}/role`, `DELETE /users/{id}`;
+  - `POST /escalas/{id}/participar`, `/sair`, `/equipe`.
+- Guards nos endpoints nativos usados pelo portal:
+  - `GET /wp/v2/escala` exige login e devolve apenas escalas dos ministérios
+    do usuário (admin/pastor veem todas);
+  - escrita em `/wp/v2/escala` exige liderança do ministério da escala;
+  - `/wp/v2/ministerio` só aceita escrita de admin/pastor;
+  - `/wp/v2/users` só aceita admin/pastor; líderes usam `/1ipim/v1/users`.
+- Conflito de escala: validação no autoatendimento (409), no cadastro/edição
+  e na edição de equipe; líder/admin pode autorizar com justificativa, que
+  vai para `1ipim_audit_log`.
+- Ministério **Livraria** criado (ID 37) com `tipo=livraria`.
+- Front-end: sessão devolve `roles`, `memberships`, `isAdmin`, `isPastor` e
+  `isMinistryLeader`; líderes veem apenas seus ministérios e suas escalas.
+- Matriz de autorização validada em produção: 25 cenários (público, líder,
+  colaborador, assinante e admin), incluindo 401/403/409 e override.
+- Playwright: **77/77** testes locais após a atualização dos mocks.
 
 ---
 

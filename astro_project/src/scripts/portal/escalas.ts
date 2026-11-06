@@ -45,6 +45,69 @@ function splitContent(schedule: WpSchedule): string[] {
   return stripTags(schedule.content?.rendered).split("|");
 }
 
+interface ScheduleConflict {
+  ministry?: string;
+  date?: string;
+  start?: string;
+  end?: string;
+}
+
+interface RestErrorPayload {
+  code?: string;
+  message?: string;
+  data?: {
+    status?: number;
+    conflicts?: ScheduleConflict[];
+    can_override?: boolean;
+  };
+}
+
+async function parseError(response: Response): Promise<RestErrorPayload> {
+  return (await response.json().catch(() => ({}))) as RestErrorPayload;
+}
+
+function conflictMessage(payload: RestErrorPayload): string {
+  const conflicts = payload.data?.conflicts || [];
+  if (conflicts.length === 0) {
+    return payload.message || "Conflito de escala.";
+  }
+
+  const lines = conflicts.map(
+    (conflict) =>
+      `• ${conflict.ministry || "Ministério"} — ${conflict.date || ""} às ${conflict.start || ""}`,
+  );
+
+  return `${payload.message || "Conflito de escala."}\n\n${lines.join("\n")}`;
+}
+
+/**
+ * Pede autorização explícita ao líder quando a API retorna 409.
+ * Retorna null quando o usuário cancela.
+ */
+function askOverride(
+  payload: RestErrorPayload,
+  canOverride: boolean,
+): { reason: string } | null {
+  if (!canOverride) {
+    showToast(conflictMessage(payload), "error");
+    return null;
+  }
+
+  if (!confirm(`${conflictMessage(payload)}\n\nAutorizar mesmo assim?`)) {
+    return null;
+  }
+
+  const reason = prompt(
+    "Justificativa para autorizar o conflito (obrigatória):",
+  );
+  if (!reason || !reason.trim()) {
+    showToast("A autorização exige justificativa.", "error");
+    return null;
+  }
+
+  return { reason: reason.trim() };
+}
+
 onPageReady("#form-container", async () => {
   const formContainer = document.getElementById("form-container");
   const listContainer = document.getElementById("list-container");
@@ -66,7 +129,7 @@ onPageReady("#form-container", async () => {
   const viewToggles = document.querySelectorAll<HTMLElement>(".view-toggle");
   const pageTitle = document.getElementById("page-title");
   const user = (await auth.ensureSession()) ?? auth.getUser();
-  const permissions = getPermissions(user.role, user.nicename);
+  const permissions = getPermissions(user);
   const isManager = permissions.isAdmin || permissions.isPrivileged;
 
   const ministryNames: Record<number, string> = {};
@@ -85,9 +148,10 @@ onPageReady("#form-container", async () => {
 
   async function loadMinistries(): Promise<void> {
     try {
-      const response = await apiFetch(
-        "/wp-json/wp/v2/ministerio/?per_page=100",
-      );
+      const path = isManager
+        ? "/wp-json/1ipim/v1/ministries?manage=1"
+        : "/wp-json/wp/v2/ministerio/?per_page=100";
+      const response = await apiFetch(path);
       const ministries = (await response.json()) as WpMinistry[];
 
       ministries.forEach((ministry) => {
@@ -111,7 +175,7 @@ onPageReady("#form-container", async () => {
 
   async function loadVolunteers(): Promise<void> {
     try {
-      const response = await apiFetch("/wp-json/wp/v2/users/?per_page=100", {});
+      const response = await apiFetch("/wp-json/1ipim/v1/users");
       const users = (await response.json()) as WpUser[];
 
       if (volunteersSelect) {
@@ -304,32 +368,45 @@ onPageReady("#form-container", async () => {
           button.innerHTML =
             '<i class="fa-solid fa-circle-notch animate-spin"></i>';
 
-          const teamNames =
-            names === "---" || names.trim() === ""
-              ? user.displayName
-              : `${names}, ${user.displayName}`;
-          const teamEmails =
-            emails.trim() === ""
-              ? user.email || ""
-              : `${emails}, ${user.email}`;
-          const date = button.getAttribute("data-date") || "";
-          const ministryId = button.getAttribute("data-minid") || "";
-          const time = button.getAttribute("data-time") || "";
-          const content = `<p>${date}|${teamEmails}|${time}|${teamNames}|${ministryId}</p>`;
-
-          try {
-            const response = await apiFetch(`/wp-json/wp/v2/escala/${id}`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
+          const join = async (override?: {
+            override: boolean;
+            override_reason: string;
+          }) => {
+            const response = await apiFetch(
+              `/wp-json/1ipim/v1/escalas/${id}/participar`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(override || {}),
               },
-              body: JSON.stringify({
-                content,
-                meta: { equipe_nomes: teamNames, equipe_emails: teamEmails },
-              }),
-            });
+            );
+
+            if (response.status === 409) {
+              const payload = await parseError(response);
+              const authorization = askOverride(
+                payload,
+                Boolean(payload.data?.can_override) && isManager,
+              );
+              if (!authorization) return false;
+
+              return join({
+                override: true,
+                override_reason: authorization.reason,
+              });
+            }
 
             if (!response.ok) throw new Error("Falha ao participar");
+            return true;
+          };
+
+          try {
+            const joined = await join();
+            if (!joined) {
+              button.disabled = false;
+              button.innerHTML =
+                '<i class="fa-solid fa-user-plus"></i> Participar';
+              return;
+            }
             showToast("Seu nome foi adicionado à equipe!", "success");
             modal?.classList.add("hidden");
             await loadSchedules();
@@ -534,21 +611,49 @@ onPageReady("#form-container", async () => {
 
         saveButton.innerText = "Salvando...";
         saveButton.disabled = true;
-        const content = `<p>${date}|${teamEmails}|${time}|${teamNames}|${ministryId}</p>`;
 
-        try {
-          const response = await apiFetch(`/wp-json/wp/v2/escala/${id}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+        const save = async (override?: {
+          override: boolean;
+          override_reason: string;
+        }): Promise<boolean> => {
+          const response = await apiFetch(
+            `/wp-json/1ipim/v1/escalas/${id}/equipe`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                names: teamNames,
+                emails: teamEmails,
+                ...(override || {}),
+              }),
             },
-            body: JSON.stringify({
-              content,
-              meta: { equipe_nomes: teamNames, equipe_emails: teamEmails },
-            }),
-          });
+          );
+
+          if (response.status === 409) {
+            const payload = await parseError(response);
+            const authorization = askOverride(
+              payload,
+              Boolean(payload.data?.can_override),
+            );
+            if (!authorization) return false;
+
+            return save({
+              override: true,
+              override_reason: authorization.reason,
+            });
+          }
 
           if (!response.ok) throw new Error("Falha ao atualizar");
+          return true;
+        };
+
+        try {
+          const saved = await save();
+          if (!saved) {
+            saveButton.innerText = "Salvar Alterações";
+            saveButton.disabled = false;
+            return;
+          }
           showToast("Escala atualizada!", "success");
           modal.classList.add("hidden");
           await loadSchedules();
@@ -655,41 +760,68 @@ onPageReady("#form-container", async () => {
         .map((input) => input.value)
         .join(", ");
 
+      const createOne = async (
+        isoDate: string,
+        override?: { override: boolean; override_reason: string },
+      ): Promise<"created" | "skipped"> => {
+        const content = `<p>${isoDate}|${emails}|${time}|${names}|${ministry}</p>`;
+        const response = await apiFetch("/wp-json/wp/v2/escala/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            summary: names,
+            content,
+            status: "publish",
+            ipim_override: override?.override || false,
+            ipim_override_reason: override?.override_reason || "",
+            meta: {
+              data_da_escala: isoDate,
+              ministerio_id: ministry,
+              equipe_nomes: names,
+              equipe_emails: emails,
+              horario: time,
+            },
+          }),
+        });
+
+        if (response.status === 409) {
+          const payload = await parseError(response);
+          const authorization = askOverride(
+            payload,
+            Boolean(payload.data?.can_override),
+          );
+          if (!authorization) return "skipped";
+
+          return createOne(isoDate, {
+            override: true,
+            override_reason: authorization.reason,
+          });
+        }
+
+        if (!response.ok) throw new Error("Falha ao criar escala");
+        return "created";
+      };
+
       try {
-        const requests: Promise<Response>[] = [];
         const currentDate = new Date(`${date}T12:00:00`);
+        let created = 0;
 
         for (let index = 0; index < recurrence; index++) {
           const isoDate = currentDate.toISOString().split("T")[0];
-          const content = `<p>${isoDate}|${emails}|${time}|${names}|${ministry}</p>`;
-
-          requests.push(
-            apiFetch("/wp-json/wp/v2/escala/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                title,
-                summary: names,
-                content,
-                status: "publish",
-                meta: {
-                  data_da_escala: isoDate,
-                  ministerio_id: ministry,
-                  equipe_nomes: names,
-                  equipe_emails: emails,
-                  horario: time,
-                },
-              }),
-            }),
-          );
+          const result = await createOne(isoDate);
+          if (result === "skipped") {
+            showToast(
+              created > 0
+                ? `Criadas ${created} de ${recurrence} escalas.`
+                : "Criação cancelada por conflito de escala.",
+              "info",
+            );
+            if (created > 0) await loadSchedules();
+            return;
+          }
+          created++;
           currentDate.setDate(currentDate.getDate() + 7);
-        }
-
-        const responses = await Promise.all(requests);
-        if (responses.some((response) => !response.ok)) {
-          throw new Error("Falha em uma ou mais inserções");
         }
 
         showToast(

@@ -28,9 +28,11 @@ function buildCards(permissions: Permissions): DashboardCard[] {
   if (permissions.canEscalas) {
     cards.push({
       title: "Escalas de Serviço",
-      description: permissions.isPrivileged
-        ? "Gerencie todos os voluntários"
-        : "Veja seus dias de serviço",
+      description: permissions.isAdmin
+        ? "Gerencie todas as escalas da igreja"
+        : permissions.isMinistryLeader
+          ? "Gerencie as escalas do seu ministério"
+          : "Veja seus dias de serviço",
       icon: "fa-calendar-check",
       color:
         "bg-brand-100 text-[var(--color-brand)] dark:bg-[var(--color-brand)]/10 dark:text-[var(--color-brand)]",
@@ -49,25 +51,28 @@ function buildCards(permissions: Permissions): DashboardCard[] {
     });
   }
 
+  if (permissions.canMinistries) {
+    cards.push({
+      title: "Ministérios",
+      description: permissions.isAdmin
+        ? "Crie e organize as equipes de trabalho."
+        : "Gerencie a equipe do seu ministério.",
+      icon: "fa-layer-group",
+      color:
+        "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
+      href: "/portal/ministerios",
+    });
+  }
+
   if (permissions.isAdmin) {
-    cards.push(
-      {
-        title: "Voluntários",
-        description: "Aprove novos cadastros e defina cargos.",
-        icon: "fa-users-gear",
-        color:
-          "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
-        href: "/portal/usuarios",
-      },
-      {
-        title: "Ministérios",
-        description: "Crie e organize as equipes de trabalho.",
-        icon: "fa-layer-group",
-        color:
-          "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
-        href: "/portal/ministerios",
-      },
-    );
+    cards.push({
+      title: "Voluntários",
+      description: "Aprove novos cadastros e defina cargos.",
+      icon: "fa-users-gear",
+      color:
+        "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
+      href: "/portal/usuarios",
+    });
   }
 
   return cards;
@@ -100,7 +105,7 @@ function renderCards(cards: DashboardCard[]): void {
 onPageReady("#dashboard-grid", () => {
   void (async () => {
     const user = (await auth.ensureSession()) ?? auth.getUser();
-    const permissions = getPermissions(user.role, user.nicename);
+    const permissions = getPermissions(user);
 
     const greeting = document.getElementById("dash-user-name");
     if (greeting) greeting.innerText = user.displayName || "Voluntário";

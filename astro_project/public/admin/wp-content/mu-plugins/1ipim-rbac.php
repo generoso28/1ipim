@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('IPIM_RBAC_VERSION', '0.1.0');
+define('IPIM_RBAC_VERSION', '0.2.0');
 
 function ipim_rbac_table(string $name): string
 {
@@ -55,6 +55,43 @@ function ipim_rbac_ensure_role(string $slug, string $label, array $caps): void
     foreach ($caps as $cap => $grant) {
         $role->add_cap($cap, (bool) $grant);
     }
+}
+
+/**
+ * Garante o ministério Livraria com tipo=livraria.
+ *
+ * A livraria não é um papel global: é um ministério como os demais, com
+ * líderes e colaboradores próprios.
+ */
+function ipim_rbac_ensure_livraria(): int
+{
+    $posts = get_posts([
+        'post_type' => 'ministerio',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'all',
+    ]);
+
+    foreach ($posts as $post) {
+        if (strtolower(trim($post->post_title)) === 'livraria') {
+            update_post_meta($post->ID, 'tipo', 'livraria');
+            return (int) $post->ID;
+        }
+    }
+
+    $post_id = wp_insert_post([
+        'post_type' => 'ministerio',
+        'post_status' => 'publish',
+        'post_title' => 'Livraria',
+    ], true);
+
+    if (is_wp_error($post_id)) {
+        return 0;
+    }
+
+    update_post_meta($post_id, 'tipo', 'livraria');
+
+    return (int) $post_id;
 }
 
 function ipim_rbac_install(): void
@@ -176,6 +213,8 @@ function ipim_rbac_install(): void
     add_option('1ipim_default_translation', 'almeida1819');
     add_option('1ipim_enabled_translations', ['almeida1819', 'blivre', 'bpm', 'tb1917']);
     add_option('1ipim_default_schedule_minutes', 120);
+
+    ipim_rbac_ensure_livraria();
 
     update_option('ipim_rbac_version', IPIM_RBAC_VERSION);
     ipim_rbac_audit(0, 'install', 'system', 0, null, ['version' => IPIM_RBAC_VERSION]);
@@ -426,7 +465,7 @@ function ipim_rbac_admin_page(): void
     <?php
 }
 
-add_action('init', 'ipim_rbac_install', 5);
+add_action('init', 'ipim_rbac_install', 20);
 
 add_action('admin_menu', function (): void {
     add_management_page('1IPIM RBAC', '1IPIM RBAC', 'manage_options', '1ipim-rbac', 'ipim_rbac_admin_page');

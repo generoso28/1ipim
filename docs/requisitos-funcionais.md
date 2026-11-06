@@ -35,9 +35,9 @@ Prioridade recomendada (frente portal/comunidade):
 | Autenticação do portal | ✅ Pronto | Cookie `HttpOnly` + nonce, sem JWT |
 | Reflexões | 🟡 Parcial | Listagem/modal via JS; sem URL própria por artigo |
 | Escalas | 🟡 Parcial | CRUD, calendário, participar; sem notificação/confirmação |
-| Ministérios | 🟡 Parcial | Criar/excluir e vincular voluntários |
+| Ministérios | 🟡 Parcial | Criar/excluir, vincular e definir líder/colaborador por ministério |
 | Usuários/voluntários | 🟡 Parcial | Aprovar, promover, excluir, criar; sem reset/2FA |
-| RBAC/portal | 🟡 Base implantada | Papéis, tabelas e migração; guards nas telas pendentes |
+| RBAC/portal | ✅ Base implantada | Papéis, vínculos, guards por ministério e auditoria |
 | Livraria | 🟡 Catálogo importado | 169 livros; 10 capas; página de consulta pendente |
 | Eventos | 🔴 Não iniciado | Agenda 2026 fixa no código |
 | Pequenos Grupos | 🟡 Parcial | Página pública informativa; sem diretório/inscrição |
@@ -136,8 +136,9 @@ verifica o vínculo antes de responder.
   Preservar `ministries_approved` e converter em vínculos.
 - Auditoria de alterações de papel e de vínculo.
 
-**Status:** a base foi implantada em produção em 06/11/2026 (plugin, tabelas,
-papéis e migração). Os guards nas telas e endpoints são o próximo passo.
+**Status:** passos 2 e 3 implantados em produção em 06/11/2026 (plugin,
+tabelas, papéis, migração, guards por ministério, gestão de vínculos e
+conflito de escalas).
 
 **Requisitos funcionais**
 
@@ -145,19 +146,19 @@ papéis e migração). Os guards nas telas e endpoints são o próximo passo.
 |---|---|---|---|
 | FR-52 | Definir papéis, matriz e capabilities | ✅ | Matriz aprovada e documentada |
 | FR-53 | Migrar usuários existentes sem perder vínculos | ✅ | Nenhum usuário perde acesso; testes de regressão |
-| FR-54 | Vínculo por ministério (líder/colaborador) | 🟡 | Tabela e migração prontas; guards pendentes |
-| FR-55 | Guards no servidor e no front-end | 🔴 | Tentativa fora do escopo retorna 403 |
-| FR-56 | Tela de gestão de papéis/vínculos | 🔴 | Admin altera papel e ministério |
-| FR-57 | Auditoria de mudanças de papel | 🟡 | Tabela e logs de instalação/migração; falta logar alterações |
-| FR-58 | Assinante acessa Bible Rats | 🔴 | Sem acesso a gestão |
-| FR-59 | Pastor com visão ampla e moderação | 🔴 | Vê todos os ministérios e relatórios |
-| FR-60 | Admin com acesso total | 🔴 | Acessa usuários, configurações e livraria |
-| FR-61 | Testes automatizados da matriz | 🔴 | Cada papel/recurso coberto por E2E |
+| FR-54 | Vínculo por ministério (líder/colaborador) | ✅ | Tabela, migração e guards por ministério |
+| FR-55 | Guards no servidor e no front-end | ✅ | Tentativa fora do escopo retorna 403 |
+| FR-56 | Tela de gestão de papéis/vínculos | ✅ | Admin altera papel e ministério; líder gerencia o próprio time |
+| FR-57 | Auditoria de mudanças de papel | ✅ | Log de papel, vínculo, escala e override |
+| FR-58 | Assinante acessa Bible Rats | 🟡 | Sessão e papel prontos; falta a área Bible Rats |
+| FR-59 | Pastor com visão ampla e moderação | 🟡 | Visão ampla pronta; falta moderação Bible Rats |
+| FR-60 | Admin com acesso total | ✅ | Acessa usuários, configurações e livraria |
+| FR-61 | Testes automatizados da matriz | ✅ | Matriz PHP (25 cenários) + 77 E2E locais |
 | FR-62 | Catálogo público para consulta, sem login | 🔴 | Visitante vê a lista e busca |
 | FR-63 | Líder/colaborador do ministério Livraria cadastra/edita livros e capas | 🔴 | Só o vínculo no ministério Livraria e admin acessam a gestão |
 | FR-64 | Busca de capa no cadastro do livro (Google/Open Library) | 🔴 | Escolhe imagem, confirma e salva |
 | FR-65 | Retenção de fotos configurável (padrão 90 dias) | 🔴 | Admin altera sem deploy |
-| FR-66 | Isolamento por ministério: líder do Som não acessa a Mídia | 🔴 | 403 ao tentar outro `ministry_id` |
+| FR-66 | Isolamento por ministério: líder do Som não acessa a Mídia | ✅ | 403 ao tentar outro `ministry_id` |
 | FR-67 | Configurações por ministério em `1ipim_ministry_settings` | 🔴 | Chave de um ministério não vaza para outro |
 | FR-68 | Interface lista apenas os ministérios do usuário | 🔴 | Menu/atalhos não mostram ministérios sem vínculo |
 | FR-69 | Auditoria por ministério | 🔴 | Log registra `ministry_id` e autor |

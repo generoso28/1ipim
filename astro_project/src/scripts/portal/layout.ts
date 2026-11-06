@@ -36,17 +36,19 @@ function buildNavItems(permissions: Permissions): NavItem[] {
       label: "Livraria",
     });
   }
+  if (permissions.canMinistries) {
+    items.push({
+      href: "/portal/ministerios",
+      icon: "fa-solid fa-layer-group",
+      label: "Ministérios",
+    });
+  }
   if (permissions.isAdmin) {
     items.push(
       {
         href: "/portal/usuarios",
         icon: "fa-solid fa-users-gear",
         label: "Voluntários",
-      },
-      {
-        href: "/portal/ministerios",
-        icon: "fa-solid fa-layer-group",
-        label: "Ministérios",
       },
       {
         href: WP_ADMIN_URL,
@@ -144,7 +146,7 @@ function hideAuthGuard(): void {
 }
 
 function renderShell(user: { role: string; nicename: string }): void {
-  const permissions = getPermissions(user.role, user.nicename);
+  const permissions = getPermissions(user);
   renderUser(permissions);
   renderNavigation(permissions);
 }

@@ -10,12 +10,29 @@ interface RoleVisual {
 
 const ROLE_VISUALS: Record<string, RoleVisual> = {
   administrator: { badgeClass: "bg-red-500 text-white", label: "Admin" },
+  pastor: { badgeClass: "bg-blue-600 text-white", label: "Pastor" },
   editor: { badgeClass: "bg-purple-500 text-white", label: "Líder" },
-  subscriber: { badgeClass: "bg-green-500 text-white", label: "Voluntário" },
+  lider_ministerio: { badgeClass: "bg-purple-500 text-white", label: "Líder" },
+  contributor: { badgeClass: "bg-green-500 text-white", label: "Voluntário" },
+  colaborador_ministerio: {
+    badgeClass: "bg-green-500 text-white",
+    label: "Voluntário",
+  },
+  subscriber: { badgeClass: "bg-slate-500 text-white", label: "Membro" },
+  assinante: { badgeClass: "bg-slate-500 text-white", label: "Membro" },
 };
 
-function getRoleVisual(role: string): RoleVisual {
-  return ROLE_VISUALS[role] || ROLE_VISUALS.subscriber;
+function getRoleVisual(roles: string[] | undefined): RoleVisual {
+  const list = roles || [];
+  if (list.includes("administrator")) return ROLE_VISUALS.administrator;
+  if (list.includes("pastor")) return ROLE_VISUALS.pastor;
+  if (list.includes("editor") || list.includes("lider_ministerio")) {
+    return ROLE_VISUALS.lider_ministerio;
+  }
+  if (list.includes("contributor") || list.includes("colaborador_ministerio")) {
+    return ROLE_VISUALS.colaborador_ministerio;
+  }
+  return ROLE_VISUALS.subscriber;
 }
 
 function parseStringArray(raw: string | undefined): string[] {
@@ -39,9 +56,7 @@ onPageReady("#users-table-body", async () => {
 
   async function loadMinistryNames(): Promise<void> {
     try {
-      const response = await apiFetch(
-        "/wp-json/wp/v2/ministerio/?per_page=100",
-      );
+      const response = await apiFetch("/wp-json/1ipim/v1/ministries");
       const ministries = (await response.json()) as WpMinistry[];
       ministries.forEach((ministry) => {
         ministryNames[ministry.id] = ministry.title.rendered;
@@ -68,8 +83,7 @@ onPageReady("#users-table-body", async () => {
   function renderUserRow(user: WpUser): string {
     const requested = parseStringArray(user.meta?.ministries_requested);
     const approved = parseStringArray(user.meta?.ministries_approved);
-    const role = user.roles?.[0] || "subscriber";
-    const visual = getRoleVisual(role);
+    const visual = getRoleVisual(user.roles);
     const isSelf = String(user.id) === String(currentUserId);
 
     return `
@@ -144,9 +158,7 @@ onPageReady("#users-table-body", async () => {
     try {
       await loadMinistryNames();
 
-      const response = await apiFetch(
-        "/wp-json/wp/v2/users/?context=edit&per_page=100",
-      );
+      const response = await apiFetch("/wp-json/1ipim/v1/users");
       users = await response.json();
       loading?.classList.add("hidden");
 
@@ -209,27 +221,17 @@ onPageReady("#users-table-body", async () => {
     if (!userId || !ministryId) return;
 
     try {
-      const userResponse = await apiFetch(
-        `/wp-json/wp/v2/users/${userId}/?context=edit`,
-      );
-      const user = (await userResponse.json()) as WpUser;
-      const approved = parseStringArray(user.meta?.ministries_approved);
-
-      if (!approved.includes(ministryId)) approved.push(ministryId);
-
-      const response = await apiFetch(`/wp-json/wp/v2/users/${userId}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await apiFetch(
+        `/wp-json/1ipim/v1/ministries/${ministryId}/members`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: Number(userId),
+            role: "colaborador",
+          }),
         },
-        body: JSON.stringify({
-          meta: { ministries_approved: JSON.stringify(approved) },
-          roles:
-            user.roles?.[0] === "subscriber"
-              ? ["contributor"]
-              : user.roles || ["contributor"],
-        }),
-      });
+      );
 
       if (!response.ok) throw new Error("Falha ao aprovar vínculo");
       showToast("Vínculo aprovado com sucesso!", "success");
@@ -245,8 +247,6 @@ onPageReady("#users-table-body", async () => {
     approvedJson = "[]",
   ): Promise<void> {
     if (!userId || !role) return;
-
-    const approved = parseStringArray(approvedJson);
 
     if (role === "editor") {
       const options = Object.entries(ministryNames)
@@ -264,27 +264,23 @@ onPageReady("#users-table-body", async () => {
         showToast("ID Inválido.", "error");
         return;
       }
-      if (!approved.includes(chosenId)) approved.push(chosenId);
+      approvedJson = chosenId;
     } else if (!confirm("Deseja alterar a função deste usuário?")) {
       return;
     }
 
     try {
-      const body: { roles: string[]; meta?: { ministries_approved: string } } =
+      const response = await apiFetch(
+        `/wp-json/1ipim/v1/users/${userId}/role`,
         {
-          roles: [role],
-        };
-      if (role === "editor") {
-        body.meta = { ministries_approved: JSON.stringify(approved) };
-      }
-
-      const response = await apiFetch(`/wp-json/wp/v2/users/${userId}/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            role,
+            ministry_id: role === "editor" ? Number(approvedJson) : undefined,
+          }),
         },
-        body: JSON.stringify(body),
-      });
+      );
 
       if (!response.ok) throw new Error("Falha ao atualizar função");
       showToast(
@@ -303,12 +299,9 @@ onPageReady("#users-table-body", async () => {
     if (!userId) return;
 
     try {
-      const response = await apiFetch(
-        `/wp-json/wp/v2/users/${userId}/?reassign=${currentUserId}&force=true`,
-        {
-          method: "DELETE",
-        },
-      );
+      const response = await apiFetch(`/wp-json/1ipim/v1/users/${userId}`, {
+        method: "DELETE",
+      });
 
       if (!response.ok) throw new Error("Falha ao excluir usuário");
       showToast("Usuário excluído", "success");

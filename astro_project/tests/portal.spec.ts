@@ -105,11 +105,11 @@ test.describe("Portal autenticado", () => {
     acceptDialogs(page);
 
     await mockApi(page, async (route, path, method) => {
-      if (path === "/wp/v2/ministerio/" && method === "GET") {
+      if (path === "/1ipim/v1/ministries" && method === "GET") {
         await json(route, MINISTRIES);
         return true;
       }
-      if (path === "/wp/v2/users/" && method === "GET") {
+      if (path === "/1ipim/v1/users" && method === "GET") {
         await json(route, [
           { id: 1, name: "Teste E2E", email: "teste@example.com" },
         ]);
@@ -123,8 +123,8 @@ test.describe("Portal autenticado", () => {
         await json(route, { id: 2 });
         return true;
       }
-      if (path === "/wp/v2/escala/1" && method === "POST") {
-        await json(route, { id: 1 });
+      if (path === "/1ipim/v1/escalas/1/participar" && method === "POST") {
+        await json(route, { joined: true });
         return true;
       }
       return false;
@@ -162,23 +162,23 @@ test.describe("Portal autenticado", () => {
     acceptDialogs(page);
 
     await mockApi(page, async (route, path, method) => {
-      if (path === "/wp/v2/ministerio/" && method === "GET") {
+      if (path === "/1ipim/v1/ministries" && method === "GET") {
         await json(route, MINISTRIES);
         return true;
       }
-      if (path === "/wp/v2/users/" && method === "GET") {
+      if (path === "/1ipim/v1/users" && method === "GET") {
         await json(route, USERS);
         return true;
       }
-      if (path === "/wp/v2/users/2/" && method === "GET") {
+      if (path === "/1ipim/v1/ministries/1/members" && method === "POST") {
         await json(route, USERS[1]);
         return true;
       }
-      if (path.startsWith("/wp/v2/users/") && method === "POST") {
+      if (path === "/1ipim/v1/users/2/role" && method === "POST") {
         await json(route, { id: 2 });
         return true;
       }
-      if (path.startsWith("/wp/v2/users/") && method === "DELETE") {
+      if (path === "/1ipim/v1/users/2" && method === "DELETE") {
         await json(route, { deleted: true });
         return true;
       }
@@ -210,7 +210,7 @@ test.describe("Portal autenticado", () => {
     acceptDialogs(page);
 
     await mockApi(page, async (route, path, method) => {
-      if (path === "/wp/v2/users/" && method === "GET") {
+      if (path === "/1ipim/v1/users" && method === "GET") {
         await json(route, [
           {
             id: 1,
@@ -218,23 +218,26 @@ test.describe("Portal autenticado", () => {
             email: "teste@example.com",
             roles: ["administrator"],
             meta: { ministries_approved: '["1"]', ministries_requested: "[]" },
+            memberships: [
+              { ministry_id: 1, role: "colaborador", status: "active" },
+            ],
           },
         ]);
         return true;
       }
-      if (path === "/wp/v2/ministerio/" && method === "GET") {
+      if (path === "/1ipim/v1/ministries" && method === "GET") {
         await json(route, MINISTRIES);
         return true;
       }
-      if (path === "/wp/v2/ministerio/" && method === "POST") {
+      if (path === "/1ipim/v1/ministries" && method === "POST") {
         await json(route, { id: 3 });
         return true;
       }
-      if (path.startsWith("/wp/v2/ministerio/") && method === "DELETE") {
+      if (path === "/1ipim/v1/ministries/2" && method === "DELETE") {
         await json(route, { deleted: true });
         return true;
       }
-      if (path.startsWith("/wp/v2/users/") && method === "POST") {
+      if (path === "/1ipim/v1/ministries/1/members" && method === "POST") {
         await json(route, { id: 1 });
         return true;
       }

@@ -14,13 +14,24 @@ export type PortalRole =
   | "subscriber"
   | string;
 
+export interface PortalMembership {
+  ministry_id: number;
+  role: "lider" | "colaborador" | string;
+  status: string;
+}
+
 export interface PortalUser {
   email: string | null;
   nicename: string;
   displayName: string;
   role: PortalRole;
+  roles?: string[];
   id: string;
   ministries: number[];
+  memberships?: PortalMembership[];
+  isAdmin?: boolean;
+  isPastor?: boolean;
+  isMinistryLeader?: boolean;
 }
 
 export interface Permissions {
@@ -32,6 +43,7 @@ export interface Permissions {
   canLivraria: boolean;
   isAdmin: boolean;
   isPrivileged: boolean;
+  isMinistryLeader: boolean;
 }
 
 export interface WpRendered {
@@ -57,11 +69,14 @@ export interface WpUser {
     ministries_requested?: string;
     ministries_approved?: string;
   };
+  memberships?: PortalMembership[];
 }
 
 export interface WpMinistry {
   id: number;
   title: WpRendered;
+  tipo?: string;
+  can_manage?: boolean;
 }
 
 export interface WpSchedule {

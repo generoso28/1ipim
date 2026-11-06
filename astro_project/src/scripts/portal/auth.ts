@@ -22,6 +22,11 @@ export const AUTH_KEYS = {
   role: "1ipim_user_role",
   id: "1ipim_user_id",
   ministries: "1ipim_user_ministries_approved",
+  roles: "1ipim_user_roles",
+  memberships: "1ipim_user_memberships",
+  isAdmin: "1ipim_user_is_admin",
+  isPastor: "1ipim_user_is_pastor",
+  isMinistryLeader: "1ipim_user_is_ministry_leader",
 } as const;
 
 /** Chave do JWT antigo: removida para não confundir navegadores com cache velho. */
@@ -53,6 +58,24 @@ function parseMinistries(raw: string | null): number[] {
   }
 }
 
+function parseStringArray(raw: string | null): string[] {
+  try {
+    const parsed = JSON.parse(raw || "[]");
+    return Array.isArray(parsed) ? parsed.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
+function parseMemberships(raw: string | null): PortalUser["memberships"] {
+  try {
+    const parsed = JSON.parse(raw || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 export interface SessionInput extends PortalUser {
   nonce: string;
 }
@@ -70,8 +93,13 @@ export const auth = {
       nicename: readKey(AUTH_KEYS.nicename) || "",
       displayName: readKey(AUTH_KEYS.displayName) || "",
       role: readKey(AUTH_KEYS.role) || "",
+      roles: parseStringArray(readKey(AUTH_KEYS.roles)),
       id: readKey(AUTH_KEYS.id) || "",
       ministries: parseMinistries(readKey(AUTH_KEYS.ministries)),
+      memberships: parseMemberships(readKey(AUTH_KEYS.memberships)),
+      isAdmin: readKey(AUTH_KEYS.isAdmin) === "1",
+      isPastor: readKey(AUTH_KEYS.isPastor) === "1",
+      isMinistryLeader: readKey(AUTH_KEYS.isMinistryLeader) === "1",
     };
   },
 
@@ -91,6 +119,11 @@ export const auth = {
     writeKey(AUTH_KEYS.role, session.role || "");
     writeKey(AUTH_KEYS.id, session.id || "");
     writeKey(AUTH_KEYS.ministries, JSON.stringify(session.ministries || []));
+    writeKey(AUTH_KEYS.roles, JSON.stringify(session.roles || []));
+    writeKey(AUTH_KEYS.memberships, JSON.stringify(session.memberships || []));
+    writeKey(AUTH_KEYS.isAdmin, session.isAdmin ? "1" : "0");
+    writeKey(AUTH_KEYS.isPastor, session.isPastor ? "1" : "0");
+    writeKey(AUTH_KEYS.isMinistryLeader, session.isMinistryLeader ? "1" : "0");
   },
 
   setRole(role: string): void {

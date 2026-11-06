@@ -194,6 +194,36 @@ test.describe("Páginas públicas", () => {
     );
   });
 
+  test("formulário de contato envia e mostra confirmação", async ({ page }) => {
+    let payload: Record<string, unknown> | null = null;
+
+    await page.route("**/api/contato.php*", async (route) => {
+      payload = route.request().postDataJSON() as Record<string, unknown>;
+      await json(route, { ok: true });
+    });
+
+    await page.goto("/contato/", { waitUntil: "domcontentloaded" });
+    await page.fill("#contact-name", "Teste E2E");
+    await page.fill("#contact-email", "teste@example.com");
+    await page.fill("#contact-phone", "(35) 99999-9999");
+    await page.selectOption("#contact-subject", "Visita");
+    await page.fill(
+      "#contact-message",
+      "Gostaria de agendar uma visita à igreja neste domingo.",
+    );
+    await page.click("#contact-submit");
+
+    await expect(page.locator("#contact-feedback")).toBeVisible();
+    await expect(page.locator("#contact-feedback")).toContainText(
+      "Mensagem enviada",
+    );
+    expect(payload).toMatchObject({
+      name: "Teste E2E",
+      email: "teste@example.com",
+      subject: "Visita",
+    });
+  });
+
   test("404 personalizado", async ({ page }) => {
     const response = await page.goto("/pagina-que-nao-existe", {
       waitUntil: "domcontentloaded",

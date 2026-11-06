@@ -154,7 +154,9 @@ function initCatalog(): void {
             ${card ? `<p class="text-sm text-gray-500">${esc(card)} no cartão</p>` : ""}
           </div>
           ${book.sinopse ? `<div class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-h-64 overflow-y-auto pr-2">${book.sinopse}</div>` : ""}
-          <p class="mt-6 text-[11px] text-gray-400">Para comprar, procure o ministério de Livraria da 1IPIM após o culto.</p>
+          <div class="mt-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 text-[11px] text-amber-900 dark:text-amber-200 leading-relaxed">
+            <strong>Estoque sob consulta.</strong> Fale com a secretaria durante a semana ou com a equipe da Livraria aos domingos. O catálogo pode não incluir todos os títulos disponíveis.
+          </div>
         </div>
       </div>
     `;

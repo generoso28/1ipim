@@ -66,6 +66,12 @@ test.describe("Livraria pública", () => {
 
     await page.goto("/livraria/", { waitUntil: "domcontentloaded" });
     await expect(page.locator("h1")).toContainText("Boas leituras");
+    await expect(page.locator("body")).toContainText(
+      "Estoque e disponibilidade sob consulta",
+    );
+    await expect(page.locator("body")).toContainText(
+      "O catálogo pode não incluir todos os títulos disponíveis",
+    );
     await expect(page.locator(".catalog-card")).toHaveCount(2);
     await expect(page.locator("#catalog-count")).toContainText("2 de 2");
 

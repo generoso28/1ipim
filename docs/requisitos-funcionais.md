@@ -162,6 +162,8 @@ conflito de escalas).
 | FR-67 | Configurações por ministério em `1ipim_ministry_settings` | 🔴 | Chave de um ministério não vaza para outro |
 | FR-68 | Interface lista apenas os ministérios do usuário | 🔴 | Menu/atalhos não mostram ministérios sem vínculo |
 | FR-69 | Auditoria por ministério | 🔴 | Log registra `ministry_id` e autor |
+| FR-70 | Movimentação de estoque sem digitar o número: botões de adicionar/subtrair em tela separada (protótipo) | 🔴 | Líder/admin registra entrada/saída por botões, com motivo e auditoria; saldo não fica negativo |
+| FR-71 | Avisos ao visitante no catálogo público sobre estoque e títulos fora do catálogo | ✅ | Mensagem orienta consultar a secretaria durante a semana ou a equipe da Livraria aos domingos; aviso de que o catálogo pode não listar todos os títulos |
 
 ---
 
@@ -240,10 +242,12 @@ custo/aprovação) e o horário de término de cada escala (ou duração padrão
 
 | ID | Requisito | Status | Critério de aceite |
 |---|---|---|---|
-| FR-25 | Catálogo somente consulta: título, autor, editora, categoria, preço à vista/cartão e código | 🟡 | Assinante autenticado vê a lista e busca por título/autor |
-| FR-26 | Estoque por item (fonte oficial no portal) | 🔴 | Admin atualiza; catálogo mostra disponibilidade |
+| FR-25 | Catálogo público de consulta: título, autor, editora, categoria, preço à vista/cartão e capa | ✅ | Visitante vê a lista, busca por título/autor/editora e abre os detalhes |
+| FR-26 | Estoque por item (fonte oficial no portal) | 🟡 | Admin/líder atualiza; estoque fica interno e não aparece no catálogo público |
 | FR-27 | Reserva/venda com baixa de estoque | 🔴 (P2) | Estoque não fica negativo |
 | FR-28 | Relatório de saídas e comprovante | 🔴 (P2) | Exportação CSV por período |
+| FR-70 | Movimentação de estoque por botões (+/-), em tela separada de protótipo | 🔴 | Líder/admin adiciona ou subtrai sem digitar o número, informa motivo e gera auditoria |
+| FR-71 | Aviso público: estoque sob consulta e catálogo pode estar incompleto | ✅ | Visitante é orientado a falar com a secretaria durante a semana ou com a equipe da Livraria aos domingos |
 
 **Dados importados:** `code`, `title`, `author`, `publisher`, `category`,
 `priceCash`, `priceCard`, `coverPrice`, `stockLegacy` e `cover`. Lacunas na

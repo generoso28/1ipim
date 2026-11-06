@@ -75,6 +75,17 @@ function load_wordpress(): void
 function user_payload(WP_User $user): array
 {
     $roles = array_values(array_map('strval', (array) $user->roles));
+    $legacyOrder = ['administrator', 'pastor', 'editor', 'contributor', 'subscriber'];
+    $primaryRole = null;
+    foreach ($legacyOrder as $candidate) {
+        if (in_array($candidate, $roles, true)) {
+            $primaryRole = $candidate;
+            break;
+        }
+    }
+    if ($primaryRole === null) {
+        $primaryRole = $roles[0] ?? 'subscriber';
+    }
     $ministriesRaw = get_user_meta($user->ID, 'ministries_approved', true);
     $ministries = is_string($ministriesRaw) ? json_decode($ministriesRaw, true) : $ministriesRaw;
     $ministries = is_array($ministries) ? array_values(array_map('strval', $ministries)) : [];
@@ -84,7 +95,7 @@ function user_payload(WP_User $user): array
         'nicename' => (string) $user->user_nicename,
         'displayName' => (string) $user->display_name,
         'email' => (string) $user->user_email,
-        'role' => $roles[0] ?? 'subscriber',
+        'role' => $primaryRole,
         'roles' => $roles,
         'ministries' => $ministries,
         'nonce' => wp_create_nonce('wp_rest'),

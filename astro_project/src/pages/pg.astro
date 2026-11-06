@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import pgBereanos from '../assets/img/pgs/bereanos.jpeg';
 import pgPorcaoFe from '../assets/img/pgs/porcao_de_fe.jpeg';
 import pgKoinonia from '../assets/img/pgs/koinonia.jpeg';
@@ -16,8 +17,18 @@ import pgFlorescer from '../assets/img/pgs/florescer.jpeg';
 import pgEliza from '../assets/img/pgs/pg-eliza.jpeg';
 import pgToshiba from '../assets/img/pgs/pg-toshiba.jpeg';
 
-const pgs = [
-  { name: "Porção de fé", image: pgPorcaoFe, publico: "Mulheres", responsavel: "Rita e Mayra", horario: "Segunda-feira às 19:30", frequencia: "Quinzenal" },
+type PG = {
+  name: string;
+  title?: string;
+  image: ImageMetadata;
+  publico: string;
+  responsavel: string;
+  horario: string;
+  frequencia: string;
+};
+
+const pgs: PG[] = [
+  { name: "Porção de fé", title: "Unidas pela fé", image: pgPorcaoFe, publico: "Mulheres", responsavel: "Rita", horario: "Segunda-feira às 19:30", frequencia: "Quinzenal" },
   { name: "Koinonia", image: pgKoinonia, publico: "Mulheres", responsavel: "Milka", horario: "Terça-feira às 14:00", frequencia: "Semanal" },
   { name: "Peniel", image: pgPeniel, publico: "Mulheres", responsavel: "Ester", horario: "Terça-feira às 14:30", frequencia: "Semanal" },
   { name: "Entre Meninas e Deus", image: pgMeninasDeus, publico: "Meninas de 9 a 11 anos", responsavel: "Tati, Thays, Manuela e Anne", horario: "Terça-feira às 19:00", frequencia: "Semanal" },
@@ -50,7 +61,7 @@ const pgs = [
                             <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10"></div>
                         </div>
                         <div class="p-6 md:p-8 flex flex-col flex-1 relative z-10 justify-end">
-                            <h5 class="font-extrabold text-3xl text-white mb-6 drop-shadow-md">{pg.name}</h5>
+                            <h5 class="font-extrabold text-3xl text-white mb-6 drop-shadow-md">{pg.title || pg.name}</h5>
                             <div class="space-y-2 mt-auto bg-black/40 backdrop-blur-md rounded-2xl p-5 border border-white/10 group-hover:bg-black/50 transition-colors">
                                 <p class="text-xs text-gray-300 flex justify-between border-b border-white/10 pb-2"><strong class="text-white uppercase tracking-wider text-[10px]">Público</strong> <span class="text-right">{pg.publico}</span></p>
                                 <p class="text-xs text-gray-300 flex justify-between border-b border-white/10 pb-2 pt-1"><strong class="text-white uppercase tracking-wider text-[10px]">Líder</strong> <span class="text-right">{pg.responsavel}</span></p>

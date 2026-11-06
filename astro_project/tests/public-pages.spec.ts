@@ -29,6 +29,7 @@ const PUBLIC_PAGES = [
   { path: "/semana-jovem/" },
   { path: "/pg/" },
   { path: "/contato/" },
+  { path: "/privacidade/" },
 ];
 
 function canonicalFor(path: string): string {
@@ -36,6 +37,12 @@ function canonicalFor(path: string): string {
 }
 
 test.describe("Páginas públicas", () => {
+  test.beforeEach(async ({ context }) => {
+    await context.addInitScript(() =>
+      localStorage.setItem("1ipim_consent_analytics", "denied"),
+    );
+  });
+
   for (const { path } of PUBLIC_PAGES) {
     test(`${path} carrega com SEO e sem erros`, async ({ page, baseURL }) => {
       const pageErrors: string[] = [];
@@ -240,6 +247,12 @@ test.describe("Páginas públicas", () => {
 test.describe("Mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
+  test.beforeEach(async ({ context }) => {
+    await context.addInitScript(() =>
+      localStorage.setItem("1ipim_consent_analytics", "denied"),
+    );
+  });
+
   test("menu mobile abre e navega", async ({ page }) => {
     await page.goto("/programacao/", { waitUntil: "load" });
     await page.waitForTimeout(500);
@@ -247,5 +260,33 @@ test.describe("Mobile", () => {
     await expect(page.locator("#mobile-menu")).toBeVisible();
     await expect(page.locator("#mobile-menu")).toContainText("Agenda");
     await expect(page.locator("#mobile-menu")).toContainText("A Igreja");
+  });
+});
+
+test.describe("Consentimento de analytics", () => {
+  test("banner permite recusar, rever e aceitar", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const banner = page.locator("#consent-banner");
+    await expect(banner).toBeVisible();
+
+    await page.click("#consent-reject");
+    await expect(banner).toBeHidden();
+    expect(
+      await page.evaluate(() =>
+        localStorage.getItem("1ipim_consent_analytics"),
+      ),
+    ).toBe("denied");
+
+    await page.click("#open-consent");
+    await expect(banner).toBeVisible();
+
+    await page.click("#consent-accept");
+    await expect(banner).toBeHidden();
+    expect(
+      await page.evaluate(() =>
+        localStorage.getItem("1ipim_consent_analytics"),
+      ),
+    ).toBe("granted");
   });
 });

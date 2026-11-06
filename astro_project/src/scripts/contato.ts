@@ -118,6 +118,10 @@ function initContactForm(): void {
       }
 
       form.reset();
+      window.trackEvent?.("generate_lead", {
+        form: "contato",
+        subject: payload.subject,
+      });
       showFeedback({
         type: "success",
         message:

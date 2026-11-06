@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Política de Privacidade - 1IPIM';
+const description = 'Como a 1ª Igreja Presbiteriana Independente de Machado trata os dados enviados pelo site, incluindo o formulário de contato e o Google Analytics.';
+---
+<Layout title={title} description={description} footerBgClass="bg-white dark:bg-slate-900">
+    <section class="py-20 mt-16 bg-white dark:bg-slate-900 transition-colors min-h-screen">
+        <div class="container mx-auto px-4 lg:px-8 max-w-3xl">
+            <div class="mb-12">
+                <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-sm">Privacidade</p>
+                <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-4">Política de Privacidade</h1>
+                <p class="text-gray-500 dark:text-gray-400">Última atualização: novembro de 2026.</p>
+            </div>
+
+            <div class="space-y-10 text-gray-600 dark:text-gray-300 leading-relaxed">
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-900 dark:text-white mb-3">Quem trata seus dados</h2>
+                    <p>Primeira Igreja Presbiteriana Independente de Machado (1IPIM), com sede na R. Airton Rodrigues Leite, 26, Centro, Machado-MG. Contato: <a class="text-[var(--color-success)] hover:underline" href="mailto:secretaria1ipi@gmail.com">secretaria1ipi@gmail.com</a> ou (35) 98861-3046.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-900 dark:text-white mb-3">Formulário de contato</h2>
+                    <p>Quando você usa o formulário, coletamos nome, e-mail, telefone (opcional), assunto e mensagem. Esses dados são usados apenas para responder ao seu contato e organizar eventuais visitas ou voluntariado. Não são vendidos nem compartilhados com terceiros para publicidade.</p>
+                    <p class="mt-3">O envio é feito por e-mail para a secretaria da igreja. A base legal é o seu consentimento ao enviar o formulário e o legítimo interesse em responder à solicitação.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-900 dark:text-white mb-3">Google Analytics</h2>
+                    <p>Usamos o Google Analytics 4 para entender, de forma agregada, quais páginas são mais acessadas. O script <strong>só é carregado depois que você clica em “Aceitar”</strong> no aviso de cookies. A configuração usa anonimização de IP.</p>
+                    <p class="mt-3">Se você recusar, o Google Analytics não é carregado. A escolha fica salva no seu navegador e pode ser alterada a qualquer momento em <strong>Preferências de cookies</strong>, no rodapé do site.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-900 dark:text-white mb-3">Cookies e armazenamento local</h2>
+                    <p>O site não usa cookies de publicidade. Usamos armazenamento local do navegador para:</p>
+                    <ul class="list-disc pl-6 mt-3 space-y-2">
+                        <li>lembrar sua escolha de consentimento de analytics;</li>
+                        <li>guardar a preferência de tema claro/escuro;</li>
+                        <li>manter a sessão do portal administrativo (quando você faz login).</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-extrabold text-gray-900 dark:text-white mb-3">Seus direitos</h2>
+                    <p>Você pode solicitar acesso, correção ou exclusão dos dados que enviou pelo formulário, além de revogar o consentimento de analytics. Para isso, escreva para <a class="text-[var(--color-success)] hover:underline" href="mailto:secretaria1ipi@gmail.com">secretaria1ipi@gmail.com</a>.</p>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-6">
+                    <p class="text-sm">Ao continuar navegando sem aceitar, o Google Analytics permanece desativado. Apenas os recursos essenciais do site continuam funcionando normalmente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

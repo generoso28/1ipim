@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import { GA_MEASUREMENT_ID } from '../config/analytics';
 import '../styles/global.css';
 
 interface Props {
@@ -26,7 +27,7 @@ const {
 ---
 
 <!DOCTYPE html>
-<html lang="pt-br" class="scroll-smooth">
+<html lang="pt-br" class="scroll-smooth" data-ga-id={hideChrome ? undefined : GA_MEASUREMENT_ID}>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
@@ -56,7 +57,7 @@ const {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
     <script src="../scripts/scroll.js"></script>
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.youtube.com https://s.ytimg.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https://img.youtube.com https://i.ytimg.com https://*.instagram.com https://*.fbcdn.net https://*.cdninstagram.com; frame-src 'self' https://www.youtube.com https://open.spotify.com https://chat.whatsapp.com https://www.google.com https://maps.google.com; connect-src 'self' https://1ipim.online https://youtube.googleapis.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.youtube.com https://s.ytimg.com https://static.cloudflareinsights.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https://img.youtube.com https://i.ytimg.com https://*.instagram.com https://*.fbcdn.net https://*.cdninstagram.com https://www.google-analytics.com https://*.google-analytics.com; frame-src 'self' https://www.youtube.com https://open.spotify.com https://chat.whatsapp.com https://www.google.com https://maps.google.com; connect-src 'self' https://1ipim.online https://youtube.googleapis.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com;">
 
     <script type="application/ld+json">
     {
@@ -187,5 +188,24 @@ const {
             });
         });
     </script>
+    {!hideChrome && (
+        <div id="consent-banner" class="hidden fixed inset-x-0 bottom-0 z-[4000] bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 shadow-2xl px-4 py-4 md:px-8">
+            <div class="container mx-auto max-w-7xl flex flex-col md:flex-row md:items-center gap-4">
+                <p class="text-xs md:text-sm text-gray-600 dark:text-gray-300 flex-1 leading-relaxed">
+                    Usamos o Google Analytics para entender como o site é usado. Ele só é ativado se você aceitar.
+                    <a href="/privacidade" class="underline hover:text-[var(--color-brand)]">Política de privacidade</a>.
+                </p>
+                <div class="flex gap-2 shrink-0">
+                    <button type="button" id="consent-reject" class="px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 text-sm font-bold hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">Recusar</button>
+                    <button type="button" id="consent-accept" class="px-5 py-2 rounded-xl bg-[var(--color-brand)] text-white text-sm font-bold hover:brightness-110 transition-all">Aceitar</button>
+                </div>
+            </div>
+        </div>
+    )}
+
+    <script>
+        import '../scripts/analytics.ts';
+    </script>
+
 </body>
 </html>

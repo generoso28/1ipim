@@ -1,5 +1,16 @@
 gsap.registerPlugin(ScrollTrigger);
+
+function prefereMenosMovimento() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function initScrollAnimations() {
+    if (prefereMenosMovimento()) {
+        // Sem animação: garante que o conteúdo fique visível.
+        gsap.set(".scroll-card", { opacity: 1, y: 0, x: 0, scale: 1, visibility: "visible" });
+        return;
+    }
+
     gsap.utils.toArray(".scroll-card").forEach((card) => {
         gsap.fromTo(card,
             {opacity: 0, y: 37, visibility: "hidden"}, // Movendo um pouco mais para baixo para suavizar
@@ -85,6 +96,15 @@ function isTablet() {
 }
 // Função que inicializa o efeito de zoom
 function initializeZoomEffect() {
+    if (prefereMenosMovimento()) {
+        zoomTriggers.forEach(trigger => trigger.kill());
+        zoomTriggers = [];
+        gsap.utils.toArray(".imagens-nossa-historia img").forEach(img => {
+            gsap.set(img, { scale: 1 });
+        });
+        return;
+    }
+
     if (window.innerWidth >= 550 && !isTablet()) {
         gsap.utils.toArray(".imagens-nossa-historia").forEach(img => {
             const zoomTrigger = gsap.fromTo(img,

@@ -331,3 +331,42 @@ test.describe("Consentimento de analytics", () => {
     await expect(page.locator("#consent-banner")).toBeVisible();
   });
 });
+
+test.describe("Hero e movimento reduzido", () => {
+  test("hero mobile mostra o vídeo inteiro, sem corte", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const video = page.locator("header video");
+    await expect(video).toBeVisible();
+    await expect(video).toHaveCSS("object-fit", "contain");
+  });
+
+  test("conteúdo animado fica visível sem rolagem", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expect(
+      page.locator("#ultimo-culto .scroll-card").first(),
+    ).toBeVisible();
+  });
+});
+
+test.describe("Sem JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("conteúdo com scroll-card permanece visível", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expect(
+      page.locator("#ultimo-culto .scroll-card").first(),
+    ).toBeVisible();
+  });
+});
+
+test.describe("Política de privacidade", () => {
+  test("usa o e-mail da administração", async ({ page }) => {
+    await page.goto("/privacidade/", { waitUntil: "domcontentloaded" });
+    await expect(
+      page.locator('a[href="mailto:administracao@1ipim.online"]'),
+    ).toHaveCount(2);
+  });
+});

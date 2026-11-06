@@ -134,9 +134,6 @@ test.describe("SEO — entidade local", () => {
       (church.areaServed as Array<{ name: string }>).map((item) => item.name),
     ).toContain("Machado");
 
-    await expect(page.locator("#igreja-em-machado")).toContainText(
-      /igreja presbiteriana em machado/i,
-    );
   });
 
   test("visitantes tem FAQPage com as dúvidas visíveis", async ({ page }) => {

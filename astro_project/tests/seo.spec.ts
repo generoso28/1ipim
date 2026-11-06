@@ -40,7 +40,7 @@ test.describe("SEO — metadados por página", () => {
     test(`${path} tem título, descrição, canonical e JSON-LD`, async ({
       page,
     }) => {
-      await page.goto(path, { waitUntil: "domcontentloaded" });
+      await page.goto(`${path}?v=${Date.now()}`, { waitUntil: "domcontentloaded" });
 
       const title = await page.title();
       expect(title.length).toBeGreaterThan(10);

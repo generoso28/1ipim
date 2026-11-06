@@ -146,7 +146,7 @@ test.describe("Páginas públicas", () => {
     const descriptions = new Set<string>();
 
     for (const { path } of PUBLIC_PAGES) {
-      const response = await request.get(path);
+      const response = await request.get(`${path}?v=${Date.now()}`);
       expect(response.ok()).toBeTruthy();
       const html = await response.text();
       const description = html.match(
@@ -160,7 +160,7 @@ test.describe("Páginas públicas", () => {
   });
 
   test("robots e sitemap estão disponíveis", async ({ request }) => {
-    const robots = await request.get("/robots.txt");
+    const robots = await request.get(`/robots.txt?v=${Date.now()}`);
     expect(robots.ok()).toBeTruthy();
     expect(await robots.text()).toContain("Sitemap:");
 

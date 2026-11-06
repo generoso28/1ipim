@@ -14,7 +14,7 @@ let latestThumbnail = `https://img.youtube.com/vi/${latestVideoId}/maxresdefault
 
 try {
   if (API_KEY) {
-    const res = await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${PLAYLIST_ID}&maxResults=1&key=${API_KEY}`);
+    const res = await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${PLAYLIST_ID}&maxResults=1&key=${API_KEY}`, { headers: { Referer: 'https://1ipim.online/' } });
     if (res.ok) {
         const data = await res.json();
         if (data.items && data.items.length > 0) {

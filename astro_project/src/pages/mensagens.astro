@@ -18,7 +18,7 @@ try {
     throw new Error("Chave de API do YouTube não configurada no arquivo .env");
   }
 
-  const res = await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${PLAYLIST_ID}&maxResults=${MAX_RESULTS}&key=${API_KEY}`);
+  const res = await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${PLAYLIST_ID}&maxResults=${MAX_RESULTS}&key=${API_KEY}`, { headers: { Referer: 'https://1ipim.online/' } });
   if (!res.ok) {
     throw new Error(`Erro na API: ${res.statusText}`);
   }

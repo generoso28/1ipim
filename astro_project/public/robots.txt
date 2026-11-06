@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Painéis e administração não devem ser indexados
+Disallow: /admin/
+Disallow: /portal/
+
+Sitemap: https://1ipim.online/sitemap.xml

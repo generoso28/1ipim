@@ -98,11 +98,13 @@ function renderCards(cards: DashboardCard[]): void {
 }
 
 onPageReady("#dashboard-grid", () => {
-  const user = auth.getUser();
-  const permissions = getPermissions(user.role, user.nicename);
+  void (async () => {
+    const user = (await auth.ensureSession()) ?? auth.getUser();
+    const permissions = getPermissions(user.role, user.nicename);
 
-  const greeting = document.getElementById("dash-user-name");
-  if (greeting) greeting.innerText = user.displayName || "Voluntário";
+    const greeting = document.getElementById("dash-user-name");
+    if (greeting) greeting.innerText = user.displayName || "Voluntário";
 
-  renderCards(buildCards(permissions));
+    renderCards(buildCards(permissions));
+  })();
 });

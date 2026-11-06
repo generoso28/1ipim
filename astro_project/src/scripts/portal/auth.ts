@@ -47,6 +47,8 @@ export interface SessionInput extends PortalUser {
   nonce: string;
 }
 
+let pendingRefresh: Promise<PortalUser | null> | null = null;
+
 export const auth = {
   getNonce(): string | null {
     return readKey(AUTH_KEYS.nonce);
@@ -133,6 +135,19 @@ export const auth = {
     }
   },
 
+  /**
+   * Mesma verificação de `refresh()`, compartilhada entre layout e telas para
+   * não disparar várias requisições ao carregar a página.
+   */
+  ensureSession(): Promise<PortalUser | null> {
+    if (!pendingRefresh) {
+      pendingRefresh = auth.refresh().finally(() => {
+        pendingRefresh = null;
+      });
+    }
+    return pendingRefresh;
+  },
+
   async logout(): Promise<void> {
     try {
       await fetch(`${AUTH_BASE}/logout.php`, {
@@ -150,7 +165,7 @@ export const auth = {
 
 /** Redireciona para o login quando não há sessão válida. */
 export async function requireAuth(): Promise<PortalUser | null> {
-  const user = await auth.refresh();
+  const user = await auth.ensureSession();
   if (!user) {
     window.location.href = "/portal/login";
     return null;

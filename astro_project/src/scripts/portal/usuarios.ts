@@ -27,11 +27,11 @@ function parseStringArray(raw: string | undefined): string[] {
   }
 }
 
-onPageReady("#users-table-body", () => {
+onPageReady("#users-table-body", async () => {
   const tableBody = document.getElementById("users-table-body");
   const loading = document.getElementById("loading-users");
   const emptyState = document.getElementById("no-users");
-  const currentUser = auth.getUser();
+  const currentUser = (await auth.ensureSession()) ?? auth.getUser();
   const currentUserId = currentUser.id;
 
   const ministryNames: Record<number, string> = {};

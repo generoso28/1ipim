@@ -45,7 +45,7 @@ function splitContent(schedule: WpSchedule): string[] {
   return stripTags(schedule.content?.rendered).split("|");
 }
 
-onPageReady("#form-container", () => {
+onPageReady("#form-container", async () => {
   const formContainer = document.getElementById("form-container");
   const listContainer = document.getElementById("list-container");
   const listView = document.getElementById("list-view");
@@ -65,7 +65,7 @@ onPageReady("#form-container", () => {
   const calendarView = document.getElementById("calendar-view");
   const viewToggles = document.querySelectorAll<HTMLElement>(".view-toggle");
   const pageTitle = document.getElementById("page-title");
-  const user = auth.getUser();
+  const user = (await auth.ensureSession()) ?? auth.getUser();
   const permissions = getPermissions(user.role, user.nicename);
   const isManager = permissions.isAdmin || permissions.isPrivileged;
 

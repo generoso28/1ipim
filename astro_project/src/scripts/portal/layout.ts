@@ -164,7 +164,7 @@ onPageReady("#portal-root", () => {
   (window as Window & { showToast?: typeof showToast }).showToast = showToast;
 
   void (async () => {
-    const user = await auth.refresh();
+    const user = await auth.ensureSession();
     if (!user) {
       auth.clear();
       window.location.href = "/portal/login";

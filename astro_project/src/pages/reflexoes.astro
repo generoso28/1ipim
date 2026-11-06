@@ -1,0 +1,157 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Reflexões - Primeira Igreja Presbiteriana Independente de Machado';
+const description = "Mensagens semanais, estudos bíblicos e reflexões para edificar a sua vida e caminhada com Cristo.";
+---
+<Layout title={title} description={description} footerBgClass="bg-white dark:bg-slate-900">
+  <section class="py-20 mt-16 bg-white dark:bg-slate-900 transition-colors min-h-screen"> <div class="container mx-auto px-4 lg:px-8 max-w-7xl"> <!-- Header --> <div class="text-center max-w-2xl mx-auto mb-16 scroll-card"> <p class="font-bold text-[var(--color-brand)] mb-2 uppercase tracking-wide text-xs">Palavra do Pastor</p> <h1 class="font-extrabold text-3xl md:text-5xl text-gray-900 dark:text-white mb-6 leading-tight">Reflexões & Boletim</h1> <p class="text-gray-500 dark:text-gray-400 text-lg">Mensagens semanais, estudos bíblicos e reflexões para edificar a sua vida e caminhada com Cristo.</p> </div> <!-- Loading State --> <div id="wp-loading" class="text-center py-20"> <div class="animate-spin inline-block w-8 h-8 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full" role="status" aria-label="loading"></div> <p class="mt-4 text-gray-500">Buscando reflexões recentes...</p> </div> <!-- Error State --> <div id="wp-error" class="hidden bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 p-6 rounded-xl text-center max-w-2xl mx-auto"> <i class="fa-solid fa-circle-exclamation text-3xl mb-4"></i> <p class="font-medium">Não conseguimos carregar as reflexões no momento.</p> <p class="text-sm mt-2 opacity-80">Por favor, tente novamente mais tarde ou acesse nosso mural na igreja.</p> </div> <!-- Posts Grid --> <div id="wp-posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 hidden"> <!-- Posts will be injected here --> </div> </div> </section>  <div id="post-modal" class="fixed inset-0 z-[2000] hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4"> <div class="bg-white dark:bg-slate-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl relative"> <button id="close-post-modal" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors z-[2010] bg-gray-100 dark:bg-slate-800 w-10 h-10 rounded-full flex items-center justify-center"> <i class="fa-solid fa-xmark text-xl"></i> </button> <div id="post-content-container" class="p-8 md:p-12"> <!-- Content will be injected here --> </div> </div> </div> <script>(function(){const WP_URL = "https://1ipim.online/admin";
+
+        document.addEventListener('astro:page-load', () => {
+            const grid = document.getElementById('wp-posts-grid');
+            const loading = document.getElementById('wp-loading');
+            const error = document.getElementById('wp-error');
+            const modal = document.getElementById('post-modal');
+            const modalContent = document.getElementById('post-content-container');
+            const closeModal = document.getElementById('close-post-modal');
+
+            if (!grid) return;
+
+            // 1. Buscamos todas as categorias para encontrar a correta (mais robusto que buscar por slug único)
+            const CAT_URL = `${WP_URL}/wp-json/wp/v2/categories?per_page=100`;
+
+            fetch(CAT_URL)
+                .then(res => res.json())
+                .then(categories => {
+                    let categoryFilter = '';
+                    // Procura uma categoria que tenha o slug 'reflexoes' ou o nome 'Reflexões'
+                    const targetCategory = categories.find(c => 
+                        c.slug === 'reflexoes' || 
+                        c.name.toLowerCase() === 'reflexões' || 
+                        c.name.toLowerCase() === 'reflexoes'
+                    );
+
+                    if (targetCategory) {
+                        console.log('Filtro de Categoria Ativo:', targetCategory.name, '(ID:', targetCategory.id, ')');
+                        categoryFilter = `&categories=${targetCategory.id}`;
+                    } else {
+                        console.warn('Aviso: Categoria "Reflexões" não encontrada no WordPress. Mostrando todos os posts.');
+                    }
+
+                    // 2. Agora buscamos os posts (com ou sem filtro)
+                    const API_URL = `${WP_URL}/wp-json/wp/v2/posts?_embed&per_page=9${categoryFilter}`;
+                    return fetch(API_URL);
+                })
+                .then(res => {
+                    if (!res || !res.ok) throw new Error('Falha ao buscar posts');
+                    return res.json();
+                })
+                .then(posts => {
+                    loading.classList.add('hidden');
+
+                    if (!posts || posts.length === 0) {
+                        error.querySelector('p').innerText = "Nenhuma reflexão encontrada.";
+                        error.classList.remove('hidden');
+                        return;
+                    }
+
+                    grid.classList.remove('hidden');
+                    grid.innerHTML = posts.map(post => {
+                        const title = post.title.rendered;
+                        const excerpt = post.excerpt.rendered.replace(/<[^>]*>?/gm, '').substring(0, 160) + '...';
+                        const date = new Date(post.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+                        
+                        let imageUrl = null;
+                        if (post._embedded && post._embedded['wp:featuredmedia']) {
+                            imageUrl = post._embedded['wp:featuredmedia'][0].source_url;
+                        }
+
+                        if (imageUrl) {
+                            return `
+                                <article class="bg-gray-50 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 flex flex-col group">
+                                    <div class="relative aspect-[16/9] overflow-hidden">
+                                        <img src="${imageUrl}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    </div>
+                                    <div class="p-8 flex flex-col flex-1">
+                                        <p class="text-[var(--color-brand)] text-xs font-bold uppercase tracking-widest mb-3">${date}</p>
+                                        <h3 class="font-bold text-gray-900 dark:text-white text-xl mb-4 line-clamp-2 leading-tight group-hover:text-[var(--color-brand)] transition-colors">
+                                            ${title}
+                                        </h3>
+                                        <div class="text-gray-500 dark:text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed">
+                                            ${excerpt}
+                                        </div>
+                                        <button class="read-more-btn mt-auto inline-flex items-center gap-2 text-[var(--color-brand)] font-bold text-sm hover:gap-3 transition-all" data-id="${post.id}">
+                                            Continuar lendo <i class="fa-solid fa-arrow-right-long"></i>
+                                        </button>
+                                    </div>
+                                </article>
+                            `;
+                        } else {
+                            return `
+                                <article class="bg-white dark:bg-slate-800/50 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border-l-4 border-[var(--color-brand)] p-8 flex flex-col group relative overflow-hidden">
+                                    <div class="absolute top-0 right-0 p-4 opacity-[0.03] dark:opacity-[0.05] group-hover:opacity-10 transition-opacity">
+                                        <i class="fa-solid fa-quote-right text-8xl"></i>
+                                    </div>
+                                    <p class="text-[var(--color-brand)] text-xs font-bold uppercase tracking-widest mb-3">${date}</p>
+                                    <h3 class="font-bold text-gray-900 dark:text-white text-2xl mb-4 line-clamp-2 leading-tight group-hover:text-[var(--color-brand)] transition-colors">
+                                        ${title}
+                                    </h3>
+                                    <div class="text-gray-600 dark:text-gray-400 text-base mb-8 line-clamp-4 leading-relaxed">
+                                        ${excerpt}
+                                    </div>
+                                    <button class="read-more-btn mt-auto inline-flex items-center gap-2 text-[var(--color-brand)] font-bold text-sm hover:gap-3 transition-all" data-id="${post.id}">
+                                        Ler reflexão <i class="fa-solid fa-arrow-right-long"></i>
+                                    </button>
+                                </article>
+                            `;
+                        }
+                    }).join('');
+
+                    // Eventos para o Modal
+                    document.querySelectorAll('.read-more-btn').forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const postId = btn.getAttribute('data-id');
+                            const post = posts.find(p => p.id == postId);
+                            if (post) openPost(post);
+                        });
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    loading.classList.add('hidden');
+                    error.classList.remove('hidden');
+                });
+
+            function openPost(post) {
+                const date = new Date(post.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+                let imageUrl = '';
+                if (post._embedded && post._embedded['wp:featuredmedia']) {
+                    imageUrl = post._embedded['wp:featuredmedia'][0].source_url;
+                }
+
+                modalContent.innerHTML = `
+                    ${imageUrl ? `<img src="${imageUrl}" class="w-full h-64 md:h-80 object-cover rounded-2xl mb-8 shadow-lg" />` : ''}
+                    <p class="text-[var(--color-brand)] font-bold uppercase tracking-widest text-sm mb-2">${date}</p>
+                    <h2 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-8 leading-tight">${post.title.rendered}</h2>
+                    <div class="prose prose-lg dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 leading-relaxed">
+                        ${post.content.rendered}
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+
+            if(closeModal && modal) {
+                closeModal.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    document.body.style.overflow = 'auto';
+                });
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal.click();
+                });
+            }
+        });
+    })();</script>  
+</Layout>

@@ -1,0 +1,15 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+const title = 'Nova Reflexão - 1IPIM';
+const description = 'Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.';
+---
+<PortalLayout title={title} description={description}>
+  <div class="mb-12"> <h1 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tighter uppercase">Nova Reflexão</h1> <p class="text-gray-500 mt-2">Escreva uma nova mensagem pastoral para os membros da igreja.</p> </div>  <form id="post-form" class="space-y-8 max-w-4xl"> <div class="bg-white dark:bg-slate-800 p-8 md:p-12 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm"> <div class="space-y-6"> <div> <label for="post-title" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 ml-1">Título da Reflexão</label> <input type="text" id="post-title" name="title" required class="block w-full px-6 py-5 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl text-gray-900 dark:text-white text-xl font-black tracking-tight focus:ring-2 focus:ring-[var(--color-brand)] outline-none transition-all" placeholder="Ex: O Caminho da Fé"> </div> <div> <label for="post-content" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3 ml-1">Mensagem</label> <textarea id="post-content" name="content" required rows="15" class="block w-full px-6 py-6 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl text-gray-900 dark:text-white leading-relaxed focus:ring-2 focus:ring-[var(--color-brand)] outline-none transition-all resize-none font-medium" placeholder="Escreva aqui o conteúdo..."></textarea> </div> </div> </div> <div class="flex flex-col md:flex-row gap-4"> <button type="submit" id="publish-btn" class="flex-1 bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-black py-5 rounded-2xl shadow-xl shadow-[var(--color-brand)]/20 transition-all flex items-center justify-center gap-3 group uppercase text-sm tracking-widest"> <i id="btn-icon" class="fa-solid fa-paper-plane group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform"></i> <i id="btn-loader" class="fa-solid fa-circle-notch animate-spin hidden"></i> <span id="btn-text">Publicar no Site</span> </button> <a href="/portal/gerenciar-reflexoes" class="px-12 py-5 bg-white dark:bg-slate-800 text-gray-400 font-black rounded-2xl border border-gray-100 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all uppercase text-sm tracking-widest text-center">
+Cancelar
+</a> </div> </form>  
+</PortalLayout>
+
+<script>
+import '../../scripts/portal/nova-reflexao.js';
+</script>

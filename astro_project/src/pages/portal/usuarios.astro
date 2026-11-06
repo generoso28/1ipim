@@ -1,0 +1,14 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+const title = 'Gestão de Voluntários - 1IPIM';
+const description = 'Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.';
+---
+<PortalLayout title={title} description={description}>
+  <div class="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6"> <div> <h1 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tighter uppercase">Voluntários</h1> <p class="text-gray-500 mt-2">Aprove cadastros por ministério e defina os líderes da igreja.</p> </div> <a href="/portal/novo-usuario" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-[var(--color-brand)]/20 flex items-center gap-2 text-sm uppercase"> <i class="fa-solid fa-user-plus"></i> Novo Voluntário
+</a> </div>  <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm"> <div class="overflow-x-auto"> <table class="w-full text-left border-collapse"> <thead> <tr class="border-b border-gray-100 dark:border-slate-700 font-medium h-20"> <th class="px-8 text-[10px] font-black uppercase tracking-widest text-gray-400">Voluntário</th> <th class="px-8 text-[10px] font-black uppercase tracking-widest text-gray-400">Ministérios</th> <th class="px-8 text-[10px] font-black uppercase tracking-widest text-gray-400 text-center">Status</th> <th class="px-8 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Ações</th> </tr> </thead> <tbody id="users-table-body"> <!-- Users will be injected here --> </tbody> </table> </div> <div id="loading-users" class="py-32 text-center"> <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div> <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Sincronizando voluntários...</p> </div> <div id="no-users" class="hidden py-32 text-center"> <i class="fa-solid fa-users-slash text-4xl text-gray-200 mb-4"></i> <p class="text-gray-500">Nenhum voluntário encontrado.</p> </div> </div>  
+</PortalLayout>
+
+<script>
+import '../../scripts/portal/usuarios.js';
+</script>

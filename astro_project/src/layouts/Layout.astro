@@ -11,6 +11,7 @@ interface Props {
     isImmersive?: boolean;
     footerBgClass?: string;
     noindex?: boolean;
+    hideChrome?: boolean;
 }
 
 const { 
@@ -19,7 +20,8 @@ const {
     image = "/assets/img/historia/150anos-Isaias.webp", 
     isImmersive = false,
     footerBgClass = "bg-gray-50 dark:bg-slate-800",
-    noindex = false
+    noindex = false,
+    hideChrome = false
 } = Astro.props;
 ---
 
@@ -54,7 +56,7 @@ const {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
     <script src="../scripts/scroll.js"></script>
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.youtube.com https://s.ytimg.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https://img.youtube.com https://i.ytimg.com https://*.instagram.com https://*.fbcdn.net https://*.cdninstagram.com; frame-src 'self' https://www.youtube.com https://open.spotify.com https://chat.whatsapp.com https://www.google.com https://maps.google.com; connect-src 'self' https://youtube.googleapis.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.youtube.com https://s.ytimg.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https://img.youtube.com https://i.ytimg.com https://*.instagram.com https://*.fbcdn.net https://*.cdninstagram.com; frame-src 'self' https://www.youtube.com https://open.spotify.com https://chat.whatsapp.com https://www.google.com https://maps.google.com; connect-src 'self' https://1ipim.online https://youtube.googleapis.com;">
 
     <script type="application/ld+json">
     {
@@ -112,13 +114,15 @@ const {
     <ClientRouter />
 </head>
 <body class="font-['Inter'] antialiased text-gray-800 bg-gray-50 dark:bg-slate-900 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden flex flex-col min-h-screen">
-    <Navbar isImmersive={isImmersive} />
+    {!hideChrome && <Navbar isImmersive={isImmersive} />}
     <main class="flex-grow">
         <slot />
     </main>
-    <div class={footerBgClass}>
-        <Footer />
-    </div>
+    {!hideChrome && (
+        <div class={footerBgClass}>
+            <Footer />
+        </div>
+    )}
     
     <!-- YouTube Modal Pop-up Global -->
     <div id="yt-modal" class="fixed inset-0 z-[2000] hidden bg-black/90 backdrop-blur-sm flex-col items-center justify-center p-4 sm:p-8 opacity-0 transition-opacity duration-300">

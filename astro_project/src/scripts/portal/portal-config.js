@@ -1,0 +1,83 @@
+const s = {
+  pastor: {
+    label: "Pastor",
+    canReflexoes: !0,
+    canEscalas: !0,
+    canUsers: !0,
+    canMinistries: !0,
+    canLivraria: !0,
+    isAdmin: !0,
+  },
+  admin: {
+    label: "Administrador",
+    canReflexoes: !0,
+    canEscalas: !0,
+    canUsers: !0,
+    canMinistries: !0,
+    canLivraria: !0,
+    isAdmin: !0,
+  },
+  administrator: {
+    label: "Administrador",
+    canReflexoes: !0,
+    canEscalas: !0,
+    canUsers: !0,
+    canMinistries: !0,
+    canLivraria: !0,
+    isAdmin: !0,
+  },
+  editor: {
+    label: "Líder",
+    canReflexoes: !0,
+    canEscalas: !0,
+    canUsers: !1,
+    canMinistries: !1,
+    canLivraria: !0,
+    isAdmin: !1,
+  },
+  lider: {
+    label: "Líder",
+    canReflexoes: !0,
+    canEscalas: !0,
+    canUsers: !1,
+    canMinistries: !1,
+    canLivraria: !0,
+    isAdmin: !1,
+  },
+  leader: {
+    label: "Líder",
+    canReflexoes: !0,
+    canEscalas: !0,
+    canUsers: !1,
+    canMinistries: !1,
+    canLivraria: !0,
+    isAdmin: !1,
+  },
+  contributor: {
+    label: "Voluntário",
+    canReflexoes: !1,
+    canEscalas: !0,
+    canUsers: !1,
+    canMinistries: !1,
+    canLivraria: !0,
+    isAdmin: !1,
+  },
+  subscriber: {
+    label: "Membro",
+    canReflexoes: !1,
+    canEscalas: !0,
+    canUsers: !1,
+    canMinistries: !1,
+    canLivraria: !1,
+    isAdmin: !1,
+  },
+};
+function n(e) {
+  return e.replace(/\/$/, "");
+}
+function l(e, r) {
+  const i = (e || r || "").toLowerCase(),
+    a = s[i] || s.subscriber;
+  return { ...a, isPrivileged: a.isAdmin };
+}
+export { l as a, n as g };

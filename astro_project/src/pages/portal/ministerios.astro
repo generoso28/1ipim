@@ -1,0 +1,14 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+const title = 'Estrutura de Ministérios - 1IPIM';
+const description = 'Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.';
+---
+<PortalLayout title={title} description={description}>
+  <div class="mb-12"> <h1 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tighter uppercase">Ministérios</h1> <p class="text-gray-500 mt-2">Crie áreas de atuação e visualize as equipes de trabalho da igreja.</p> </div> <div class="grid grid-cols-1 lg:grid-cols-3 gap-8"> <!-- Sidebar: Cadastro --> <div class="lg:col-span-1"> <div class="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm sticky top-8"> <h3 class="text-xl font-black text-gray-900 dark:text-white mb-6 flex items-center gap-2 uppercase tracking-tighter"> <i class="fa-solid fa-plus text-[var(--color-brand)]"></i> Novo Ministério
+</h3> <form id="add-min-form" class="space-y-4"> <div> <label for="min-title" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">Nome do Ministério</label> <input type="text" id="min-title" name="title" required class="block w-full px-5 py-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none transition-all font-bold placeholder:font-normal" placeholder="Ex: Mídia / Kids"> </div> <button type="submit" id="add-btn" class="w-full bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-black py-4 rounded-2xl shadow-lg shadow-[var(--color-brand)]/20 transition-all flex items-center justify-center gap-2 text-sm uppercase"> <span id="add-text">Criar Ministério</span> <i id="add-loader" class="fa-solid fa-circle-notch animate-spin hidden"></i> </button> </form> </div> </div> <!-- Main: Lista --> <div class="lg:col-span-2"> <div id="min-list" class="space-y-4"> <!-- Ministries will be injected here --> </div> <div id="loading-min" class="py-32 text-center"> <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div> <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Carregando estrutura...</p> </div> <div id="no-min" class="hidden py-32 text-center bg-gray-50/50 dark:bg-slate-800/20 rounded-[2.5rem] border-2 border-dashed border-gray-100 dark:border-slate-800"> <i class="fa-solid fa-layer-group text-4xl text-gray-100 mb-4"></i> <p class="text-gray-400 font-bold">Nenhum ministério cadastrado.</p> </div> </div> </div>  
+</PortalLayout>
+
+<script>
+import '../../scripts/portal/ministerios.js';
+</script>

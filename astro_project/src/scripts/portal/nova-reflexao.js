@@ -1,0 +1,57 @@
+import { a as p } from "./auth-store.js";
+import { g as f } from "./portal-config.js";
+document.addEventListener("astro:page-load", () => {
+  const a = document.getElementById("post-form"),
+    e = document.getElementById("publish-btn"),
+    t = document.getElementById("btn-text"),
+    n = document.getElementById("btn-loader"),
+    o = document.getElementById("btn-icon"),
+    r = p.getToken(),
+    d = "https://1ipim.online/admin";
+  a &&
+    a.addEventListener("submit", async (l) => {
+      (l.preventDefault(),
+        e && (e.disabled = !0),
+        t && (t.innerText = "Publicando..."),
+        n && n.classList.remove("hidden"),
+        o && o.classList.add("hidden"));
+      const m = document.getElementById("post-title"),
+        u = document.getElementById("post-content");
+      try {
+        const s = f(d),
+          i = await (
+            await fetch(`${s}/wp-json/wp/v2/categories/?slug=reflexoes`)
+          ).json();
+        let c = i && i.length > 0 ? i[0].id : null;
+        if (
+          !(
+            await fetch(`${s}/wp-json/wp/v2/posts/`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${r}`,
+              },
+              body: JSON.stringify({
+                title: m.value,
+                content: u.value,
+                status: "publish",
+                categories: c ? [c] : [],
+              }),
+            })
+          ).ok
+        )
+          throw new Error();
+        (window.showToast("Reflexão publicada com sucesso!", "success"),
+          setTimeout(() => {
+            window.location.href = "/portal/gerenciar-reflexoes";
+          }, 2e3));
+      } catch {
+        window.showToast("Erro ao publicar mensagem", "error");
+      } finally {
+        (e && (e.disabled = !1),
+          t && (t.innerText = "Publicar no Site"),
+          n && n.classList.add("hidden"),
+          o && o.classList.remove("hidden"));
+      }
+    });
+});

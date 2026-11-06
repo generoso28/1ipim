@@ -1,0 +1,17 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+const title = 'Gestão de Reflexões - 1IPIM';
+const description = 'Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.';
+---
+<PortalLayout title={title} description={description}>
+  <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-6"> <div> <h1 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tighter uppercase">Reflexões</h1> <p class="text-gray-500 mt-2">Gerencie as mensagens pastorais e boletins semanais.</p> </div> <a href="/portal/nova-reflexao" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-[var(--color-brand)]/20 flex items-center gap-2 text-sm uppercase shrink-0"> <i class="fa-solid fa-plus"></i> Nova Reflexão
+</a> </div>  <div class="flex items-center gap-2 mb-6 border-b border-gray-100 dark:border-slate-700 pb-4"> <button class="filter-tab active px-5 py-2.5 rounded-xl text-sm font-bold transition-all bg-[var(--color-brand)] text-white" data-filter="publish">
+Publicadas
+</button> <button class="filter-tab px-5 py-2.5 rounded-xl text-sm font-bold transition-all bg-white dark:bg-slate-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700" data-filter="draft"> <i class="fa-solid fa-trash-can opacity-60 mr-1"></i> Lixeira (Rascunhos)
+</button> </div>  <div class="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm"> <div class="overflow-x-auto"> <table class="w-full text-left border-collapse"> <thead> <tr class="border-b border-gray-100 dark:border-slate-700 font-medium h-20"> <th class="px-8 text-[10px] font-black uppercase tracking-widest text-gray-400">Título da Postagem</th> <th class="px-8 text-[10px] font-black uppercase tracking-widest text-gray-400 text-center">Publicado em</th> <th class="px-8 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Ações</th> </tr> </thead> <tbody id="posts-table-body"> <!-- Posts will be injected here --> </tbody> </table> </div> <div id="loading-posts" class="py-32 text-center"> <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div> <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Sincronizando com o site...</p> </div> <div id="no-posts" class="hidden py-32 text-center"> <i class="fa-solid fa-folder-open text-4xl text-gray-200 mb-4"></i> <p class="text-gray-500 font-bold">Nenhuma reflexão encontrada.</p> </div> </div>  
+</PortalLayout>
+
+<script>
+import '../../scripts/portal/gerenciar-reflexoes.js';
+</script>

@@ -2,6 +2,9 @@
 # 1IPIM - configuração do Apache (HostGator)
 # ==========================================================================
 
+# ----- Página de erro personalizada --------------------------------------
+ErrorDocument 404 /404.html
+
 # ----- Canonicalização: HTTPS obrigatório e sem "www" ---------------------
 <IfModule mod_rewrite.c>
     RewriteEngine On

@@ -10,6 +10,7 @@ interface Props {
 	image?: string;
     isImmersive?: boolean;
     footerBgClass?: string;
+    noindex?: boolean;
 }
 
 const { 
@@ -17,7 +18,8 @@ const {
     description = "Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.", 
     image = "/assets/img/historia/150anos-Isaias.webp", 
     isImmersive = false,
-    footerBgClass = "bg-gray-50 dark:bg-slate-800"
+    footerBgClass = "bg-gray-50 dark:bg-slate-800",
+    noindex = false
 } = Astro.props;
 ---
 
@@ -34,7 +36,7 @@ const {
     <meta property="og:image" content={new URL(image, Astro.site || 'https://1ipim.online')} />
     <meta property="og:url" content={Astro.url} />
     <meta property="og:type" content="website" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
     
     <link rel="canonical" href={Astro.url} />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />

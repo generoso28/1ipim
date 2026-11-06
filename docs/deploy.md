@@ -11,12 +11,14 @@ não apaga nada no servidor e guarda backup dos arquivos sobrescritos.
   - `DEPLOY_USER`
   - `DEPLOY_PASS`
   - opcionais: `DEPLOY_HOST` (padrão `ftp.1ipim.online`), `DEPLOY_PORT`,
-    `DEPLOY_ROOT`, `DEPLOY_BACKUP_ROOT`.
+    `DEPLOY_ROOT`, `DEPLOY_BACKUP_ROOT`, `DEPLOY_STAGING_DIR`.
 
 ## Staging
 
-Crie no cPanel o subdomínio `staging.1ipim.online` apontando para
-`public_html/staging`. Depois:
+Crie no cPanel o subdomínio `staging.1ipim.online`. Neste account o cPanel
+criou o docroot em `staging.1ipim.online` (fora de `public_html`). O script usa
+esse caminho por padrão, mas você pode sobrescrever com `DEPLOY_STAGING_DIR` ou
+`--remote-dir`. Depois:
 
 ```bash
 cd astro_project && npm run build

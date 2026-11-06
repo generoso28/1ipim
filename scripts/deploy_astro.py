@@ -38,6 +38,12 @@ except ImportError:
 LOCAL_DIST = Path(__file__).resolve().parent.parent / "astro_project" / "dist"
 
 STAGING_HTACCESS = """\
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ https://staging.1ipim.online%{REQUEST_URI} [L,R=301]
+</IfModule>
+
 <IfModule mod_headers.c>
     Header always set X-Robots-Tag "noindex, nofollow"
 </IfModule>
@@ -104,7 +110,12 @@ def main() -> int:
         return 1
 
     remote_dir = args.remote_dir or (
-        posixpath.join(root, "staging") if args.target == "staging" else root
+        os.environ.get(
+            "DEPLOY_STAGING_DIR",
+            posixpath.join(posixpath.dirname(root), "staging.1ipim.online"),
+        )
+        if args.target == "staging"
+        else root
     )
     timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
     backup_dir = posixpath.join(backup_root, f"{args.target}_{timestamp}")

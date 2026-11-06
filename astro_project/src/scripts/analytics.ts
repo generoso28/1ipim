@@ -48,15 +48,12 @@ function loadGA(): void {
   if (!id || gaLoaded) return;
   gaLoaded = true;
 
-  const script = document.createElement("script");
-  script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
-  document.head.appendChild(script);
-
   window.dataLayer = window.dataLayer || [];
-  const gtag: Gtag = (...args) => {
-    window.dataLayer?.push(args);
-  };
+  // Formato canônico do snippet do Google: gtag.js espera `arguments`,
+  // não um array montado com rest parameters.
+  const gtag = function (this: unknown): void {
+    window.dataLayer?.push(arguments);
+  } as Gtag;
   window.gtag = gtag;
 
   gtag("js", new Date());
@@ -64,6 +61,11 @@ function loadGA(): void {
     send_page_view: false,
     anonymize_ip: true,
   });
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+  document.head.appendChild(script);
 }
 
 function trackPageView(): void {

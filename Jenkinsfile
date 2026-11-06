@@ -16,8 +16,8 @@ pipeline {
         )
         booleanParam(
             name: 'DEPLOY_PRODUCTION',
-            defaultValue: true,
-            description: 'Publicar em produção após os testes locais e de staging'
+            defaultValue: false,
+            description: 'Publicar em produção após os testes locais e de staging (marque manualmente)'
         )
         booleanParam(
             name: 'REQUIRE_APPROVAL',

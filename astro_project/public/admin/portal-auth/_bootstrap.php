@@ -55,7 +55,7 @@ function require_method(string $method): void
 function load_wordpress(): void
 {
     $candidates = [
-        dirname(__DIR__, 2) . '/admin/wp-load.php',             // public_html/admin
+        dirname(__DIR__) . '/wp-load.php',                      // production: public_html/admin
         dirname(__DIR__, 3) . '/public_html/admin/wp-load.php', // staging -> public_html/admin
     ];
 

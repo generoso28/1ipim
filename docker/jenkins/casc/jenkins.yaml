@@ -34,7 +34,7 @@ jobs:
 
         parameters {
           booleanParam('DEPLOY_STAGING', true, 'Publicar e testar no staging')
-          booleanParam('DEPLOY_PRODUCTION', true, 'Publicar em produção após os testes')
+          booleanParam('DEPLOY_PRODUCTION', false, 'Publicar em produção após os testes (manual)')
           booleanParam('REQUIRE_APPROVAL', false, 'Exigir aprovação manual antes da produção')
         }
 

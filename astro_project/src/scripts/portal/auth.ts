@@ -1,11 +1,21 @@
 import type { PortalUser } from "./types";
 
 /**
+ * Base dos endpoints de sessão do portal.
+ *
+ * Aponta sempre para produção: o staging usa os mesmos cookies e a mesma
+ * REST API, e o backend libera CORS para staging/www.
+ */
+export const AUTH_BASE = "https://1ipim.online/admin/portal-auth";
+
+/**
  * Chaves de localStorage usadas pelo portal.
- * Mantidas iguais às versões anteriores para não invalidar sessões existentes.
+ *
+ * Nenhuma delas é um segredo: o cookie de sessão do WordPress é HttpOnly.
+ * O nonce é público (protege contra CSRF) e muda a cada login.
  */
 export const AUTH_KEYS = {
-  token: "1ipim_auth_token",
+  nonce: "1ipim_auth_nonce",
   email: "1ipim_user_email",
   nicename: "1ipim_user_nicename",
   displayName: "1ipim_user_display_name",
@@ -33,19 +43,13 @@ function parseMinistries(raw: string | null): number[] {
   }
 }
 
-export interface SessionInput {
-  token: string;
-  email: string;
-  nicename: string;
-  displayName: string;
-  role: string;
-  id?: string;
-  ministries?: number[];
+export interface SessionInput extends PortalUser {
+  nonce: string;
 }
 
 export const auth = {
-  getToken(): string | null {
-    return readKey(AUTH_KEYS.token);
+  getNonce(): string | null {
+    return readKey(AUTH_KEYS.nonce);
   },
 
   getUser(): PortalUser {
@@ -59,16 +63,20 @@ export const auth = {
     };
   },
 
-  isLoggedIn(): boolean {
-    return Boolean(readKey(AUTH_KEYS.token));
+  /**
+   * Indica que existe um usuário em cache — não prova que a sessão ainda vale.
+   * Use `refresh()` para validar no servidor.
+   */
+  hasSession(): boolean {
+    return Boolean(readKey(AUTH_KEYS.nonce) && readKey(AUTH_KEYS.id));
   },
 
   setSession(session: SessionInput): void {
-    writeKey(AUTH_KEYS.token, session.token);
-    writeKey(AUTH_KEYS.email, session.email);
-    writeKey(AUTH_KEYS.nicename, session.nicename);
-    writeKey(AUTH_KEYS.displayName, session.displayName);
-    writeKey(AUTH_KEYS.role, session.role);
+    writeKey(AUTH_KEYS.nonce, session.nonce);
+    writeKey(AUTH_KEYS.email, session.email || "");
+    writeKey(AUTH_KEYS.nicename, session.nicename || "");
+    writeKey(AUTH_KEYS.displayName, session.displayName || "");
+    writeKey(AUTH_KEYS.role, session.role || "");
     writeKey(AUTH_KEYS.id, session.id || "");
     writeKey(AUTH_KEYS.ministries, JSON.stringify(session.ministries || []));
   },
@@ -89,13 +97,63 @@ export const auth = {
     if (!isBrowser()) return;
     Object.values(AUTH_KEYS).forEach((key) => localStorage.removeItem(key));
   },
+
+  /**
+   * Valida a sessão no WordPress e atualiza o cache local.
+   *
+   * - 401/403: limpa o cache e retorna null (precisa logar).
+   * - Falha de rede: mantém o cache existente, para não deslogar por oscilação.
+   */
+  async refresh(): Promise<PortalUser | null> {
+    try {
+      const response = await fetch(`${AUTH_BASE}/session.php`, {
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        auth.clear();
+        return null;
+      }
+
+      if (!response.ok) {
+        return auth.hasSession() ? auth.getUser() : null;
+      }
+
+      const payload = (await response.json()) as { user?: SessionInput };
+      if (!payload?.user) {
+        auth.clear();
+        return null;
+      }
+
+      auth.setSession(payload.user);
+      return auth.getUser();
+    } catch {
+      return auth.hasSession() ? auth.getUser() : null;
+    }
+  },
+
+  async logout(): Promise<void> {
+    try {
+      await fetch(`${AUTH_BASE}/logout.php`, {
+        method: "POST",
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
+    } catch {
+      // Mesmo se a rede falhar, o cache local é limpo.
+    } finally {
+      auth.clear();
+    }
+  },
 };
 
-/** Redireciona para o login quando não há token. */
-export function requireAuth(): PortalUser | null {
-  if (!auth.getToken()) {
+/** Redireciona para o login quando não há sessão válida. */
+export async function requireAuth(): Promise<PortalUser | null> {
+  const user = await auth.refresh();
+  if (!user) {
     window.location.href = "/portal/login";
     return null;
   }
-  return auth.getUser();
+  return user;
 }

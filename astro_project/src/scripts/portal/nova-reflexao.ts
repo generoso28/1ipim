@@ -1,4 +1,3 @@
-import { auth } from "./auth";
 import { apiFetch } from "./api";
 import { showToast, onPageReady } from "./ui";
 
@@ -12,8 +11,6 @@ onPageReady("#post-form", () => {
   const buttonLabel = document.getElementById("btn-text");
   const buttonLoader = document.getElementById("btn-loader");
   const buttonIcon = document.getElementById("btn-icon");
-  const token = auth.getToken();
-
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -41,7 +38,6 @@ onPageReady("#post-form", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title,

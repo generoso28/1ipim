@@ -31,7 +31,6 @@ onPageReady("#users-table-body", () => {
   const tableBody = document.getElementById("users-table-body");
   const loading = document.getElementById("loading-users");
   const emptyState = document.getElementById("no-users");
-  const token = auth.getToken();
   const currentUser = auth.getUser();
   const currentUserId = currentUser.id;
 
@@ -147,7 +146,6 @@ onPageReady("#users-table-body", () => {
 
       const response = await apiFetch(
         "/wp-json/wp/v2/users/?context=edit&per_page=100",
-        { headers: { Authorization: `Bearer ${token}` } },
       );
       users = await response.json();
       loading?.classList.add("hidden");
@@ -213,7 +211,6 @@ onPageReady("#users-table-body", () => {
     try {
       const userResponse = await apiFetch(
         `/wp-json/wp/v2/users/${userId}/?context=edit`,
-        { headers: { Authorization: `Bearer ${token}` } },
       );
       const user = (await userResponse.json()) as WpUser;
       const approved = parseStringArray(user.meta?.ministries_approved);
@@ -224,7 +221,6 @@ onPageReady("#users-table-body", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           meta: { ministries_approved: JSON.stringify(approved) },
@@ -286,7 +282,6 @@ onPageReady("#users-table-body", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       });
@@ -312,7 +307,6 @@ onPageReady("#users-table-body", () => {
         `/wp-json/wp/v2/users/${userId}/?reassign=${currentUserId}&force=true`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
         },
       );
 

@@ -35,14 +35,14 @@ Parâmetros:
 | Parâmetro | Padrão | Efeito |
 |---|---|---|
 | `DEPLOY_STAGING` | `true` | Publica e testa no staging |
-| `DEPLOY_PRODUCTION` | `true` | Publica em produção após os testes |
+| `DEPLOY_PRODUCTION` | `false` | Publica em produção após os testes (precisa ser marcado) |
 | `REQUIRE_APPROVAL` | `false` | Exige aprovação manual antes da produção |
 
 Etapas:
 
 1. `npm ci`
 2. Build do Astro
-3. **Testes locais** — 28 testes Playwright contra o preview local
+3. **Testes locais** — 29 testes Playwright contra o preview local
 4. **Deploy staging** — `scripts/deploy_astro.py --target staging`
 5. **Testes no staging** — `BASE_URL=https://staging.1ipim.online`
 6. Aprovação manual (opcional)
@@ -71,16 +71,15 @@ BASE_URL=https://1ipim.online npx playwright test
 ## Observações
 
 - O job tem **SCM trigger** (`H/5 * * * *`): cada push no `master` dispara o
-  fluxo completo. Como `DEPLOY_PRODUCTION=true` por padrão, isso publica em
-  produção automaticamente depois dos testes. Para exigir aprovação manual,
-  rode com `REQUIRE_APPROVAL=true`; para apenas validar, use
-  `DEPLOY_PRODUCTION=false`.
+  fluxo completo de testes e o deploy de staging. `DEPLOY_PRODUCTION=false` por
+  padrão, então um push **não** publica em produção. Para publicar, rode o job
+  manualmente marcando `DEPLOY_PRODUCTION=true`; `REQUIRE_APPROVAL=true` adiciona
+  uma pausa de aprovação antes.
 - O pipeline usa **API mockada** nos testes do portal; ele não cria, edita ou
   exclui dados reais no WordPress.
-- Como o `DEPLOY_PRODUCTION` vem `true` por padrão, um build sem alterar
-  parâmetros publica em produção depois dos testes. Use
-  `DEPLOY_PRODUCTION=false` para um dry-run ou `REQUIRE_APPROVAL=true` para
-  exigir aprovação manual.
+- Como o `DEPLOY_PRODUCTION` vem `false` por padrão, builds automáticos (push)
+  validam staging mas não tocam em produção. Use `REQUIRE_APPROVAL=true` se
+  quiser uma pausa extra mesmo em builds manuais.
 - O Jenkins fica exposto apenas em `localhost:8081`; não exponha essa porta
   publicamente sem TLS e autenticação reforçada.
 - Para parar: `docker compose down`. Para apagar também o estado do Jenkins:

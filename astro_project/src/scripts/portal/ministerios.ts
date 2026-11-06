@@ -1,4 +1,3 @@
-import { auth } from "./auth";
 import { apiFetch } from "./api";
 import { escapeAttribute, escapeHtml, showToast, onPageReady } from "./ui";
 import type { WpMinistry, WpUser } from "./types";
@@ -24,17 +23,12 @@ onPageReady("#min-list", () => {
   const titleInput = document.getElementById(
     "min-title",
   ) as HTMLInputElement | null;
-  const token = auth.getToken();
-
   let users: WpUser[] = [];
 
   async function loadUsers(): Promise<void> {
     try {
       const response = await apiFetch(
         "/wp-json/wp/v2/users/?context=edit&per_page=100",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
       );
       users = await response.json();
     } catch (error) {
@@ -72,7 +66,6 @@ onPageReady("#min-list", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           meta: { ministries_approved: JSON.stringify(approved) },
@@ -130,9 +123,6 @@ onPageReady("#min-list", () => {
       await loadUsers();
       const response = await apiFetch(
         "/wp-json/wp/v2/ministerio/?per_page=100",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
       );
       const ministries = (await response.json()) as WpMinistry[];
 
@@ -191,7 +181,6 @@ onPageReady("#min-list", () => {
                 `/wp-json/wp/v2/ministerio/${ministryId}/?force=true`,
                 {
                   method: "DELETE",
-                  headers: { Authorization: `Bearer ${token}` },
                 },
               );
               if (!response.ok) throw new Error("Falha ao excluir");
@@ -268,7 +257,6 @@ onPageReady("#min-list", () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ title, status: "publish" }),
         });

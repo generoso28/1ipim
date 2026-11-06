@@ -6,9 +6,11 @@ import {
   getApiPath,
   json,
   MINISTRIES,
+  mockAuthSession,
   POSTS,
   scheduleFor,
   seedSession,
+  SESSION_USER,
   USERS,
 } from "./helpers/portal";
 
@@ -36,36 +38,24 @@ async function expectToast(page: Page, text: string): Promise<void> {
 
 test.describe("Portal", () => {
   test("sem token redireciona para o login", async ({ page }) => {
+    await mockAuthSession(page, null);
     await page.goto("/portal/", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/portal\/login\/?$/);
     await expect(page.locator("#login-form")).toBeVisible();
   });
 
   test("login grava sessão e monta o dashboard", async ({ page }) => {
-    await mockApi(page, async (route, path, method) => {
-      if (path === "/jwt-auth/v1/token" && method === "POST") {
-        await json(route, {
-          token: "e2e-token",
-          user_email: "teste@example.com",
-          user_nicename: "teste",
-          user_display_name: "Teste E2E",
-          id: 42,
-        });
-        return true;
+    await page.route("**/admin/portal-auth/**", async (route) => {
+      const url = new URL(route.request().url());
+      if (url.pathname.endsWith("/login.php")) {
+        await json(route, { ok: true, user: SESSION_USER });
+        return;
       }
-      if (path === "/wp/v2/settings") {
-        await json(route, {});
-        return true;
+      if (url.pathname.endsWith("/session.php")) {
+        await json(route, { ok: true, user: SESSION_USER });
+        return;
       }
-      if (path === "/wp/v2/users/me") {
-        await json(route, {
-          id: 42,
-          roles: ["administrator"],
-          meta: { ministries_approved: "[1,2]" },
-        });
-        return true;
-      }
-      return false;
+      await json(route, { ok: true });
     });
 
     await page.goto("/portal/login/", { waitUntil: "networkidle" });
@@ -79,23 +69,24 @@ test.describe("Portal", () => {
     await expect(page.locator("#nav-dynamic-links a")).toHaveCount(6);
 
     const session = await page.evaluate(() => ({
-      token: localStorage.getItem("1ipim_auth_token"),
+      nonce: localStorage.getItem("1ipim_auth_nonce"),
       role: localStorage.getItem("1ipim_user_role"),
       id: localStorage.getItem("1ipim_user_id"),
       ministries: localStorage.getItem("1ipim_user_ministries_approved"),
     }));
     expect(session).toEqual({
-      token: "e2e-token",
+      nonce: "e2e-nonce",
       role: "administrator",
-      id: "42",
-      ministries: "[1,2]",
+      id: "1",
+      ministries: "[1]",
     });
   });
 });
 
 test.describe("Portal autenticado", () => {
-  test.beforeEach(async ({ context }) => {
+  test.beforeEach(async ({ context, page }) => {
     await seedSession(context);
+    await mockAuthSession(page);
   });
 
   test("dashboard e navegação por papel", async ({ page }) => {

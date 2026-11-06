@@ -1,3 +1,4 @@
+import { auth } from "./auth";
 import { normalizeBaseUrl } from "./permissions";
 
 export const WP_BASE = "https://1ipim.online/admin";
@@ -18,9 +19,16 @@ export function apiUrl(path: string, base = WP_BASE): string {
   return `${normalizeBaseUrl(base)}${path}`;
 }
 
-export function authHeaders(token: string | null, json = false): HeadersInit {
+/**
+ * Cabeçalhos de autenticação.
+ *
+ * A sessão vai no cookie HttpOnly (credentials: "include"); o nonce protege
+ * as requisições de escrita da REST API contra CSRF.
+ */
+export function authHeaders(json = false): Record<string, string> {
   const headers: Record<string, string> = {};
-  if (token) headers.Authorization = `Bearer ${token}`;
+  const nonce = auth.getNonce();
+  if (nonce) headers["X-WP-Nonce"] = nonce;
   if (json) headers["Content-Type"] = "application/json";
   return headers;
 }
@@ -30,7 +38,15 @@ export async function apiFetch(
   init: RequestInit = {},
   base = WP_BASE,
 ): Promise<Response> {
-  return fetch(apiUrl(path, base), init);
+  return fetch(apiUrl(path, base), {
+    credentials: "include",
+    ...init,
+    headers: {
+      Accept: "application/json",
+      ...authHeaders(),
+      ...(init.headers as Record<string, string> | undefined),
+    },
+  });
 }
 
 export async function apiJson<T>(

@@ -20,6 +20,7 @@ ErrorDocument 404 /404.html
     RewriteCond %{REQUEST_URI} !^/admin/wp-json/? [NC]
     RewriteCond %{REQUEST_URI} !^/admin/wp-includes/? [NC]
     RewriteCond %{REQUEST_URI} !^/admin/wp-content/? [NC]
+    RewriteCond %{REQUEST_URI} !^/admin/portal-auth/ [NC]
     RewriteCond %{REQUEST_URI} !^/admin/wp-login\.php [NC]
     RewriteCond %{REQUEST_URI} !^/admin/wp-cron\.php [NC]
     RewriteCond %{REQUEST_URI} !^/admin/xmlrpc\.php [NC]

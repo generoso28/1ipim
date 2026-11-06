@@ -65,8 +65,6 @@ onPageReady("#form-container", () => {
   const calendarView = document.getElementById("calendar-view");
   const viewToggles = document.querySelectorAll<HTMLElement>(".view-toggle");
   const pageTitle = document.getElementById("page-title");
-
-  const token = auth.getToken();
   const user = auth.getUser();
   const permissions = getPermissions(user.role, user.nicename);
   const isManager = permissions.isAdmin || permissions.isPrivileged;
@@ -113,9 +111,7 @@ onPageReady("#form-container", () => {
 
   async function loadVolunteers(): Promise<void> {
     try {
-      const response = await apiFetch("/wp-json/wp/v2/users/?per_page=100", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiFetch("/wp-json/wp/v2/users/?per_page=100", {});
       const users = (await response.json()) as WpUser[];
 
       if (volunteersSelect) {
@@ -143,9 +139,10 @@ onPageReady("#form-container", () => {
   async function loadSchedules(): Promise<void> {
     try {
       loading?.classList.remove("hidden");
-      const response = await apiFetch("/wp-json/wp/v2/escala/?per_page=100", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await apiFetch(
+        "/wp-json/wp/v2/escala/?per_page=100",
+        {},
+      );
       const data = await response.json();
       loading?.classList.add("hidden");
 
@@ -278,7 +275,6 @@ onPageReady("#form-container", () => {
               `/wp-json/wp/v2/escala/${id}/?force=true`,
               {
                 method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` },
               },
             );
             if (!response.ok) throw new Error("Falha ao cancelar");
@@ -326,7 +322,6 @@ onPageReady("#form-container", () => {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify({
                 content,
@@ -546,7 +541,6 @@ onPageReady("#form-container", () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               content,
@@ -674,7 +668,6 @@ onPageReady("#form-container", () => {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
               },
               body: JSON.stringify({
                 title,

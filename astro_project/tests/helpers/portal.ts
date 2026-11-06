@@ -1,13 +1,51 @@
 import type { BrowserContext, Page, Route } from "@playwright/test";
 
 export const SESSION = {
-  "1ipim_auth_token": "e2e-token",
+  "1ipim_auth_nonce": "e2e-nonce",
   "1ipim_user_role": "administrator",
   "1ipim_user_id": "1",
   "1ipim_user_display_name": "Teste E2E",
   "1ipim_user_email": "teste@example.com",
   "1ipim_user_ministries_approved": '["1"]',
 } as const;
+
+/** Usuário devolvido por `/admin/portal-auth/session.php`. */
+export const SESSION_USER = {
+  id: "1",
+  nicename: "teste",
+  displayName: "Teste E2E",
+  email: "teste@example.com",
+  role: "administrator",
+  roles: ["administrator"],
+  ministries: [1],
+  nonce: "e2e-nonce",
+} as const;
+
+/**
+ * Mocka os endpoints de sessão. Chamado nos testes autenticados para que o
+ * layout não consulte a produção de verdade.
+ */
+export async function mockAuthSession(
+  page: Page,
+  user: typeof SESSION_USER | null = SESSION_USER,
+): Promise<void> {
+  await page.route("**/admin/portal-auth/**", async (route) => {
+    const url = new URL(route.request().url());
+    if (url.pathname.endsWith("/session.php")) {
+      if (user) {
+        await json(route, { ok: true, user });
+      } else {
+        await json(route, { error: "not_authenticated" }, 401);
+      }
+      return;
+    }
+    if (url.pathname.endsWith("/logout.php")) {
+      await json(route, { ok: true });
+      return;
+    }
+    await json(route, { error: "not_mocked" }, 404);
+  });
+}
 
 export async function seedSession(context: BrowserContext): Promise<void> {
   await context.addInitScript((session) => {
@@ -17,23 +55,28 @@ export async function seedSession(context: BrowserContext): Promise<void> {
   }, SESSION);
 }
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-  "Access-Control-Allow-Headers": "Authorization, Content-Type, X-WP-Nonce",
-};
+function corsHeaders(route: Route): Record<string, string> {
+  const origin = route.request().headers()["origin"] || "*";
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+    "Access-Control-Allow-Headers": "Authorization, Content-Type, X-WP-Nonce",
+    Vary: "Origin",
+  };
+}
 
 export function json(route: Route, body: unknown, status = 200): Promise<void> {
   return route.fulfill({
     status,
-    headers: CORS_HEADERS,
+    headers: corsHeaders(route),
     contentType: "application/json",
     body: JSON.stringify(body),
   });
 }
 
 export function corsPreflight(route: Route): Promise<void> {
-  return route.fulfill({ status: 204, headers: CORS_HEADERS });
+  return route.fulfill({ status: 204, headers: corsHeaders(route) });
 }
 
 export function getApiPath(route: Route): { path: string; method: string } {

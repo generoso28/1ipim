@@ -1,4 +1,3 @@
-import { auth } from "./auth";
 import { apiFetch } from "./api";
 import { escapeHtml, showToast, onPageReady } from "./ui";
 import type { WpPost } from "./types";
@@ -7,8 +6,6 @@ onPageReady("#posts-table-body", () => {
   const tableBody = document.getElementById("posts-table-body");
   const loading = document.getElementById("loading-posts");
   const emptyState = document.getElementById("no-posts");
-  const token = auth.getToken();
-
   let activeFilter = "publish";
 
   async function setPostStatus(postId: string, status: string): Promise<void> {
@@ -19,7 +16,6 @@ onPageReady("#posts-table-body", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status }),
       });
@@ -45,7 +41,6 @@ onPageReady("#posts-table-body", () => {
         `/wp-json/wp/v2/posts/${postId}/?force=true`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
         },
       );
 
@@ -117,7 +112,6 @@ onPageReady("#posts-table-body", () => {
 
       const response = await apiFetch(
         `/wp-json/wp/v2/posts/?_embed&per_page=100&status=${activeFilter}${categoryParam}`,
-        { headers: { Authorization: `Bearer ${token}` } },
       );
       const posts = await response.json();
 

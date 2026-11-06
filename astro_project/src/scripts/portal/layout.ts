@@ -125,8 +125,9 @@ function setupMobileMenu(): void {
 function setupLogout(): void {
   const button = document.getElementById("portal-logout-btn");
   if (button) {
-    button.onclick = () => {
-      auth.clear();
+    button.onclick = async () => {
+      button.setAttribute("aria-busy", "true");
+      await auth.logout();
       window.location.href = "/portal/login";
     };
   }
@@ -142,22 +143,35 @@ function hideAuthGuard(): void {
   }, 300);
 }
 
-onPageReady("#portal-root", () => {
-  if (!auth.getToken()) {
-    window.location.href = "/portal/login";
-    return;
-  }
-
-  const user = auth.getUser();
+function renderShell(user: { role: string; nicename: string }): void {
   const permissions = getPermissions(user.role, user.nicename);
-
   renderUser(permissions);
   renderNavigation(permissions);
+}
+
+onPageReady("#portal-root", () => {
+  // Pinta a interface com o cache (se houver) para evitar tela branca.
+  if (auth.hasSession()) {
+    renderShell(auth.getUser());
+    hideAuthGuard();
+  }
+
   setupThemeToggle();
   setupMobileMenu();
   setupLogout();
-  hideAuthGuard();
 
   // Compatibilidade com scripts antigos que chamam window.showToast.
   (window as Window & { showToast?: typeof showToast }).showToast = showToast;
+
+  void (async () => {
+    const user = await auth.refresh();
+    if (!user) {
+      auth.clear();
+      window.location.href = "/portal/login";
+      return;
+    }
+
+    renderShell(user);
+    hideAuthGuard();
+  })();
 });

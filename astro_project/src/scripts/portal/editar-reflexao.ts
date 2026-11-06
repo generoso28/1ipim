@@ -1,4 +1,3 @@
-import { auth } from "./auth";
 import { apiFetch, getErrorMessage } from "./api";
 import { escapeHtml, showToast, onPageReady } from "./ui";
 
@@ -17,7 +16,6 @@ onPageReady("#edit-form", () => {
   const contentInput = document.getElementById(
     "post-content",
   ) as HTMLTextAreaElement | null;
-  const token = auth.getToken();
   const postId = new URLSearchParams(window.location.search).get("id");
 
   if (!postId) {
@@ -29,7 +27,6 @@ onPageReady("#edit-form", () => {
     try {
       const response = await apiFetch(
         `/wp-json/wp/v2/posts/${postId}/?context=edit`,
-        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       if (!response.ok) throw new Error("Post não encontrado");
@@ -71,7 +68,6 @@ onPageReady("#edit-form", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           title: titleInput?.value || "",

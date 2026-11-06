@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
+import { SITE } from '../config/seo';
 
 const schedule = [
   {
@@ -46,8 +47,41 @@ const schedule = [
 ];
 
 
+function nextWeekday(day: number): string {
+    const now = new Date();
+    const date = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const diff = (day - date.getUTCDay() + 7) % 7;
+    date.setUTCDate(date.getUTCDate() + diff);
+    return date.toISOString().slice(0, 10);
+}
+
+const weeklyEvents = [
+    { name: "Escola Bíblica Dominical", day: 0, start: "09:00", end: "10:30", description: "Estudo sistemático da Bíblia para crianças, jovens e adultos na 1IPIM, em Machado (MG)." },
+    { name: "Culto Solene", day: 0, start: "19:00", end: "21:00", description: "Culto de adoração, oração, louvor e pregação da Palavra na 1IPIM, em Machado (MG)." },
+    { name: "Reunião de Oração", day: 3, start: "18:30", end: "20:00", description: "Reunião semanal de oração pela igreja, missões, enfermos e uns pelos outros." },
+    { name: "Get Up", day: 6, start: "19:30", end: "21:30", description: "Encontro do ministério de jovens Get Up da 1IPIM, em Machado (MG)." },
+].map((event) => ({
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.name,
+    description: event.description,
+    startDate: `${nextWeekday(event.day)}T${event.start}:00-03:00`,
+    endDate: `${nextWeekday(event.day)}T${event.end}:00-03:00`,
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    eventStatus: "https://schema.org/EventScheduled",
+    isAccessibleForFree: true,
+    location: {
+        "@type": "Place",
+        name: SITE.name,
+        address: { "@type": "PostalAddress", ...SITE.address },
+        geo: { "@type": "GeoCoordinates", ...SITE.geo },
+    },
+    organizer: { "@id": `${SITE.url}/#church` },
+}));
+
+
 ---
-<Layout title="Programação - Primeira Igreja Presbiteriana Independente de Machado" description="Horários dos cultos e atividades da 1IPIM: Escola Bíblica Dominical, Culto Solene, Get Up, ensaios e encontros durante a semana." footerBgClass="bg-white dark:bg-slate-900">
+<Layout title="Programação - Primeira Igreja Presbiteriana Independente de Machado" description="Horários dos cultos e atividades da 1IPIM: Escola Bíblica Dominical, Culto Solene, Get Up, ensaios e encontros durante a semana." footerBgClass="bg-white dark:bg-slate-900" schema={weeklyEvents}>
     <section class="py-20 mt-16 bg-white dark:bg-slate-900 transition-colors min-h-screen">
         <div class="container mx-auto px-4 lg:px-8 max-w-7xl">
             <div class="text-center max-w-2xl mx-auto mb-16 scroll-card">

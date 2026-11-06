@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { SITE } from '../config/seo';
 import { Image } from 'astro:assets';
 
 // Imports de imagens dos pastores
@@ -63,9 +64,31 @@ const pastores = [
     highlightColor: "#29a060"
   }
 ];
+
+const personSchemas = [
+    ...pastores.map((pastor) => ({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: pastor.name,
+        jobTitle: `Pastor — ${pastor.role}`,
+        description: pastor.bio,
+        image: new URL(pastor.image.src, SITE.url).href,
+        worksFor: { "@id": `${SITE.url}/#church` },
+    })),
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Isaías Garcia Vieira",
+        jobTitle: "Pastor Emérito",
+        description:
+            "Pastor emérito da 1IPIM, em Machado (MG), com mais de 55 anos de ministério dedicado à igreja e à região.",
+        image: new URL(isaiasMissoes.src, SITE.url).href,
+        worksFor: { "@id": `${SITE.url}/#church` },
+    },
+];
 ---
 
-<Layout title="Pastores - Primeira Igreja Presbiteriana Independente de Machado" description="Conheça o corpo pastoral e a liderança da 1ª Igreja Presbiteriana Independente de Machado, com suas áreas de ministério e formação." footerBgClass="bg-gray-50 dark:bg-slate-800">
+<Layout title="Pastores - Primeira Igreja Presbiteriana Independente de Machado" description="Conheça o corpo pastoral e a liderança da 1ª Igreja Presbiteriana Independente de Machado, com suas áreas de ministério e formação." footerBgClass="bg-gray-50 dark:bg-slate-800" schema={personSchemas}>
     <section class="pt-32 md:pt-40 pb-20 bg-gradient-to-br from-amber-900 via-amber-950 to-slate-950 transition-colors relative overflow-hidden" id="pastor-emerito">
         <!-- Efeitos decorativos de fundo -->
         <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">

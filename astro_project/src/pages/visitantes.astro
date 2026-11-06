@@ -1,13 +1,56 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const faqs = [
+  {
+    "q": "Que horas chego?",
+    "a": "Nosso culto principal de celebração acontece aos Domingos às 19h. Recomendamos chegar alguns minutinhos antes para estacionar com calma e conversar no saguão."
+  },
+  {
+    "q": "O que devo vestir?",
+    "a": "Venha como você se sente bem. Não há dress code; você encontrará pessoas de terno e também de jeans e tênis."
+  },
+  {
+    "q": "Sou obrigado a ofertar?",
+    "a": "Não. A oferta é voltada aos membros; visitantes são convidados sem obrigações."
+  },
+  {
+    "q": "Posso participar da Santa Ceia?",
+    "a": "A Santa Ceia é para cristãos crentes professos, batizados e em comunhão com o Senhor e suas igrejas locais, inclusive de outras denominações evangélicas."
+  },
+  {
+    "q": "Onde fica a igreja e há estacionamento?",
+    "a": "Estamos na Rua Airton Rodrigues Leite, 26, Centro de Machado (MG). Há estacionamento nas proximidades e a equipe de recepção orienta os visitantes."
+  },
+  {
+    "q": "Há ministério infantil?",
+    "a": "Sim. Crianças são bem-vindas e há cuidado e ensino adequados à idade durante os cultos."
+  },
+  {
+    "q": "Qual é a denominação da igreja?",
+    "a": "Somos a Primeira Igreja Presbiteriana Independente de Machado, ligada à Igreja Presbiteriana Independente do Brasil (IPI), de tradição reformada."
+  }
+];
+
+const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(({ q, a }) => ({
+        "@type": "Question",
+        name: q,
+        acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+};
 ---
-<Layout title="Você é Novo Aqui? - 1IPIM" description="É a sua primeira vez? Saiba o que esperar do culto, onde estacionar, o que vestir, o ministério infantil e como chegar à 1IPIM em Machado (MG)." isImmersive={true}>
+
+<Layout title="Você é Novo Aqui? - 1IPIM" description="É a sua primeira vez? Saiba o que esperar do culto, onde estacionar, o que vestir, o ministério infantil e como chegar à 1IPIM em Machado (MG)." isImmersive={true} schema={faqSchema}>
     <!-- Hero Section -->
     <header class="bg-white dark:bg-slate-900 relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-center transition-colors overflow-hidden border-b border-gray-100 dark:border-slate-800">
         <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-success)]/5 rounded-full blur-[100px] pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--color-brand)]/5 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div class="container mx-auto px-4 lg:px-8 max-w-4xl text-center relative z-10" id="fadeDiv">
+            <p class="text-[var(--color-success)] font-black uppercase tracking-widest text-xs md:text-sm mb-4">Igreja Presbiteriana em Machado (MG)</p>
             <h1 class="font-extrabold text-4xl md:text-5xl lg:text-7xl text-gray-900 dark:text-white mb-6 leading-tight select-none">
                 Olá! Nós amamos <br><span class="text-[var(--color-success)]">receber visitantes.</span>
             </h1>
@@ -173,6 +216,33 @@ import Layout from '../layouts/Layout.astro';
                         <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-3 relative z-10">Posso participar da Santa Ceia?</h3>
                         <p class="text-gray-600 dark:text-gray-400 leading-relaxed relative z-10 flex-1">
                             A Santa Ceia, um sacramento sublime, é voltada estritamente aos cristãos crentes professos que já foram batizados em Cristo e encontram-se em comunhão perante o Senhor e suas igrejas locais (mesmo vindos de outras denominações evangélicas).
+                        </p>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-md border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-shadow scroll-card h-full flex flex-col relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 text-gray-100 dark:text-slate-800 text-7xl group-hover:scale-110 transition-transform duration-500 pointer-events-none z-0"><i class="fa-solid fa-location-dot"></i></div>
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-3 relative z-10">Onde fica a igreja e há estacionamento?</h3>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed relative z-10 flex-1">
+                            Estamos na Rua Airton Rodrigues Leite, 26, Centro de Machado (MG). Há estacionamento nas proximidades e a equipe de recepção orienta os visitantes.
+                        </p>
+                    </div>
+
+                    <!-- FAQ 6 -->
+                    <div class="bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-md border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-shadow scroll-card h-full flex flex-col relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 text-gray-100 dark:text-slate-800 text-7xl group-hover:scale-110 transition-transform duration-500 pointer-events-none z-0"><i class="fa-solid fa-child-reaching"></i></div>
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-3 relative z-10">Há ministério infantil?</h3>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed relative z-10 flex-1">
+                            Sim. Crianças são bem-vindas e há cuidado e ensino adequados à idade durante os cultos.
+                        </p>
+                    </div>
+
+                    <!-- FAQ 7 -->
+                    <div class="bg-white dark:bg-slate-900 p-8 rounded-[2rem] shadow-md border border-gray-100 dark:border-slate-700 hover:shadow-lg transition-shadow scroll-card h-full flex flex-col relative overflow-hidden group">
+                        <div class="absolute -right-6 -top-6 text-gray-100 dark:text-slate-800 text-7xl group-hover:scale-110 transition-transform duration-500 pointer-events-none z-0"><i class="fa-solid fa-church"></i></div>
+                        <h3 class="font-bold text-xl text-gray-900 dark:text-white mb-3 relative z-10">Qual é a denominação da igreja?</h3>
+                        <p class="text-gray-600 dark:text-gray-400 leading-relaxed relative z-10 flex-1">
+                            Somos a Primeira Igreja Presbiteriana Independente de Machado, ligada à Igreja Presbiteriana Independente do Brasil (IPI), de tradição reformada.
                         </p>
                     </div>
                 </div>

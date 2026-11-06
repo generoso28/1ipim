@@ -4,5 +4,6 @@ Allow: /
 # Painéis e administração não devem ser indexados
 Disallow: /admin/
 Disallow: /portal/
+Disallow: /api/
 
 Sitemap: https://1ipim.online/sitemap.xml

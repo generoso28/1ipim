@@ -16,18 +16,26 @@ const latestThumbnail = `https://img.youtube.com/vi/${latestVideoId}/maxresdefau
         <h1 class="sr-only">Primeira Igreja Presbiteriana Independente de Machado</h1>
         <!-- Background Video self-hosted -->
         <div class="absolute inset-0 z-0 bg-black pointer-events-none overflow-hidden">
+            <!-- Primeiro frame aparece de imediato; o vídeo entra após o primeiro paint -->
+            <picture class="absolute inset-0 block">
+                <source media="(max-width: 767px)" srcset="/assets/video/sobrevoo-poster.webp" />
+                <img
+                    src="/assets/video/hero-poster.webp"
+                    alt=""
+                    aria-hidden="true"
+                    fetchpriority="high"
+                    class="w-full h-full object-cover md:scale-[1.02]"
+                />
+            </picture>
             <video
-                autoplay
+                id="hero-video"
                 muted
                 loop
                 playsinline
-                class="absolute w-full h-full object-contain md:object-cover opacity-90 md:scale-[1.02]"
-                preload="auto"
-            >
-                <source src="/assets/video/hero.webm" type="video/webm" />
-                <source src="/assets/video/hero.mp4" type="video/mp4" />
-                <track kind="captions" src="" label="Português" srclang="pt" />
-            </video>
+                preload="none"
+                aria-hidden="true"
+                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 md:scale-[1.02]"
+            ></video>
             <!-- Sombreamento de base apenas para destacar os botões -->
             <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
         </div>
@@ -528,5 +536,45 @@ const latestThumbnail = `https://img.youtube.com/vi/${latestVideoId}/maxresdefau
 
         document.addEventListener('astro:page-load', loadLatestSermon);
         if (document.readyState !== 'loading') loadLatestSermon();
+    </script>
+    <script>
+        const setupHeroVideo = () => {
+            const video = document.getElementById('hero-video') as HTMLVideoElement | null;
+            if (!video || video.dataset.loaded === '1') return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            video.dataset.loaded = '1';
+
+            const isMobile = window.matchMedia('(max-width: 767px)').matches;
+            const sources: Array<[string, string]> = isMobile
+                ? [['/assets/video/sobrevoo.mp4', 'video/mp4']]
+                : [['/assets/video/hero.webm', 'video/webm'], ['/assets/video/hero.mp4', 'video/mp4']];
+
+            sources.forEach(([src, type]) => {
+                const source = document.createElement('source');
+                source.src = src;
+                source.type = type;
+                video.appendChild(source);
+            });
+
+            video.load();
+            const play = video.play();
+            if (play) {
+                play.then(() => video.classList.remove('opacity-0')).catch(() => {
+                    // Se o navegador bloquear o autoplay, o poster continua visível.
+                });
+            }
+        };
+
+        const scheduleHeroVideo = () => {
+            const idle = (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback;
+            if (idle) {
+                idle(setupHeroVideo, { timeout: 2000 });
+            } else {
+                window.setTimeout(setupHeroVideo, 1200);
+            }
+        };
+
+        document.addEventListener('astro:page-load', scheduleHeroVideo);
+        if (document.readyState !== 'loading') scheduleHeroVideo();
     </script>
 </Layout>

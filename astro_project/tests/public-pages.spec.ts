@@ -333,13 +333,41 @@ test.describe("Consentimento de analytics", () => {
 });
 
 test.describe("Hero e movimento reduzido", () => {
-  test("hero mobile mostra o vídeo inteiro, sem corte", async ({ page }) => {
+  test("hero mobile usa o vídeo vertical de sobrevoo", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    const video = page.locator("header video");
-    await expect(video).toBeVisible();
-    await expect(video).toHaveCSS("object-fit", "contain");
+    const poster = page.locator("header picture img");
+    await expect(poster).toBeVisible();
+    await expect
+      .poll(() => poster.evaluate((img: HTMLImageElement) => img.currentSrc))
+      .toContain("sobrevoo-poster");
+
+    const video = page.locator("#hero-video");
+    await expect
+      .poll(() => video.evaluate((el: HTMLVideoElement) => el.currentSrc), {
+        timeout: 10_000,
+      })
+      .toContain("sobrevoo.mp4");
+  });
+
+  test("hero desktop mantém o vídeo atual", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const poster = page.locator("header picture img");
+    await expect
+      .poll(() => poster.evaluate((img: HTMLImageElement) => img.currentSrc))
+      .toContain("hero-poster");
+
+    const video = page.locator("#hero-video");
+    await expect
+      .poll(() => video.evaluate((el: HTMLVideoElement) => el.currentSrc), {
+        timeout: 10_000,
+      })
+      .toContain("hero.webm");
   });
 
   test("conteúdo animado fica visível sem rolagem", async ({ page }) => {
@@ -368,5 +396,27 @@ test.describe("Política de privacidade", () => {
     await expect(
       page.locator('a[href="mailto:administracao@1ipim.online"]'),
     ).toHaveCount(2);
+  });
+});
+
+test.describe("Performance de assets", () => {
+  test("não busca fontes ou ícones em CDNs externas", async ({ page }) => {
+    const externos: string[] = [];
+
+    page.on("request", (request) => {
+      const url = request.url();
+      if (
+        url.includes("fonts.googleapis.com") ||
+        url.includes("fonts.gstatic.com") ||
+        url.includes("font-awesome")
+      ) {
+        externos.push(url);
+      }
+    });
+
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(1500);
+
+    expect(externos).toEqual([]);
   });
 });

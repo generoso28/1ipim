@@ -1,0 +1,20 @@
+services:
+  jenkins:
+    build:
+      context: ./docker/jenkins
+      dockerfile: Dockerfile
+    container_name: 1ipim-jenkins
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    env_file:
+      - ./docker/jenkins/.env
+    environment:
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/casc/jenkins.yaml
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Djava.awt.headless=true
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./docker/jenkins/casc:/var/jenkins_home/casc:ro
+
+volumes:
+  jenkins_home:

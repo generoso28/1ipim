@@ -1,49 +1,58 @@
 # CI/CD com Jenkins + Playwright
 
-O pipeline está no `Jenkinsfile` da raiz. Ele valida o site com Playwright antes
-de qualquer deploy e só publica em produção após aprovação manual.
+O Jenkins local roda em Docker e executa a suíte Playwright antes de publicar.
+O fluxo é: **testes locais → deploy staging → testes no staging → deploy
+produção → smoke em produção**.
 
-## Fluxo
+## Subir o Jenkins
 
-1. **Checkout**
-2. **Instalar dependências** (`npm ci` em `astro_project`)
-3. **Build** (Astro; injeta `YOUTUBE_API_KEY` em `.env`)
-4. **Testes E2E** (Playwright, 28 testes)
-5. **Preparar deploy** (instala Python/paramiko quando houver deploy)
-6. **Deploy staging** (se `DEPLOY_STAGING=true`)
-7. **Aprovação manual** (se `DEPLOY_PRODUCTION=true`)
-8. **Deploy produção** (somente após aprovação)
+```bash
+cp docker/jenkins/.env.example docker/jenkins/.env
+# edite DEPLOY_USER, DEPLOY_PASS, YOUTUBE_API_KEY e JENKINS_ADMIN_PASSWORD
+docker compose up -d --build
+```
 
-Artefatos publicados:
+Acesse **http://localhost:8081** e entre com `admin` e a senha definida em
+`docker/jenkins/.env`.
 
-- relatório HTML em `astro_project/playwright-report/`;
-- JUnit em `astro_project/test-results/junit.xml`;
-- traces, screenshots e vídeos de falhas em `astro_project/test-results/`.
+O `docker/jenkins/.env` é ignorado pelo Git. O job `1ipim-ci` é criado
+automaticamente via Configuration as Code (JCasC), com as credenciais
+`1ipim-sftp` e `youtube-api-key`.
 
-## Pré-requisitos no Jenkins
+## O que a imagem contém
 
-Plugins:
+- Jenkins LTS (JDK 21);
+- Node 22;
+- Playwright 1.62.1 + Chromium e dependências;
+- Python 3 + paramiko (deploy SFTP);
+- plugins: Configuration as Code, Job DSL, Pipeline, Git, Credentials Binding,
+  JUnit, HTML Publisher, Timestamper.
 
-- Pipeline / Pipeline: Docker
-- Credentials Binding
-- JUnit
-- HTML Publisher
-- (opcional) Timestamper, build discarder
+## Pipeline
 
-Credenciais:
+Parâmetros:
 
-| ID | Tipo | Uso |
+| Parâmetro | Padrão | Efeito |
 |---|---|---|
-| `1ipim-sftp` | Username with password | deploy SFTP |
-| `youtube-api-key` | Secret text | build do Astro |
+| `DEPLOY_STAGING` | `true` | Publica e testa no staging |
+| `DEPLOY_PRODUCTION` | `true` | Publica em produção após os testes |
+| `REQUIRE_APPROVAL` | `false` | Exige aprovação manual antes da produção |
 
-O agente usa a imagem Docker
-`mcr.microsoft.com/playwright:v1.62.1-noble`, que já traz Node 24 e os
-navegadores do Playwright 1.62.1. Se o Jenkins não usar Docker, troque o
-`agent` por um nó com Node 22+, Python 3 e execute
-`npx playwright install --with-deps chromium`.
+Etapas:
 
-## Rodando localmente
+1. `npm ci`
+2. Build do Astro (`YOUTUBE_API_KEY` vindo das credenciais)
+3. **Testes locais** — 28 testes Playwright contra o preview local
+4. **Deploy staging** — `scripts/deploy_astro.py --target staging`
+5. **Testes no staging** — `BASE_URL=https://staging.1ipim.online`
+6. Aprovação manual (opcional)
+7. **Deploy produção** — `scripts/deploy_astro.py --target production`
+8. **Smoke produção** — `BASE_URL=https://1ipim.online`
+
+Se qualquer etapa falhar, o pipeline para e a próxima não roda. O deploy é
+aditivo, faz backup em `~/1ipim_backups/` e verifica SHA-256.
+
+## Rodando localmente sem Jenkins
 
 ```bash
 cd astro_project
@@ -53,44 +62,25 @@ npm run build
 npx playwright test
 ```
 
-Ou:
-
-```bash
-npm run test:e2e:build
-```
-
-O `playwright.config.ts` sobe `npm run preview` na porta 4330 quando
-`BASE_URL` não está definido.
-
-Para testar contra outro ambiente:
+Contra staging/produção:
 
 ```bash
 BASE_URL=https://staging.1ipim.online npx playwright test
+BASE_URL=https://1ipim.online npx playwright test
 ```
 
-Nesse caso o Playwright não sobe o servidor local.
+## Observações
 
-## O que os testes cobrem
-
-- **12 páginas públicas**: status, canonical, `og:url`, um `<h1>`, descrição
-  única, rodapé/ano, ausência de `localhost` e de chave exposta, sem 404 de
-  assets locais e sem erros de página.
-- **Reflexões** com API mockada (4 artigos na versão validada).
-- **Semana Jovem** com imagens carregadas.
-- **404** personalizado.
-- **Menu desktop** (Agenda/A Igreja) e **menu mobile**.
-- **robots.txt** e **sitemap.xml**.
-- **Portal**: login, sessão/localStorage, dashboard por papel, escalas
-  (calendário, participação, criação), voluntários (aprovar/promover/excluir),
-  ministérios (criar/excluir), reflexões (lixeira/filtro), nova/editar reflexão
-  e telas restantes.
-- O portal usa **API mockada** nos testes; nenhum dado real de produção é
-  alterado pelo pipeline.
-
-## Deploy
-
-- O deploy é feito pelo `scripts/deploy_astro.py` (SFTP aditivo, backup e
-  verificação SHA-256).
-- Staging: docroot `staging.1ipim.online`, `X-Robots-Tag: noindex`.
-- Produção: exige `DEPLOY_PRODUCTION=true` e aprovação manual no Jenkins.
-- Backups ficam em `~/1ipim_backups/` no servidor.
+- O job é **manual**; não há gatilho de SCM configurado. Para build automático a
+  cada push, adicione `triggers { scm('H/5 * * * *') }` no job em
+  `docker/jenkins/casc/jenkins.yaml` ou configure um webhook.
+- O pipeline usa **API mockada** nos testes do portal; ele não cria, edita ou
+  exclui dados reais no WordPress.
+- Como o `DEPLOY_PRODUCTION` vem `true` por padrão, um build sem alterar
+  parâmetros publica em produção depois dos testes. Use
+  `DEPLOY_PRODUCTION=false` para um dry-run ou `REQUIRE_APPROVAL=true` para
+  exigir aprovação manual.
+- O Jenkins fica exposto apenas em `localhost:8081`; não exponha essa porta
+  publicamente sem TLS e autenticação reforçada.
+- Para parar: `docker compose down`. Para apagar também o estado do Jenkins:
+  `docker compose down -v`.

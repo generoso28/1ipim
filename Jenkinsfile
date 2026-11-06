@@ -1,14 +1,9 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/playwright:v1.62.1-noble'
-            args '--user root'
-        }
-    }
+    agent any
 
     options {
         timestamps()
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 45, unit: 'MINUTES')
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
     }
@@ -17,17 +12,17 @@ pipeline {
         booleanParam(
             name: 'DEPLOY_STAGING',
             defaultValue: true,
-            description: 'Publicar em staging após os testes passarem'
+            description: 'Publicar no staging e validar com Playwright'
         )
         booleanParam(
             name: 'DEPLOY_PRODUCTION',
-            defaultValue: false,
-            description: 'Solicitar aprovação e publicar em produção'
+            defaultValue: true,
+            description: 'Publicar em produção após os testes locais e de staging'
         )
-        string(
-            name: 'BASE_URL',
-            defaultValue: '',
-            description: 'Opcional: testar contra uma URL externa (ex.: https://staging.1ipim.online)'
+        booleanParam(
+            name: 'REQUIRE_APPROVAL',
+            defaultValue: false,
+            description: 'Pausar para aprovação manual antes do deploy de produção'
         )
     }
 
@@ -37,12 +32,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Instalar dependências') {
             steps {
                 dir('astro_project') {
@@ -64,36 +53,17 @@ pipeline {
             }
         }
 
-        stage('Testes E2E (Playwright)') {
+        stage('Testes locais (Playwright)') {
             steps {
                 dir('astro_project') {
-                    script {
-                        if (params.BASE_URL?.trim()) {
-                            sh "BASE_URL='${params.BASE_URL.trim()}' npx playwright test"
-                        } else {
-                            sh 'npx playwright test'
-                        }
-                    }
+                    sh 'npx playwright test'
                 }
-            }
-        }
-
-        stage('Preparar deploy') {
-            when {
-                expression { params.DEPLOY_STAGING || params.DEPLOY_PRODUCTION }
-            }
-            steps {
-                sh 'apt-get update && apt-get install -y python3-pip'
-                sh 'pip3 install --break-system-packages paramiko'
             }
         }
 
         stage('Deploy staging') {
             when {
-                expression {
-                    params.DEPLOY_STAGING &&
-                    (env.BRANCH_NAME == null || env.BRANCH_NAME == 'master')
-                }
+                expression { params.DEPLOY_STAGING }
             }
             steps {
                 withCredentials([
@@ -108,21 +78,29 @@ pipeline {
             }
         }
 
-        stage('Aprovação produção') {
+        stage('Testes no staging (Playwright)') {
             when {
-                expression { params.DEPLOY_PRODUCTION }
+                expression { params.DEPLOY_STAGING }
             }
             steps {
-                input message: 'Testes passaram. Publicar em produção agora?', ok: 'Publicar'
+                dir('astro_project') {
+                    sh 'BASE_URL=https://staging.1ipim.online npx playwright test'
+                }
+            }
+        }
+
+        stage('Aprovação para produção') {
+            when {
+                expression { params.DEPLOY_PRODUCTION && params.REQUIRE_APPROVAL }
+            }
+            steps {
+                input message: 'Testes locais e de staging passaram. Publicar em produção?', ok: 'Publicar'
             }
         }
 
         stage('Deploy produção') {
             when {
-                expression {
-                    params.DEPLOY_PRODUCTION &&
-                    (env.BRANCH_NAME == null || env.BRANCH_NAME == 'master')
-                }
+                expression { params.DEPLOY_PRODUCTION }
             }
             steps {
                 withCredentials([
@@ -133,6 +111,17 @@ pipeline {
                     )
                 ]) {
                     sh 'python3 scripts/deploy_astro.py --target production --confirm'
+                }
+            }
+        }
+
+        stage('Smoke produção (Playwright)') {
+            when {
+                expression { params.DEPLOY_PRODUCTION }
+            }
+            steps {
+                dir('astro_project') {
+                    sh 'BASE_URL=https://1ipim.online npx playwright test'
                 }
             }
         }
@@ -154,10 +143,10 @@ pipeline {
             }
         }
         failure {
-            echo 'Pipeline falhou. A versão não foi entregue.'
+            echo 'Pipeline falhou. Verifique o relatório do Playwright e os logs do deploy.'
         }
         success {
-            echo 'Testes E2E passaram. Deploy concluído conforme os parâmetros.'
+            echo 'Pipeline concluído: testes locais, staging e produção conforme os parâmetros.'
         }
     }
 }

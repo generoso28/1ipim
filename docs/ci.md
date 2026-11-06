@@ -42,12 +42,13 @@ Etapas:
 
 1. `npm ci`
 2. Build do Astro
-3. **Testes locais** — 29 testes Playwright contra o preview local
-4. **Deploy staging** — `scripts/deploy_astro.py --target staging`
-5. **Testes no staging** — `BASE_URL=https://staging.1ipim.online`
-6. Aprovação manual (opcional)
-7. **Deploy produção** — `scripts/deploy_astro.py --target production`
-8. **Smoke produção** — `BASE_URL=https://1ipim.online`
+3. **Testes locais** — 77 testes Playwright (E2E, SEO e axe) contra o preview local
+4. **Lighthouse CI** — performance/acessibilidade/SEO com relatório no Jenkins
+5. **Deploy staging** — `scripts/deploy_astro.py --target staging`
+6. **Testes no staging** — `BASE_URL=https://staging.1ipim.online`
+7. Aprovação manual (opcional)
+8. **Deploy produção** — `scripts/deploy_astro.py --target production`
+9. **Smoke produção** — `BASE_URL=https://1ipim.online`
 
 Se qualquer etapa falhar, o pipeline para e a próxima não roda. O deploy é
 aditivo, faz backup em `~/1ipim_backups/` e verifica SHA-256.
@@ -84,6 +85,11 @@ BASE_URL=https://1ipim.online npx playwright test
   publicamente sem TLS e autenticação reforçada.
 - Para parar: `docker compose down`. Para apagar também o estado do Jenkins:
   `docker compose down -v`.
+
+## Relatórios no Jenkins
+
+O build publica **Playwright** e **Lighthouse** na página do job. Detalhes de
+qualidade em [`docs/quality.md`](quality.md).
 
 ## Relatório Playwright no Jenkins
 

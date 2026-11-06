@@ -143,3 +143,26 @@ function initContactForm(): void {
 
 document.addEventListener("astro:page-load", initContactForm);
 if (document.readyState !== "loading") initContactForm();
+
+
+const MAP_EMBED_URL =
+  "https://maps.google.com/maps?width=100%25&height=100%25&hl=en&q=Rua%20Airton%20Rodrigues%20Leite,%2026&t=&z=17&ie=UTF8&iwloc=B&output=embed";
+
+function initMap(): void {
+  const button = document.getElementById("map-load");
+  const container = document.getElementById("map-container");
+  if (!button || !container || container.dataset.mapLoaded === "1") return;
+  container.dataset.mapLoaded = "1";
+
+  button.addEventListener("click", () => {
+    const iframe = document.createElement("iframe");
+    iframe.title = "Mapa de localização";
+    iframe.className = "w-full h-full";
+    iframe.src = MAP_EMBED_URL;
+    iframe.loading = "lazy";
+    container.replaceChildren(iframe);
+  });
+}
+
+document.addEventListener("astro:page-load", initMap);
+if (document.readyState !== "loading") initMap();

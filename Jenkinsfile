@@ -56,6 +56,27 @@ pipeline {
             }
         }
 
+        stage('Lighthouse CI') {
+            steps {
+                dir('astro_project') {
+                    sh '''
+                        set -e
+                        npm run preview -- --port 4321 > /tmp/lighthouse-preview.log 2>&1 &
+                        PREVIEW_PID=$!
+                        trap "kill $PREVIEW_PID 2>/dev/null || true" EXIT
+                        for i in $(seq 1 30); do
+                            curl -sf http://localhost:4321/ >/dev/null && break
+                            sleep 1
+                        done
+                        curl -sf http://localhost:4321/ >/dev/null || (cat /tmp/lighthouse-preview.log; exit 1)
+                        export CHROME_PATH=$(find /ms-playwright -maxdepth 3 -type f -name chrome | head -1)
+                        npx lhci autorun
+                        node scripts/lighthouse_index.mjs
+                    '''
+                }
+            }
+        }
+
         stage('Deploy staging') {
             when {
                 expression { params.DEPLOY_STAGING }
@@ -125,7 +146,7 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true, testResults: 'astro_project/test-results/junit.xml'
-            archiveArtifacts artifacts: 'astro_project/playwright-report/**, astro_project/test-results/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'astro_project/playwright-report/**, astro_project/test-results/**, astro_project/lighthouse-reports/**', allowEmptyArchive: true
             catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                 publishHTML(target: [
                     allowMissing: true,
@@ -134,6 +155,14 @@ pipeline {
                     reportDir: 'astro_project/playwright-report',
                     reportFiles: 'index.html',
                     reportName: 'Playwright'
+                ])
+                publishHTML(target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'astro_project/lighthouse-reports',
+                    reportFiles: 'index.html',
+                    reportName: 'Lighthouse'
                 ])
             }
         }

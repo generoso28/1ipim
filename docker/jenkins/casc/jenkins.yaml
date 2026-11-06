@@ -25,6 +25,12 @@ credentials:
               id: 1ipim-sftp
               username: ${DEPLOY_USER}
               password: ${DEPLOY_PASS}
+          - usernamePassword:
+              scope: GLOBAL
+              id: 1ipim-git
+              username: generoso28
+              password: ${GITHUB_TOKEN}
+              description: GitHub - Jenkins SCM
               description: SFTP HostGator
 
 jobs:
@@ -42,7 +48,10 @@ jobs:
           cpsScm {
             scm {
               git {
-                remote { url('https://github.com/generoso28/1ipim.git') }
+                remote {
+                url('https://github.com/generoso28/1ipim.git')
+                credentials('1ipim-git')
+              }
                 branch('*/master')
               }
             }

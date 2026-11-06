@@ -5,7 +5,7 @@
   --color-brand: #008169;
   --color-brand-dark: #005f4d;
   --color-brand-light: #339987;
-  --color-success: #198754; 
+  --color-success: #146c43; 
 }
 
 /* We will keep the custom CSS that handles GSAP scrolling for compatibility */

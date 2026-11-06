@@ -241,7 +241,7 @@ const personSchemas = [
                                 </div>
                                 <div class="flex-1 text-center sm:text-left">
                                     <h3 class="font-extrabold text-2xl md:text-3xl text-gray-900 dark:text-white mb-2">{pastor.name}</h3>
-                                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4 font-bold text-sm shadow-sm transition-transform hover:scale-105" style={`background-color: ${pastor.roleColor}30; color: ${pastor.highlightColor}; border: 1px solid ${pastor.roleColor}50;`}>
+                                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-4 font-bold text-sm shadow-sm transition-transform hover:scale-105 text-gray-900 dark:text-slate-100" style={`background-color: ${pastor.roleColor}30; border: 1px solid ${pastor.roleColor}50;`}>
                                         <i class="fa-solid fa-crosshairs opacity-70"></i>{pastor.role}
                                     </div>
                                     <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm text-justify sm:text-left selection:bg-[var(--color-brand)] selection:text-white">
@@ -254,18 +254,18 @@ const personSchemas = [
                         <!-- Pilar Card -->
                         <div class={`lg:col-span-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 border border-gray-100/80 dark:border-slate-700/50 relative overflow-hidden group flex flex-col ${index % 2 !== 0 ? 'lg:order-1' : ''}`}>
                             <div class="absolute right-0 top-0 w-48 h-48 rounded-full blur-[60px] -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-15 group-hover:opacity-30 transition-opacity duration-700" style={`background-color: ${pastor.roleColor};`}></div>
-                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm group-hover:scale-110 transition-transform relative z-10" style={`background-color: ${pastor.roleColor}22; color: ${pastor.highlightColor}; border: 1px solid ${pastor.roleColor}30;`}>
+                            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm group-hover:scale-110 transition-transform relative z-10 text-gray-900 dark:text-white" style={`background-color: ${pastor.roleColor}22; border: 1px solid ${pastor.roleColor}30;`}>
                                 <i class={pastor.pilarIcon}></i>
                             </div>
                             <div class="relative z-10 flex-1 flex flex-col">
-                                <p class="font-bold uppercase tracking-widest text-[10px] mb-2 opacity-60 text-gray-500 dark:text-gray-400">Atos 2.42 — {pastor.pilar}</p>
+                                <p class="font-bold uppercase tracking-widest text-[10px] mb-2 text-gray-600 dark:text-gray-400">Atos 2.42 — {pastor.pilar}</p>
                                 <h4 class="font-extrabold text-2xl text-gray-900 dark:text-white mb-3 leading-tight">{pastor.pilarTitle}</h4>
                                 <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed flex-1">{pastor.pilarDesc}</p>
                                 <div class="mt-6 flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-slate-700">
                                     <div class="w-9 h-9 rounded-full overflow-hidden shadow-sm shrink-0" style={`border: 2px solid ${pastor.roleColor};`}>
                                         <Image src={pastor.image} alt={pastor.name} width={40} height={40} class="w-full h-full object-cover" />
                                     </div>
-                                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Responsável: <span style={`color: ${pastor.highlightColor};`}>{pastor.name}</span></span>
+                                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Responsável: <span class="text-[var(--color-brand-dark)] dark:text-emerald-300">{pastor.name}</span></span>
                                 </div>
                             </div>
                         </div>

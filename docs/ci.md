@@ -86,3 +86,13 @@ BASE_URL=https://1ipim.online npx playwright test
   publicamente sem TLS e autenticação reforçada.
 - Para parar: `docker compose down`. Para apagar também o estado do Jenkins:
   `docker compose down -v`.
+
+## Relatório Playwright no Jenkins
+
+O container roda com `-Dhudson.model.DirectoryBrowserSupport.CSP=` para permitir
+que o JavaScript do relatório HTML do Playwright execute dentro do Jenkins.
+Sem isso, o Jenkins aplica `Content-Security-Policy: sandbox ... default-src
+'none'` e o relatório abre em branco.
+
+Essa configuração vale apenas para este Jenkins local. Se o Jenkins for exposto
+publicamente, restrinja a CSP ou sirva o relatório por outro meio.

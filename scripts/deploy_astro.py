@@ -38,6 +38,8 @@ except ImportError:
 LOCAL_DIST = Path(__file__).resolve().parent.parent / "astro_project" / "dist"
 
 STAGING_HTACCESS = """\
+ErrorDocument 404 /404.html
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{HTTPS} !=on

@@ -208,7 +208,7 @@ test.describe("SEO — entidade local", () => {
 
 test.describe("SEO — sitemap e robots", () => {
   test("sitemap inclui todas as páginas públicas", async ({ request }) => {
-    const response = await request.get("/sitemap.xml");
+    const response = await request.get(`/sitemap.xml?v=${Date.now()}`);
     expect(response.ok()).toBeTruthy();
     const text = await response.text();
 
@@ -218,7 +218,7 @@ test.describe("SEO — sitemap e robots", () => {
   });
 
   test("robots bloqueia admin, portal e API", async ({ request }) => {
-    const response = await request.get("/robots.txt");
+    const response = await request.get(`/robots.txt?v=${Date.now()}`);
     expect(response.ok()).toBeTruthy();
     const text = await response.text();
 

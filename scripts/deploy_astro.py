@@ -58,6 +58,11 @@ ErrorDocument 404 /404.html
     <FilesMatch "\\.html$">
         Header set Cache-Control "no-cache, must-revalidate"
     </FilesMatch>
+
+    # Sitemap/robots sempre revalidados
+    <FilesMatch "^(sitemap\\.xml|robots\\.txt)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
 </IfModule>
 """
 

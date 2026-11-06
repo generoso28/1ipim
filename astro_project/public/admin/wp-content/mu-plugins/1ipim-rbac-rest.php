@@ -855,6 +855,12 @@ add_filter('rest_pre_dispatch', static function ($result, WP_REST_Server $server
     $is_logged = is_user_logged_in();
     $GLOBALS['ipim_escala_manage_allowed'] = false;
 
+    // O preflight CORS não carrega cookie de sessão. Deixar o WordPress
+    // responder 200 com os headers antes de qualquer verificação de papel.
+    if ($method === 'OPTIONS') {
+        return $result;
+    }
+
     if (strpos($route, '/wp/v2/escala') === 0) {
         if (!$is_logged) {
             return new WP_Error('rest_forbidden', 'Faça login para acessar as escalas.', ['status' => 401]);

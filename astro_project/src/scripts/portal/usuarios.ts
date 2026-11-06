@@ -49,6 +49,16 @@ onPageReady("#users-table-body", async () => {
   const loading = document.getElementById("loading-users");
   const emptyState = document.getElementById("no-users");
   const currentUser = (await auth.ensureSession()) ?? auth.getUser();
+  const canManageAll =
+    Boolean(currentUser.isAdmin || currentUser.isPastor) ||
+    currentUser.role === "administrator" ||
+    currentUser.role === "pastor";
+
+  if (!canManageAll) {
+    window.location.href = "/portal/";
+    return;
+  }
+
   const currentUserId = currentUser.id;
 
   const ministryNames: Record<number, string> = {};

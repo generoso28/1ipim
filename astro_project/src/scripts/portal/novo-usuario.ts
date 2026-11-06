@@ -52,6 +52,15 @@ onPageReady("#new-user-form", () => {
     const user = await requireAuth();
     if (!user) return;
 
+    const canManageAll =
+      Boolean(user.isAdmin || user.isPastor) ||
+      user.role === "administrator" ||
+      user.role === "pastor";
+    if (!canManageAll) {
+      window.location.href = "/portal/";
+      return;
+    }
+
     hideGuard();
     void loadMinistries();
 

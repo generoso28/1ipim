@@ -71,9 +71,11 @@ BASE_URL=https://1ipim.online npx playwright test
 
 ## Observações
 
-- O job é **manual**; não há gatilho de SCM configurado. Para build automático a
-  cada push, adicione `triggers { scm('H/5 * * * *') }` no job em
-  `docker/jenkins/casc/jenkins.yaml` ou configure um webhook.
+- O job tem **SCM trigger** (`H/5 * * * *`): cada push no `master` dispara o
+  fluxo completo. Como `DEPLOY_PRODUCTION=true` por padrão, isso publica em
+  produção automaticamente depois dos testes. Para exigir aprovação manual,
+  rode com `REQUIRE_APPROVAL=true`; para apenas validar, use
+  `DEPLOY_PRODUCTION=false`.
 - O pipeline usa **API mockada** nos testes do portal; ele não cria, edita ou
   exclui dados reais no WordPress.
 - Como o `DEPLOY_PRODUCTION` vem `true` por padrão, um build sem alterar

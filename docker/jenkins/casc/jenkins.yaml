@@ -54,4 +54,8 @@ jobs:
             scriptPath('Jenkinsfile')
           }
         }
+
+        triggers {
+          scm('H/5 * * * *')
+        }
       }

@@ -21,6 +21,7 @@ declare global {
 
 let gaLoaded = false;
 let lastTracked = "";
+let preferencesOpen = false;
 
 function measurementId(): string {
   return (document.documentElement.dataset.gaId || "").trim();
@@ -92,12 +93,13 @@ function syncBanner(): void {
   const banner = document.getElementById("consent-banner");
   if (!banner) return;
 
-  const show = getConsent() === null;
+  const show = preferencesOpen || getConsent() === null;
   banner.classList.toggle("hidden", !show);
   banner.classList.toggle("flex", show);
 }
 
 function accept(): void {
+  preferencesOpen = false;
   setConsent("granted");
   loadGA();
   trackPageView();
@@ -105,15 +107,14 @@ function accept(): void {
 }
 
 function reject(): void {
+  preferencesOpen = false;
   setConsent("denied");
   syncBanner();
 }
 
 function openPreferences(): void {
-  const banner = document.getElementById("consent-banner");
-  if (!banner) return;
-  banner.classList.remove("hidden");
-  banner.classList.add("flex");
+  preferencesOpen = true;
+  syncBanner();
 }
 
 let setupDone = false;

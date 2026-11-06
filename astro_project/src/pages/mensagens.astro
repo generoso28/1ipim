@@ -1,32 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Image } from 'astro:assets';
-
-/**
- * YouTube API Fetching Logic
- * using the channel UCo1LQoyw17iaoL3y0TnDP9g -> Playlist UUo1LQoyw17iaoL3y0TnDP9g
- */
-const API_KEY = import.meta.env.YOUTUBE_API_KEY;
-const PLAYLIST_ID = 'UUo1LQoyw17iaoL3y0TnDP9g';
-const MAX_RESULTS = 12;
-
-let videos = [];
-let errorMsg = null;
-
-try {
-  if (!API_KEY) {
-    throw new Error("Chave de API do YouTube não configurada no arquivo .env");
-  }
-
-  const res = await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${PLAYLIST_ID}&maxResults=${MAX_RESULTS}&key=${API_KEY}`, { headers: { Referer: 'https://1ipim.online/' } });
-  if (!res.ok) {
-    throw new Error(`Erro na API: ${res.statusText}`);
-  }
-  const data = await res.json();
-  videos = data.items || [];
-} catch (e) {
-  errorMsg = e.message;
-}
 ---
 <Layout title="Mensagens - Primeira Igreja Presbiteriana Independente de Machado" description="Assista às últimas mensagens e cultos da 1ª Igreja Presbiteriana Independente de Machado e acompanhe as playlists no Spotify." footerBgClass="bg-white dark:bg-slate-900">
     <section class="py-20 mt-16 bg-white dark:bg-slate-900 transition-colors min-h-screen">
@@ -35,36 +8,80 @@ try {
                 <p class="font-bold text-[var(--color-success)] mb-2 uppercase tracking-wide text-xs">Galeria de Vídeos</p>
                 <h1 class="font-extrabold text-3xl md:text-5xl text-gray-900 dark:text-white mb-6 leading-tight">Últimas Mensagens</h1>
                 <p class="text-gray-500 dark:text-gray-400 text-lg">Acompanhe nossos cultos ao vivo e não perca nenhum ensinamento. Assista diretamente por aqui ou inscreva-se no nosso canal.</p>
-                
+
                 <a href="https://www.youtube.com/@1ipimachado" target="_blank" rel="nofollow" class="inline-flex items-center gap-2 mt-6 bg-[#ff0033] dark:bg-[#e0002d] text-white px-6 py-2 rounded-full font-bold hover:bg-[#cc0029] transition-colors shadow">
                     <i class="fa-brands fa-youtube"></i> Inscrever-se no Canal
                 </a>
             </div>
 
-            {errorMsg && (
-                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 p-6 rounded-xl text-center max-w-2xl mx-auto scroll-card">
-                    <i class="fa-solid fa-triangle-exclamation text-3xl mb-4"></i>
-                    <p class="font-medium">Não foi possível carregar as mensagens no momento.</p>
-                    <p class="text-sm mt-2 opacity-80">{errorMsg}</p>
-                </div>
-            )}
+            <div id="yt-loading" class="text-center py-20 scroll-card">
+                <div class="animate-spin inline-block w-8 h-8 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full" role="status" aria-label="loading"></div>
+                <p class="mt-4 text-gray-500">Carregando mensagens...</p>
+            </div>
 
-            {!errorMsg && videos.length === 0 && (
-                <div class="text-center py-20 scroll-card">
-                    <div class="animate-spin inline-block w-8 h-8 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full" role="status" aria-label="loading"></div>
-                    <p class="mt-4 text-gray-500">Carregando mensagens...</p>
-                </div>
-            )}
+            <div id="yt-error" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 p-6 rounded-xl text-center max-w-2xl mx-auto scroll-card">
+                <i class="fa-solid fa-triangle-exclamation text-3xl mb-4"></i>
+                <p class="font-medium">Não foi possível carregar as mensagens no momento.</p>
+                <p class="text-sm mt-2 opacity-80">Tente novamente mais tarde ou acesse nosso canal no YouTube.</p>
+            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {videos.map((item) => {
-                    const videoId = item.snippet.resourceId.videoId;
-                    const thumbnail = item.snippet.thumbnails?.maxres?.url || item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.medium?.url;
-                    
-                    return (
-                        <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 flex flex-col group scroll-card">
-                            <button data-videoid={videoId} aria-label={`Assistir ${item.snippet.title}`} class="open-yt-modal relative aspect-video w-full overflow-hidden block focus:outline-none">
-                                <img src={thumbnail} alt={item.snippet.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            <div id="yt-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+</Layout>
+
+<script>
+    const loadVideos = () => {
+        const grid = document.getElementById('yt-grid');
+        const loading = document.getElementById('yt-loading');
+        const error = document.getElementById('yt-error');
+        if (!grid || grid.dataset.youtubeLoaded) return;
+        grid.dataset.youtubeLoaded = '1';
+
+        const escapeHtml = (value) =>
+            String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+
+        const safeThumbnail = (video, videoId) => {
+            const candidate = String(video?.thumbnail ?? '');
+            return candidate.startsWith('https://') ? candidate : `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        };
+
+        const formatDate = (published) => {
+            const date = new Date(published);
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+        };
+
+        const bindModal = () => {
+            const win = window as Window & { refreshYTModals?: () => void };
+            if (typeof win.refreshYTModals === 'function') {
+                win.refreshYTModals();
+                return;
+            }
+            setTimeout(bindModal, 50);
+        };
+
+        fetch('/api/youtube.php?limit=12', { headers: { Accept: 'application/json' } })
+            .then((response) => response.ok ? response.json() : Promise.reject(new Error('HTTP ' + response.status)))
+            .then((data) => {
+                const videos = Array.isArray(data?.videos) ? data.videos : [];
+                if (videos.length === 0) throw new Error('empty');
+
+                grid.innerHTML = videos.map((video) => {
+                    const videoId = escapeHtml(video.id);
+                    const title = escapeHtml(video.title || 'Vídeo');
+                    const thumbnail = safeThumbnail(video, videoId);
+                    const date = formatDate(video.published);
+
+                    return `
+                        <div class="bg-gray-50 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 flex flex-col group">
+                            <button data-videoid="${videoId}" aria-label="Assistir ${title}" class="open-yt-modal relative aspect-video w-full overflow-hidden block focus:outline-none">
+                                <img src="${thumbnail}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                                 <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                                     <div class="w-14 h-14 bg-[#ff0033] text-white rounded-full flex items-center justify-center opacity-90 group-hover:opacity-100 group-hover:scale-110 shadow-lg transition-all">
                                         <i class="fa-solid fa-play text-xl ml-1"></i>
@@ -73,16 +90,26 @@ try {
                             </button>
                             <div class="p-6 flex flex-col flex-1">
                                 <h3 class="font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 text-lg group-hover:text-[var(--color-brand)] transition-colors">
-                                    <button data-videoid={videoId} class="open-yt-modal text-left focus:outline-none">{item.snippet.title}</button>
+                                    <button data-videoid="${videoId}" class="open-yt-modal text-left focus:outline-none">${title}</button>
                                 </h3>
                                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-auto pt-4 flex items-center gap-2">
-                                    <i class="fa-regular fa-calendar"></i> {new Date(item.snippet.publishedAt).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                                    <i class="fa-regular fa-calendar"></i> ${escapeHtml(date)}
                                 </p>
                             </div>
                         </div>
-                    );
-                })}
-            </div>
-        </div>
-    </section>
-</Layout>
+                    `;
+                }).join('');
+
+                loading?.classList.add('hidden');
+                error?.classList.add('hidden');
+                bindModal();
+            })
+            .catch(() => {
+                loading?.classList.add('hidden');
+                error?.classList.remove('hidden');
+            });
+    };
+
+    document.addEventListener('astro:page-load', loadVideos);
+    if (document.readyState !== 'loading') loadVideos();
+</script>

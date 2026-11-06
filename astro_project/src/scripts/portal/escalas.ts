@@ -1,7 +1,7 @@
 import { auth } from "./auth";
 import { apiFetch } from "./api";
 import { getPermissions } from "./permissions";
-import { escapeAttribute, escapeHtml, showToast } from "./ui";
+import { escapeAttribute, escapeHtml, showToast, onPageReady } from "./ui";
 import type { WpMinistry, WpSchedule, WpUser } from "./types";
 
 interface ScheduleFilters {
@@ -45,7 +45,7 @@ function splitContent(schedule: WpSchedule): string[] {
   return stripTags(schedule.content?.rendered).split("|");
 }
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#form-container", () => {
   const formContainer = document.getElementById("form-container");
   const listContainer = document.getElementById("list-container");
   const listView = document.getElementById("list-view");

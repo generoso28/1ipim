@@ -96,7 +96,9 @@ export function scheduleFor(date: string) {
     id: 1,
     title: { rendered: "Culto" },
     date: `${date}T12:00:00`,
-    content: { rendered: `<p>${date}|outro@example.com|19:30|Equipe E2E|1</p>` },
+    content: {
+      rendered: `<p>${date}|outro@example.com|19:30|Equipe E2E|1</p>`,
+    },
     meta: {
       data_da_escala: date,
       ministerio_id: "1",

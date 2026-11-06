@@ -1,5 +1,5 @@
 import { apiFetch, getErrorMessage } from "./api";
-import { escapeAttribute, escapeHtml } from "./ui";
+import { escapeAttribute, escapeHtml, onPageReady } from "./ui";
 import type { WpMinistry } from "./types";
 
 interface RegistrationPayload {
@@ -77,7 +77,7 @@ function showFeedback(
   if (messageEl) messageEl.innerText = message;
 }
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#register-form", () => {
   const form = document.getElementById(
     "register-form",
   ) as HTMLFormElement | null;

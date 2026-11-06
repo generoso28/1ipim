@@ -1,6 +1,6 @@
 import { auth } from "./auth";
 import { apiFetch } from "./api";
-import { escapeAttribute, escapeHtml, showToast } from "./ui";
+import { escapeAttribute, escapeHtml, showToast, onPageReady } from "./ui";
 import type { WpMinistry, WpUser } from "./types";
 
 interface MemberAction {
@@ -9,7 +9,7 @@ interface MemberAction {
   action: "add" | "remove";
 }
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#min-list", () => {
   const form = document.getElementById(
     "add-min-form",
   ) as HTMLFormElement | null;

@@ -1,6 +1,6 @@
 import { auth } from "./auth";
 import { apiFetch } from "./api";
-import { escapeAttribute, escapeHtml, showToast } from "./ui";
+import { escapeAttribute, escapeHtml, showToast, onPageReady } from "./ui";
 import type { WpMinistry, WpUser } from "./types";
 
 interface RoleVisual {
@@ -27,7 +27,7 @@ function parseStringArray(raw: string | undefined): string[] {
   }
 }
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#users-table-body", () => {
   const tableBody = document.getElementById("users-table-body");
   const loading = document.getElementById("loading-users");
   const emptyState = document.getElementById("no-users");

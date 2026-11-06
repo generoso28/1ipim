@@ -1,6 +1,6 @@
 import { auth } from "./auth";
 import { apiFetch, getErrorMessage } from "./api";
-import { setLoadingState } from "./ui";
+import { setLoadingState, onPageReady } from "./ui";
 
 const LOGIN_ERROR_FALLBACK = "Verifique seus dados e tente novamente.";
 
@@ -46,7 +46,7 @@ async function loadProfile(token: string, fallbackRole: string): Promise<void> {
   window.location.href = "/portal";
 }
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#login-form", () => {
   const form = document.getElementById("login-form") as HTMLFormElement | null;
   if (!form) return;
 

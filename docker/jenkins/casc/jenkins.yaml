@@ -26,11 +26,6 @@ credentials:
               username: ${DEPLOY_USER}
               password: ${DEPLOY_PASS}
               description: SFTP HostGator
-          - string:
-              scope: GLOBAL
-              id: youtube-api-key
-              secret: ${YOUTUBE_API_KEY}
-              description: YouTube API key
 
 jobs:
   - script: |

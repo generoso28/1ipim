@@ -7,26 +7,9 @@ import pgMulheres from '../assets/img/pgs/mulheres-com-proposito.jpeg';
 import pgEnrico from '../assets/img/pgs/pg-enrico.jpeg';
 import pgPedro from '../assets/img/pgs/pg-pedro.jpeg';
 
-const API_KEY = import.meta.env.YOUTUBE_API_KEY;
-const PLAYLIST_ID = 'UUo1LQoyw17iaoL3y0TnDP9g';
-let latestVideoId = 'CMwYG1snm3U'; // Fallback padrão
-let latestThumbnail = `https://img.youtube.com/vi/${latestVideoId}/maxresdefault.jpg`;
-
-try {
-  if (API_KEY) {
-    const res = await fetch(`https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${PLAYLIST_ID}&maxResults=1&key=${API_KEY}`, { headers: { Referer: 'https://1ipim.online/' } });
-    if (res.ok) {
-        const data = await res.json();
-        if (data.items && data.items.length > 0) {
-            const item = data.items[0];
-            latestVideoId = item.snippet.resourceId.videoId;
-            latestThumbnail = item.snippet.thumbnails?.maxres?.url || item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.medium?.url || `https://img.youtube.com/vi/${latestVideoId}/hqdefault.jpg`;
-        }
-    }
-  }
-} catch (e) {
-  console.error("Erro ao puxar API do Youtube na Home:", e);
-}
+// Fallback estático; o vídeo mais recente é atualizado no navegador via /api/youtube.php.
+const latestVideoId = 'CMwYG1snm3U';
+const latestThumbnail = `https://img.youtube.com/vi/${latestVideoId}/maxresdefault.jpg`;
 ---
 <Layout title="Primeira Igreja Presbiteriana Independente de Machado" description="Conheça a 1ª Igreja Presbiteriana Independente de Machado (MG): horários de cultos, mensagens, pequenos grupos, eventos e como nos visitar." isImmersive={true}>
     <header class="bg-black relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-end overflow-hidden pb-16 md:pb-24">
@@ -90,8 +73,8 @@ try {
                 <!-- Video Embed as Button -->
                 <div class="w-full lg:w-7/12 scroll-card">
                     <div class="w-full aspect-video rounded-2xl shadow-2xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 relative group bg-black">
-                        <button data-videoid={latestVideoId} class="open-yt-modal relative w-full h-full block focus:outline-none">
-                            <img src={latestThumbnail} alt="Último Culto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                        <button id="latest-sermon-button" data-videoid={latestVideoId} class="js-latest-sermon open-yt-modal relative w-full h-full block focus:outline-none">
+                            <img id="latest-sermon-thumb" src={latestThumbnail} alt="Último Culto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                             <div class="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center">
                                 <div class="w-16 h-16 bg-[#ff0033] text-white rounded-full flex items-center justify-center opacity-90 group-hover:opacity-100 group-hover:scale-110 shadow-lg transition-transform">
                                     <i class="fa-solid fa-play text-2xl ml-1"></i>
@@ -520,4 +503,30 @@ try {
             </div>
         </div>
     </section>
+
+    <script>
+        const loadLatestSermon = () => {
+            const thumb = document.getElementById('latest-sermon-thumb');
+            if (!thumb || thumb.dataset.youtubeLoaded) return;
+            thumb.dataset.youtubeLoaded = '1';
+
+            fetch('/api/youtube.php?limit=1', { headers: { Accept: 'application/json' } })
+                .then((response) => response.ok ? response.json() : Promise.reject(new Error('HTTP ' + response.status)))
+                .then((data) => {
+                    const video = Array.isArray(data?.videos) ? data.videos[0] : null;
+                    if (!video) return;
+
+                    const button = document.querySelector('.js-latest-sermon');
+                    if (button) button.setAttribute('data-videoid', video.id);
+                    if (video.thumbnail) thumb.src = video.thumbnail;
+                    if (video.title) thumb.alt = video.title;
+                })
+                .catch(() => {
+                    // Mantém o fallback estático.
+                });
+        };
+
+        document.addEventListener('astro:page-load', loadLatestSermon);
+        if (document.readyState !== 'loading') loadLatestSermon();
+    </script>
 </Layout>

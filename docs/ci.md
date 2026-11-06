@@ -8,7 +8,7 @@ produção → smoke em produção**.
 
 ```bash
 cp docker/jenkins/.env.example docker/jenkins/.env
-# edite DEPLOY_USER, DEPLOY_PASS, YOUTUBE_API_KEY e JENKINS_ADMIN_PASSWORD
+# edite DEPLOY_USER, DEPLOY_PASS e JENKINS_ADMIN_PASSWORD
 docker compose up -d --build
 ```
 
@@ -17,7 +17,7 @@ Acesse **http://localhost:8081** e entre com `admin` e a senha definida em
 
 O `docker/jenkins/.env` é ignorado pelo Git. O job `1ipim-ci` é criado
 automaticamente via Configuration as Code (JCasC), com as credenciais
-`1ipim-sftp` e `youtube-api-key`.
+`1ipim-sftp`.
 
 ## O que a imagem contém
 
@@ -41,7 +41,7 @@ Parâmetros:
 Etapas:
 
 1. `npm ci`
-2. Build do Astro (`YOUTUBE_API_KEY` vindo das credenciais)
+2. Build do Astro
 3. **Testes locais** — 28 testes Playwright contra o preview local
 4. **Deploy staging** — `scripts/deploy_astro.py --target staging`
 5. **Testes no staging** — `BASE_URL=https://staging.1ipim.online`
@@ -57,7 +57,6 @@ aditivo, faz backup em `~/1ipim_backups/` e verifica SHA-256.
 ```bash
 cd astro_project
 npm ci
-printf 'YOUTUBE_API_KEY=%s\n' "$YOUTUBE_API_KEY" > .env
 npm run build
 npx playwright test
 ```

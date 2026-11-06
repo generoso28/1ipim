@@ -82,3 +82,19 @@ export function setLoadingState({
   if (loader) loader.classList.toggle("hidden", !loading);
   if (arrow) arrow.classList.toggle("hidden", loading);
 }
+
+/**
+ * Executa o inicializador uma vez por "raiz" de página.
+ * Cobre o carregamento inicial e as transições do Astro sem duplicar listeners.
+ */
+export function onPageReady(rootSelector: string, init: () => void): void {
+  const run = () => {
+    const root = document.querySelector(rootSelector);
+    if (!root || root.hasAttribute("data-page-ready")) return;
+    root.setAttribute("data-page-ready", "1");
+    init();
+  };
+
+  document.addEventListener("astro:page-load", run);
+  if (document.readyState !== "loading") run();
+}

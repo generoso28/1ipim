@@ -106,7 +106,9 @@ test.describe("Portal autenticado", () => {
     await expect(page.locator("#user-nav-role")).toHaveText("Administrador");
   });
 
-  test("escalas: lista, calendário, participação e criação", async ({ page }) => {
+  test("escalas: lista, calendário, participação e criação", async ({
+    page,
+  }) => {
     const scheduleDate = currentMonthDate(10);
     const newDate = currentMonthDate(20);
     acceptDialogs(page);
@@ -269,7 +271,9 @@ test.describe("Portal autenticado", () => {
         return true;
       }
       if (path === "/wp/v2/posts/" && method === "GET") {
-        const status = new URL(route.request().url()).searchParams.get("status");
+        const status = new URL(route.request().url()).searchParams.get(
+          "status",
+        );
         await json(route, status === "draft" ? [] : POSTS);
         return true;
       }
@@ -313,7 +317,9 @@ test.describe("Portal autenticado", () => {
       return false;
     });
 
-    await page.goto("/portal/nova-reflexao/", { waitUntil: "domcontentloaded" });
+    await page.goto("/portal/nova-reflexao/", {
+      waitUntil: "domcontentloaded",
+    });
     await page.fill("#post-title", "Reflexão E2E");
     await page.fill("#post-content", "Conteúdo da reflexão E2E");
     await page.click("#publish-btn");

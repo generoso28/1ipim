@@ -1,9 +1,9 @@
 import { auth } from "./auth";
 import { apiFetch } from "./api";
-import { escapeHtml, showToast } from "./ui";
+import { escapeHtml, showToast, onPageReady } from "./ui";
 import type { WpPost } from "./types";
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#posts-table-body", () => {
   const tableBody = document.getElementById("posts-table-body");
   const loading = document.getElementById("loading-posts");
   const emptyState = document.getElementById("no-posts");

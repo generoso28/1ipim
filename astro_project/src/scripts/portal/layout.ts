@@ -1,6 +1,6 @@
 import { auth } from "./auth";
 import { getPermissions } from "./permissions";
-import { escapeHtml, getUserInitials, showToast } from "./ui";
+import { escapeHtml, getUserInitials, showToast, onPageReady } from "./ui";
 import type { Permissions } from "./types";
 
 interface NavItem {
@@ -142,7 +142,7 @@ function hideAuthGuard(): void {
   }, 300);
 }
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#portal-root", () => {
   if (!auth.getToken()) {
     window.location.href = "/portal/login";
     return;

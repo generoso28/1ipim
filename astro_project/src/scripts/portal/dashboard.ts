@@ -1,6 +1,6 @@
 import { auth } from "./auth";
 import { getPermissions } from "./permissions";
-import { escapeHtml } from "./ui";
+import { escapeHtml, onPageReady } from "./ui";
 import type { Permissions } from "./types";
 
 interface DashboardCard {
@@ -97,7 +97,7 @@ function renderCards(cards: DashboardCard[]): void {
     .join("");
 }
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#dashboard-grid", () => {
   const user = auth.getUser();
   const permissions = getPermissions(user.role, user.nicename);
 

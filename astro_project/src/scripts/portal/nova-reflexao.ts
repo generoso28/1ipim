@@ -1,8 +1,8 @@
 import { auth } from "./auth";
 import { apiFetch } from "./api";
-import { showToast } from "./ui";
+import { showToast, onPageReady } from "./ui";
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#post-form", () => {
   const form = document.getElementById("post-form") as HTMLFormElement | null;
   if (!form) return;
 

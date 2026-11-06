@@ -1,8 +1,8 @@
 import { auth } from "./auth";
 import { apiFetch, getErrorMessage } from "./api";
-import { escapeHtml, showToast } from "./ui";
+import { escapeHtml, showToast, onPageReady } from "./ui";
 
-document.addEventListener("astro:page-load", () => {
+onPageReady("#edit-form", () => {
   const form = document.getElementById("edit-form") as HTMLFormElement | null;
   const spinner = document.getElementById("loading-spinner");
   const saveButton = document.getElementById(

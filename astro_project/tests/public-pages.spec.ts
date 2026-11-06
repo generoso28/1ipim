@@ -1,6 +1,21 @@
 import { expect, test } from "@playwright/test";
 import { json } from "./helpers/portal";
 
+const YOUTUBE_VIDEOS = [
+  {
+    id: "XxAkxfMSeus",
+    title: "Exposição Bíblica - Pr. Arruda",
+    published: "2026-11-02T12:12:26Z",
+    thumbnail: "https://i.ytimg.com/vi/XxAkxfMSeus/hqdefault.jpg",
+  },
+  {
+    id: "U249xiWlj0s",
+    title: "Culto de Celebração",
+    published: "2026-10-26T12:00:00Z",
+    thumbnail: "https://i.ytimg.com/vi/U249xiWlj0s/hqdefault.jpg",
+  },
+];
+
 const PUBLIC_PAGES = [
   { path: "/" },
   { path: "/visitantes/" },
@@ -36,6 +51,12 @@ test.describe("Páginas públicas", () => {
           localFailures.push(`${response.status()} ${response.url()}`);
         }
       });
+
+      if (path === "/" || path === "/mensagens/") {
+        await page.route("**/api/youtube.php*", (route) =>
+          json(route, { videos: YOUTUBE_VIDEOS }),
+        );
+      }
 
       if (path === "/reflexoes/") {
         await page.route("**/admin/wp-json/**", (route) => {
@@ -96,6 +117,19 @@ test.describe("Páginas públicas", () => {
         await expect(page.locator("article")).toHaveCount(1);
       }
 
+      if (path === "/") {
+        await expect(page.locator("#latest-sermon-button")).toHaveAttribute(
+          "data-videoid",
+          YOUTUBE_VIDEOS[0].id,
+        );
+      }
+
+      if (path === "/mensagens/") {
+        await expect(
+          page.locator("#yt-grid .open-yt-modal").first(),
+        ).toBeVisible();
+      }
+
       expect(pageErrors).toEqual([]);
       expect(localFailures).toEqual([]);
     });
@@ -141,6 +175,23 @@ test.describe("Páginas públicas", () => {
     await expect(
       page.locator("nav a:visible", { hasText: "Nossa história" }).first(),
     ).toBeVisible();
+  });
+
+  test("mensagens renderiza os vídeos retornados pelo proxy", async ({
+    page,
+  }) => {
+    await page.route("**/api/youtube.php*", (route) =>
+      json(route, { videos: YOUTUBE_VIDEOS }),
+    );
+
+    await page.goto("/mensagens/", { waitUntil: "domcontentloaded" });
+    await expect(page.locator("#yt-grid .open-yt-modal").first()).toBeVisible();
+    await expect(page.locator("#yt-grid")).toContainText(
+      YOUTUBE_VIDEOS[0].title,
+    );
+    await expect(page.locator("#yt-grid .open-yt-modal")).toHaveCount(
+      YOUTUBE_VIDEOS.length * 2,
+    );
   });
 
   test("404 personalizado", async ({ page }) => {

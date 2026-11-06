@@ -42,13 +42,8 @@ pipeline {
 
         stage('Build') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'youtube-api-key', variable: 'YOUTUBE_API_KEY')
-                ]) {
-                    dir('astro_project') {
-                        sh 'echo "YOUTUBE_API_KEY=$YOUTUBE_API_KEY" > .env'
-                        sh 'npm run build'
-                    }
+                dir('astro_project') {
+                    sh 'npm run build'
                 }
             }
         }

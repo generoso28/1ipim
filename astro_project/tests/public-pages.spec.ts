@@ -264,11 +264,25 @@ test.describe("Mobile", () => {
 });
 
 test.describe("Consentimento de analytics", () => {
-  test("banner permite recusar, rever e aceitar", async ({ page }) => {
+  test("não carrega o GA antes do consentimento e mantém desligado ao recusar", async ({
+    page,
+  }) => {
+    let gtagRequests = 0;
+
+    await page.route(/googletagmanager\.com/, (route) => {
+      gtagRequests += 1;
+      return route.fulfill({
+        status: 200,
+        contentType: "application/javascript",
+        body: "",
+      });
+    });
+
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
     const banner = page.locator("#consent-banner");
     await expect(banner).toBeVisible();
+    expect(gtagRequests).toBe(0);
 
     await page.click("#consent-reject");
     await expect(banner).toBeHidden();
@@ -277,9 +291,26 @@ test.describe("Consentimento de analytics", () => {
         localStorage.getItem("1ipim_consent_analytics"),
       ),
     ).toBe("denied");
+    expect(gtagRequests).toBe(0);
+  });
 
-    await page.click("#open-consent");
+  test("carrega o GA depois do aceite", async ({ page }) => {
+    let gtagRequests = 0;
+
+    await page.route(/googletagmanager\.com/, (route) => {
+      gtagRequests += 1;
+      return route.fulfill({
+        status: 200,
+        contentType: "application/javascript",
+        body: "",
+      });
+    });
+
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const banner = page.locator("#consent-banner");
     await expect(banner).toBeVisible();
+    expect(gtagRequests).toBe(0);
 
     await page.click("#consent-accept");
     await expect(banner).toBeHidden();
@@ -288,5 +319,15 @@ test.describe("Consentimento de analytics", () => {
         localStorage.getItem("1ipim_consent_analytics"),
       ),
     ).toBe("granted");
+    await expect.poll(() => gtagRequests).toBeGreaterThan(0);
+  });
+
+  test("link do rodapé reabre as preferências de cookies", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.click("#consent-reject");
+    await expect(page.locator("#consent-banner")).toBeHidden();
+
+    await page.evaluate(() => document.getElementById("open-consent")?.click());
+    await expect(page.locator("#consent-banner")).toBeVisible();
   });
 });

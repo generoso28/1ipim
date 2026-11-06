@@ -1,8 +1,65 @@
-# Cache Control para Otimização de Performance
+# ==========================================================================
+# 1IPIM - configuração do Apache (HostGator)
+# ==========================================================================
+
+# ----- Canonicalização: HTTPS obrigatório e sem "www" ---------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redireciona http:// e/ou www para https://1ipim.online (preserva caminho e query)
+    RewriteCond %{HTTPS} !=on [OR]
+    RewriteCond %{HTTP_HOST} ^www\.1ipim\.online$ [NC]
+    RewriteRule ^ https://1ipim.online%{REQUEST_URI} [L,R=301]
+
+    # WordPress fica em /admin (front-end desativado)
+    RewriteCond %{REQUEST_URI} ^/admin/?(.*)$ [NC]
+    RewriteCond %{REQUEST_URI} !^/admin/wp-admin/? [NC]
+    RewriteCond %{REQUEST_URI} !^/admin/wp-json/? [NC]
+    RewriteCond %{REQUEST_URI} !^/admin/wp-includes/? [NC]
+    RewriteCond %{REQUEST_URI} !^/admin/wp-content/? [NC]
+    RewriteCond %{REQUEST_URI} !^/admin/wp-login\.php [NC]
+    RewriteCond %{REQUEST_URI} !^/admin/wp-cron\.php [NC]
+    RewriteCond %{REQUEST_URI} !^/admin/xmlrpc\.php [NC]
+    RewriteRule ^admin/?(.*)$ /admin/wp-admin/ [R=301,L]
+</IfModule>
+
+# ----- Cabeçalhos de segurança -------------------------------------------
+<IfModule mod_headers.c>
+    Header always set Strict-Transport-Security "max-age=31536000"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+
+    # Não indexar o painel e a administração do WordPress
+    <IfModule mod_setenvif.c>
+        SetEnvIf Request_URI "^/(portal|admin)(/|$)" NOINDEX_PATH
+    </IfModule>
+    Header set X-Robots-Tag "noindex, nofollow" env=NOINDEX_PATH
+</IfModule>
+
+# ----- Bloqueio de arquivos sensíveis do WordPress ------------------------
+<IfModule mod_authz_core.c>
+    <Files "readme.html">
+        Require all denied
+    </Files>
+    <Files "xmlrpc.php">
+        Require all denied
+    </Files>
+</IfModule>
+
+# ----- Compressão ---------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/json application/xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ----- Cache --------------------------------------------------------------
 <IfModule mod_expires.c>
     ExpiresActive On
-    
-    # Imagens e Ícones
+
+    # Imagens e ícones
     ExpiresByType image/jpg "access plus 7 days"
     ExpiresByType image/jpeg "access plus 7 days"
     ExpiresByType image/gif "access plus 7 days"
@@ -10,33 +67,32 @@
     ExpiresByType image/webp "access plus 7 days"
     ExpiresByType image/svg+xml "access plus 7 days"
     ExpiresByType image/x-icon "access plus 7 days"
-    
+
     # Vídeos
     ExpiresByType video/mp4 "access plus 7 days"
     ExpiresByType video/webm "access plus 7 days"
-    
+
     # Fontes
     ExpiresByType font/ttf "access plus 1 month"
     ExpiresByType font/otf "access plus 1 month"
     ExpiresByType font/woff "access plus 1 month"
     ExpiresByType font/woff2 "access plus 1 month"
-    
-    # CSS e Javascript
+
+    # CSS e JavaScript
     ExpiresByType text/css "access plus 7 days"
     ExpiresByType application/javascript "access plus 7 days"
-    
-    # Padrão
+
     ExpiresDefault "access plus 2 days"
 </IfModule>
 
 <IfModule mod_headers.c>
-    # Adiciona Header Cache-Control
-    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|webp|mp4|webm)$">
-        Header set Cache-Control "max-age=604800, public"
+    # Demais assets estáticos
+    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|webp|mp4|webm|woff|woff2|ttf|otf|svg)$">
+        Header set Cache-Control "public, max-age=604800"
     </FilesMatch>
-    
-    # Habilitar Compressão Gzip se disponível
-    <IfModule mod_deflate.c>
-        AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript
-    </IfModule>
+
+    # HTML sempre revalidado (conteúdo muda sem trocar a URL)
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
 </IfModule>

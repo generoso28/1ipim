@@ -239,22 +239,52 @@ function ipim_rbac_sync_memberships(int $user_id, $raw): void
     $approved = array_values(array_unique(array_filter(array_map('intval', $approved))));
     $user = get_userdata($user_id);
     $roles = $user ? (array) $user->roles : [];
-    $membership_role = 'colaborador';
-    if (array_intersect($roles, ['administrator', 'pastor', 'editor', 'lider_ministerio'])) {
-        $membership_role = 'lider';
-    }
+    $can_lead = (bool) array_intersect(
+        $roles,
+        ['administrator', 'pastor', 'editor', 'lider_ministerio']
+    );
+    $default_role = $can_lead ? 'lider' : 'colaborador';
 
     foreach ($approved as $ministry_id) {
-        $wpdb->query($wpdb->prepare(
-            "INSERT INTO {$table} (user_id, ministry_id, role, status, created_at, updated_at)
-             VALUES (%d, %d, %s, 'active', %s, %s)
-             ON DUPLICATE KEY UPDATE role = VALUES(role), status = 'active', updated_at = VALUES(updated_at)",
+        $existing = $wpdb->get_row($wpdb->prepare(
+            "SELECT role, status FROM {$table} WHERE user_id = %d AND ministry_id = %d",
             $user_id,
-            $ministry_id,
-            $membership_role,
-            current_time('mysql'),
-            current_time('mysql')
+            $ministry_id
         ));
+
+        if ($existing) {
+            // Preserva o papel por ministério já atribuído. O papel global é
+            // teto, não promove automaticamente todos os vínculos.
+            $role = (string) $existing->role;
+            if ($role === 'lider' && !$can_lead) {
+                $role = 'colaborador';
+            }
+            if ($existing->status !== 'active') {
+                $role = $default_role;
+            }
+
+            $wpdb->update(
+                $table,
+                ['role' => $role, 'status' => 'active', 'updated_at' => current_time('mysql')],
+                ['user_id' => $user_id, 'ministry_id' => $ministry_id],
+                ['%s', '%s', '%s'],
+                ['%d', '%d']
+            );
+            continue;
+        }
+
+        $wpdb->insert(
+            $table,
+            [
+                'user_id' => $user_id,
+                'ministry_id' => $ministry_id,
+                'role' => $default_role,
+                'status' => 'active',
+                'created_at' => current_time('mysql'),
+                'updated_at' => current_time('mysql'),
+            ],
+            ['%d', '%d', '%s', '%s', '%s', '%s']
+        );
     }
 
     if ($approved === []) {

@@ -71,6 +71,9 @@ separado para a livraria. O mesmo mecanismo serve para Som, Mídia, Louvor etc.
 
 - O papel global define o **teto**; o vínculo por ministério define o **escopo**.
 - Um usuário pode ser líder em um ministério e colaborador em outro.
+- A sincronização de `ministries_approved` **preserva** o papel já atribuído
+  por ministério; o papel global não promove automaticamente todos os vínculos.
+  Ao perder o teto global, vínculos de líder são rebaixados a colaborador.
 - `administrator` e `pastor` enxergam todos os ministérios.
 - O ministério **Livraria** gerencia o catálogo; não usuários/configurações.
 - O catálogo é **público**; a gestão exige vínculo ativo no ministério Livraria

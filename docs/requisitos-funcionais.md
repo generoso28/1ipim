@@ -177,7 +177,7 @@ conflito de escalas).
 | FR-94 | Busca de capas via Google Books + link Google Imagens | 🟡 | Chave do Books configurada; resultados com revisão; CSE/Google Images interno adiado |
 | FR-95 | Página dinâmica do livro | 🔴 | `/livraria/{slug}` server-rendered a partir da tabela, com `Book` JSON-LD e canonical |
 | FR-96 | Gestão de programação no portal | 🔴 | CRUD de semanais (por dia da semana, sem recorrência) e eventos (data única, filtrados pelo ano corrente); página pública dinâmica mantendo o visual atual |
-| FR-97 | Gestão de pequenos grupos no portal | 🔴 | CRUD de grupos via portal (ministério `tipo=pequenos_grupos`; líder de PG = colaborador); página pública `/pg` dinâmica |
+| FR-97 | Gestão de pequenos grupos no portal | ✅ | CRUD de grupos via portal (ministério `tipo=pequenos_grupos`; líder de PG = colaborador); página pública `/pg` dinâmica |
 | FR-98 | Berea — comunidade | 🔴 | Feed, salas criadas pelos usuários + vinculadas aos PGs, desafios, ranking, moderação delegada |
 | FR-106 | Identidade visual e app do Berea | 🔴 | App própria (sem navbar do site), light-first com toggle dark, **quatro cores da igreja** como base + dourado só de destaque, Material Symbols, bottom tab bar/FAB |
 | FR-101 | Integração PG ↔ Berea no relatório do encontro | 🔴 | Líder lista presentes, identifica quem não tem conta e envia convite/código da sala |
@@ -296,10 +296,10 @@ manual. Sem capa, o catálogo usa um placeholder com o título.
 
 | ID | Requisito | Status | Critério de aceite |
 |---|---|---|---|
-| FR-29 | Diretório de PGs: dia, horário, local, líder e público-alvo | 🔴 | Página pública `/pg` dinâmica (lê a API); filtro por região/dia |
+| FR-29 | Diretório de PGs: dia, horário, local, líder e público-alvo | 🟡 | Página pública `/pg` dinâmica (lê a API); filtro por região/dia pendente |
 | FR-30 | Inscrição/interesse em um PG | 🔴 | Líder recebe notificação |
-| FR-31 | Gestão de membros e líderes por PG | 🔴 | Admin/líder edita; líder de PG gerencia o próprio grupo |
-| FR-99 | Registro de encontro do PG: foto, nome, data, texto lido, tema, preletor e público presente | 🔴 | Público = total + lista opcional de nomes (com `user_id`); cada líder publica o seu; admin/pastor veem todos; auditável |
+| FR-31 | Gestão de membros e líderes por PG | 🟡 | Admin/líder edita; líder de PG gerencia o próprio grupo; UI de vínculo de usuários pendente |
+| FR-99 | Registro de encontro do PG: foto, nome, data, texto lido, tema, preletor e público presente | 🟡 | Público = total + lista de nomes; registro no portal; foto por URL (upload pendente); auditável |
 | FR-101 | Integração do relatório com o Berea | 🔴 | Líder lista presentes, vê quem não tem conta e convida por código, link ou e-mail |
 | FR-102 | Seção de encontros na sala do PG | 🔴 | Aba separada do feed; registros visíveis a todos os líderes de PG no Portal; opção de publicar resumo no feed |
 | FR-100 | Relatório de frequência/público por PG e período | 🔴 | Agregação por grupo/período e exportação CSV; emitido na página de auditoria |

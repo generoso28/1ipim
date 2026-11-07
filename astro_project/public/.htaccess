@@ -23,6 +23,14 @@ ErrorDocument 404 /404.html
     RewriteCond %{HTTP_HOST} ^admin\.1ipim\.online$ [NC]
     RewriteRule ^$ /admin/wp-admin/ [L,R=302]
 
+    # Portal no subdomínio (host principal)
+    RewriteCond %{HTTP_HOST} ^(www\.)?1ipim\.online$ [NC]
+    RewriteRule ^portal/?(.*)$ https://portal.1ipim.online/$1 [L,R=301]
+
+    # Admin no subdomínio (host principal)
+    RewriteCond %{HTTP_HOST} ^(www\.)?1ipim\.online$ [NC]
+    RewriteRule ^admin/?(.*)$ https://admin.1ipim.online/admin/$1 [L,R=301]
+
     # WordPress fica em /admin (front-end desativado)
     RewriteCond %{REQUEST_URI} ^/admin/?(.*)$ [NC]
     RewriteCond %{REQUEST_URI} !^/admin/wp-admin/? [NC]

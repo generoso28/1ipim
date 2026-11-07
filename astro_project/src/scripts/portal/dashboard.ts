@@ -52,6 +52,19 @@ function buildCards(permissions: Permissions): DashboardCard[] {
     });
   }
 
+  if (permissions.canGrupos) {
+    cards.push({
+      title: "Pequenos Grupos",
+      description: permissions.isAdmin || permissions.isMinistryLeader
+        ? "Gerencie os grupos e registre encontros."
+        : "Registre encontros e presença do seu grupo.",
+      icon: "fa-people-group",
+      color:
+        "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400",
+      href: "/portal/pequenos-grupos",
+    });
+  }
+
   if (permissions.canMinistries) {
     cards.push({
       title: "Ministérios",

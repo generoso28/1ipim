@@ -34,6 +34,7 @@ export interface PortalUser {
   isMinistryLeader?: boolean;
   canManageLivraria?: boolean;
   canManageLivrariaStock?: boolean;
+  canManageGrupos?: boolean;
 }
 
 export interface Permissions {
@@ -43,6 +44,7 @@ export interface Permissions {
   canUsers: boolean;
   canMinistries: boolean;
   canLivraria: boolean;
+  canGrupos: boolean;
   isAdmin: boolean;
   isPrivileged: boolean;
   isMinistryLeader: boolean;

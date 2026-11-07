@@ -61,6 +61,10 @@ Entregáveis:
 
 **Objetivo:** tornar PGs dinâmicos, com cadastro/edição via portal e registro de encontro.
 
+**Status:** backend, portal e página pública implementados (CRUD de grupos,
+encontros com presença total + lista, seed dos 15 grupos atuais). Upload de foto
+e relatório de frequência ficam para as próximas fases.
+
 ### 3.1 Modelo de dados
 
 Tabela `{prefix}1ipim_grupos`:

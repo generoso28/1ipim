@@ -42,6 +42,13 @@ function buildNavItems(permissions: Permissions): NavItem[] {
       label: "Livraria",
     });
   }
+  if (permissions.canGrupos) {
+    items.push({
+      href: "/portal/pequenos-grupos",
+      icon: "fa-solid fa-people-group",
+      label: "Pequenos Grupos",
+    });
+  }
   if (permissions.canMinistries) {
     items.push({
       href: "/portal/ministerios",

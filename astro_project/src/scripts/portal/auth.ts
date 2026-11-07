@@ -30,6 +30,7 @@ export const AUTH_KEYS = {
   isMinistryLeader: "1ipim_user_is_ministry_leader",
   canManageLivraria: "1ipim_user_can_manage_livraria",
   canManageLivrariaStock: "1ipim_user_can_manage_livraria_stock",
+  canManageGrupos: "1ipim_user_can_manage_grupos",
 } as const;
 
 /** Chave do JWT antigo: removida para não confundir navegadores com cache velho. */
@@ -105,6 +106,7 @@ export const auth = {
       isMinistryLeader: readKey(AUTH_KEYS.isMinistryLeader) === "1",
       canManageLivraria: readKey(AUTH_KEYS.canManageLivraria) === "1",
       canManageLivrariaStock: readKey(AUTH_KEYS.canManageLivrariaStock) === "1",
+      canManageGrupos: readKey(AUTH_KEYS.canManageGrupos) === "1",
     };
   },
 
@@ -137,6 +139,7 @@ export const auth = {
       AUTH_KEYS.canManageLivrariaStock,
       session.canManageLivrariaStock ? "1" : "0",
     );
+    writeKey(AUTH_KEYS.canManageGrupos, session.canManageGrupos ? "1" : "0");
   },
 
   setRole(role: string): void {

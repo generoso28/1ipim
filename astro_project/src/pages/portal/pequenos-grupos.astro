@@ -1,0 +1,169 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+const title = 'Pequenos Grupos - Portal 1IPIM';
+const description = 'Gestão dos Pequenos Grupos, encontros e presença.';
+---
+<PortalLayout title={title} description={description}>
+  <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <p class="text-[var(--color-brand)] font-bold uppercase tracking-widest text-xs mb-2">Comunidade</p>
+      <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">Pequenos Grupos</h1>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Cadastre grupos e registre os encontros com foto, texto lido, tema, preletor e presença.</p>
+    </div>
+    <button id="novo-grupo" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg transition-all flex items-center justify-center gap-2">
+      <i class="fa-solid fa-plus"></i> Novo grupo
+    </button>
+  </div>
+
+  <div id="grupos-feedback" class="hidden mb-6 p-4 rounded-xl text-sm font-bold"></div>
+  <div id="grupos-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+
+  <section id="grupo-panel" class="hidden mt-10 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-[2rem] p-6 md:p-8 shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div>
+        <p class="text-[10px] font-black uppercase tracking-widest text-[var(--color-brand)]">Encontros</p>
+        <h2 id="grupo-panel-nome" class="text-2xl font-black text-gray-900 dark:text-white">Grupo</h2>
+        <p id="grupo-panel-info" class="text-sm text-gray-500"></p>
+      </div>
+      <div class="flex gap-2">
+        <button id="novo-encontro" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all">
+          <i class="fa-solid fa-plus mr-1"></i> Novo encontro
+        </button>
+        <button id="fechar-painel" class="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 font-bold text-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">Fechar</button>
+      </div>
+    </div>
+    <div id="encontros-lista" class="space-y-4"></div>
+  </section>
+</PortalLayout>
+
+<!-- Modal de grupo -->
+<div id="grupo-modal" class="hidden fixed inset-0 z-[2000] bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
+  <div class="max-w-2xl mx-auto my-8 bg-white dark:bg-slate-800 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-slate-700 p-6 md:p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 id="grupo-modal-title" class="text-2xl font-black text-gray-900 dark:text-white">Novo grupo</h2>
+      <button id="fechar-grupo-modal" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 flex items-center justify-center" aria-label="Fechar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <form id="grupo-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="hidden" id="grupo-id">
+      <div class="md:col-span-2">
+        <label for="grupo-nome" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Nome do grupo</label>
+        <input id="grupo-nome" name="nome" required class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none">
+      </div>
+      <div>
+        <label for="grupo-publico" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Público-alvo</label>
+        <input id="grupo-publico" name="publico_alvo" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+      <div>
+        <label for="grupo-responsavel" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Responsável / líderes</label>
+        <input id="grupo-responsavel" name="responsavel" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+      <div>
+        <label for="grupo-dia" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Dia da semana</label>
+        <select id="grupo-dia" name="dia_semana" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+          <option value="">—</option>
+          <option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option>
+          <option value="4">Quinta</option><option value="5">Sexta</option><option value="6">Sábado</option><option value="7">Domingo</option>
+        </select>
+      </div>
+      <div>
+        <label for="grupo-horario" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Horário</label>
+        <input id="grupo-horario" name="horario" type="time" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+      <div>
+        <label for="grupo-frequencia" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Frequência</label>
+        <select id="grupo-frequencia" name="frequencia" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+          <option value="Semanal">Semanal</option><option value="Quinzenal">Quinzenal</option><option value="Mensal">Mensal</option>
+        </select>
+      </div>
+      <div>
+        <label for="grupo-local" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Local</label>
+        <input id="grupo-local" name="local" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" placeholder="Endereço ou online">
+      </div>
+      <div>
+        <label for="grupo-contato" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">WhatsApp</label>
+        <input id="grupo-contato" name="contato" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" placeholder="5535999999999">
+      </div>
+      <div>
+        <label for="grupo-imagem" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Imagem (URL)</label>
+        <input id="grupo-imagem" name="imagem" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" placeholder="/assets/img/pgs/...">
+      </div>
+      <div>
+        <label for="grupo-status" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Status</label>
+        <select id="grupo-status" name="status" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+          <option value="ativo">Ativo</option><option value="inativo">Inativo</option><option value="arquivado">Arquivado</option>
+        </select>
+      </div>
+      <div class="md:col-span-2">
+        <label for="grupo-descricao" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Descrição</label>
+        <textarea id="grupo-descricao" name="descricao" rows="3" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none"></textarea>
+      </div>
+      <div id="grupo-form-feedback" class="md:col-span-2 hidden p-3 rounded-xl text-sm font-bold"></div>
+      <div class="md:col-span-2 flex justify-end gap-2 pt-2">
+        <button type="button" id="cancelar-grupo" class="px-5 py-3 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 font-bold text-sm">Cancelar</button>
+        <button type="submit" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all">Salvar grupo</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de encontro -->
+<div id="encontro-modal" class="hidden fixed inset-0 z-[2000] bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
+  <div class="max-w-2xl mx-auto my-8 bg-white dark:bg-slate-800 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-slate-700 p-6 md:p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-black text-gray-900 dark:text-white">Novo encontro</h2>
+      <button id="fechar-encontro-modal" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 flex items-center justify-center" aria-label="Fechar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <form id="encontro-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="hidden" id="encontro-grupo-id">
+      <div>
+        <label for="encontro-data" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Data</label>
+        <input id="encontro-data" type="date" required class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+      <div>
+        <label for="encontro-publico" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Público presente (total)</label>
+        <input id="encontro-publico" type="number" min="0" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+      <div>
+        <label for="encontro-texto" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Texto lido</label>
+        <input id="encontro-texto" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" placeholder="Ex.: João 3">
+      </div>
+      <div>
+        <label for="encontro-tema" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Tema</label>
+        <input id="encontro-tema" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+      <div>
+        <label for="encontro-preletor" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Preletor</label>
+        <input id="encontro-preletor" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+      <div>
+        <label for="encontro-foto" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Foto (URL)</label>
+        <input id="encontro-foto" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" placeholder="https://...">
+      </div>
+      <div class="md:col-span-2">
+        <label for="encontro-observacoes" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Observações</label>
+        <textarea id="encontro-observacoes" rows="2" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none"></textarea>
+      </div>
+      <div class="md:col-span-2">
+        <label for="encontro-presenca" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Presentes (um nome por linha)</label>
+        <textarea id="encontro-presenca" rows="4" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" placeholder="Ana&#10;João&#10;..."></textarea>
+      </div>
+      <label class="md:col-span-2 flex items-center gap-3 text-sm text-gray-600 dark:text-gray-300 font-medium">
+        <input id="encontro-feed" type="checkbox" class="w-4 h-4 accent-[var(--color-brand)]"> Publicar resumo no feed do Berea
+      </label>
+      <div id="encontro-form-feedback" class="md:col-span-2 hidden p-3 rounded-xl text-sm font-bold"></div>
+      <div class="md:col-span-2 flex justify-end gap-2 pt-2">
+        <button type="button" id="cancelar-encontro" class="px-5 py-3 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 font-bold text-sm">Cancelar</button>
+        <button type="submit" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all">Salvar encontro</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  import '../../scripts/portal/grupos.ts';
+</script>

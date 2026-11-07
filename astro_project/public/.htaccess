@@ -14,6 +14,15 @@ ErrorDocument 404 /404.html
     RewriteCond %{HTTP_HOST} ^www\.1ipim\.online$ [NC]
     RewriteRule ^ https://1ipim.online%{REQUEST_URI} [L,R=301]
 
+    # Subdomínio admin: força HTTPS no próprio host
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP_HOST} ^admin\.1ipim\.online$ [NC]
+    RewriteRule ^ https://admin.1ipim.online%{REQUEST_URI} [L,R=301]
+
+    # Subdomínio admin: a raiz abre o wp-admin (WordPress continua em /admin)
+    RewriteCond %{HTTP_HOST} ^admin\.1ipim\.online$ [NC]
+    RewriteRule ^$ /admin/wp-admin/ [L,R=302]
+
     # WordPress fica em /admin (front-end desativado)
     RewriteCond %{REQUEST_URI} ^/admin/?(.*)$ [NC]
     RewriteCond %{REQUEST_URI} !^/admin/wp-admin/? [NC]

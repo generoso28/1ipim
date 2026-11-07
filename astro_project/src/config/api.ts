@@ -21,7 +21,7 @@ const readEnv = (key: string): string => {
 /** Base do WordPress (inclui `/admin` no arranjo atual). */
 export const WP_ADMIN_BASE =
   stripTrailingSlashes(readEnv("PUBLIC_WP_ADMIN_BASE")) ||
-  "https://1ipim.online/admin";
+  "https://admin.1ipim.online/admin";
 
 /** REST API do projeto. */
 export const WP_REST_BASE = `${WP_ADMIN_BASE}/wp-json/1ipim/v1`;

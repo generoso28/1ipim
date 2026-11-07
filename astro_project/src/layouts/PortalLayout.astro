@@ -1,6 +1,7 @@
 ---
 import Layout from './Layout.astro';
 import '../styles/portal.css';
+import { SITE_ORIGIN } from '../config/api';
 
 interface Props {
     title: string;
@@ -32,7 +33,7 @@ const {
 
         <!-- Sidebar -->
         <aside id="portal-sidebar" class="fixed lg:relative z-40 h-full w-64 lg:w-64 bg-white dark:bg-slate-800 border-r border-gray-100 dark:border-slate-700 transition-all duration-300 group overflow-x-hidden flex flex-col transform -translate-x-full lg:translate-x-0">
-            <a href="/" class="p-6 flex items-center gap-4" title="Voltar ao site" aria-label="Portal 1IPIM — voltar ao site principal">
+            <a href={SITE_ORIGIN} class="p-6 flex items-center gap-4" title="Voltar ao site" aria-label="Portal 1IPIM — voltar ao site principal">
                 <div class="w-8 h-8 flex-shrink-0 bg-[var(--color-brand)] rounded-lg flex items-center justify-center text-white">
                     <i class="fa-solid fa-church"></i>
                 </div>

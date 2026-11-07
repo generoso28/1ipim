@@ -179,7 +179,7 @@ conflito de escalas).
 | FR-96 | Gestão de programação no portal | 🔴 | CRUD de semanais (por dia da semana, sem recorrência) e eventos (data única, filtrados pelo ano corrente); página pública dinâmica mantendo o visual atual |
 | FR-97 | Gestão de pequenos grupos no portal | 🔴 | CRUD de grupos via portal (ministério `tipo=pequenos_grupos`; líder de PG = colaborador); página pública `/pg` dinâmica |
 | FR-98 | Berea — comunidade | 🔴 | Feed, salas criadas pelos usuários + vinculadas aos PGs, desafios, ranking, moderação delegada |
-| FR-106 | Identidade visual e app do Berea | 🔴 | App própria (sem navbar do site), light-first com toggle dark, accent âmbar + zinc, Material Symbols, bottom tab bar/FAB |
+| FR-106 | Identidade visual e app do Berea | 🔴 | App própria (sem navbar do site), light-first com toggle dark, **quatro cores da igreja** como base + dourado só de destaque, Material Symbols, bottom tab bar/FAB |
 | FR-101 | Integração PG ↔ Berea no relatório do encontro | 🔴 | Líder lista presentes, identifica quem não tem conta e envia convite/código da sala |
 | FR-102 | Seção de encontros do PG na sala do Berea | 🔴 | Registros ficam separados do feed principal, com foto, texto, tema, preletor e público |
 | FR-103 | Planos, desafios e devocionais por sala | 🔴 | Líder/moderador publica direto; moderador apaga conteúdo, remove pessoas e restringe postagens |
@@ -377,10 +377,12 @@ sequência (streak), badges e um pódio do grupo.
 **Nome de trabalho:** Berea — “Juntos, nas Escrituras”.
 
 **Identidade visual (definida).** App própria em `berea.1ipim.online` (sem o
-navbar/footer do site), **light-first** com toggle para dark, accent **âmbar**
-(`#fdba74` + derivados AA), neutros **zinc**, ícones **Material Symbols**,
-tipografia Inter + Cormorant Garamond, bottom tab bar (mobile) / left rail
-(desktop) + FAB de check-in. Detalhes em [`docs/berea.md`](berea.md) e
+navbar/footer do site), **light-first** com toggle para dark. A base são as
+**quatro cores da igreja** (Atos 2:42): Doutrina `#7ccece`, Comunhão `#6fc7b0`,
+Partir do pão `#beeb69`, Orações `#7bcfa0`; o **dourado** (`#f59e0b`/`#d97706`)
+é **apenas destaque**. Ícones **Material Symbols**, tipografia Inter + Cormorant
+Garamond, bottom tab bar (mobile) / left rail (desktop) + FAB de check-in.
+Detalhes em [`docs/berea.md`](berea.md) e
 [`docs/plano-implementacao.md`](plano-implementacao.md).
 
 **Referência analisada.** O app iOS `Bible Rats` (Expo/React Native +

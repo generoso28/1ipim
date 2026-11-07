@@ -278,7 +278,8 @@ Tabela `{prefix}1ipim_access_requests`:
 |---|---|
 | Posicionamento | App própria em `berea.1ipim.online`, **sem** navbar/footer do site |
 | Tema | **Light-first**, toggle para dark |
-| Accent | **Dourado quente** `#f59e0b` (500) + `#d97706` (600) para AA |
+| Cores base | **As quatro cores da igreja** (Atos 2:42): Doutrina `#7ccece`, Comunhão `#6fc7b0`, Partir do pão `#beeb69`, Orações `#7bcfa0` |
+| Destaque | **Dourado quente** `#f59e0b` (500) / `#d97706` (600) — **só** CTAs/streak |
 | Neutros | Zinc (`#f4f4f5`, `#e4e4e7`, `#27272a`, `#151718`…) |
 | Destrutivo | `#f87171` |
 | Tipografia | Inter (corpo) + Cormorant Garamond (títulos/versículos) |
@@ -286,8 +287,9 @@ Tabela `{prefix}1ipim_access_requests`:
 | Navegação | Bottom tab bar (mobile) / left rail (desktop) + FAB de check-in |
 | Superfícies | Raios generosos, cards de feed, avatares circulares |
 
-> Tokens dourados (`--color-amber-50…700`) no `@theme`, com contraste AA
-> validado sobre superfícies claras (usar `#d97706`/`#b45309` para texto).
+> As quatro cores são a base (marca, categorias, salas, badges); o dourado é
+> apenas destaque. Tokens `--color-berea-*` + `--color-amber-*`, com contraste
+> AA validado sobre superfícies claras (`#d97706`/`#b45309` para texto).
 
 ### 7.2 Estrutura de telas (IA)
 

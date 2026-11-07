@@ -1,15 +1,21 @@
 # Migração para subdomínios — runbook
 
-**Status:** subdomínios cadastrados e com SSL wildcard (`*.1ipim.online`).
+**Status:** subdomínios ativos com SSL wildcard (`*.1ipim.online`).
 **Estado em 07/11/2026:**
-- `portal.1ipim.online` — **publicado** (Astro `dist`; `/` → `/portal/`), validado
-  em navegador e com 13 testes Playwright verdes.
-- `admin.1ipim.online` — **redirect interino 301** para `https://1ipim.online/admin/`
-  (alias definitivo com `WP_HOME`/`search-replace` pendente).
-- `berea.1ipim.online` — **placeholder** com a identidade; app real na fase 5.
-- `1ipim.online`, `staging.1ipim.online` — inalterados (200).
-- Produção recebeu `portal-auth/_bootstrap.php` (CORS) e o mu-plugin
-  `1ipim-cors.php` (backups em `/home2/edu10350/1ipim_backups/manual_*`).
+- `portal.1ipim.online` — **portal na raiz** (ex.: `/login`, `/livraria`). O
+  pacote `dist-portal` é publicado no docroot; `/portal/*` redireciona para a
+  raiz. Validado em navegador (sem erros de console/CSP).
+- `admin.1ipim.online` — **alias canônico** via symlink para `public_html`;
+  WordPress em `admin.1ipim.online/admin`. `WP_HOME`/`WP_SITEURL` definidos no
+  `wp-config.php` + `COOKIE_DOMAIN='.1ipim.online'`. A raiz redireciona para
+  `/admin/wp-admin/`; `1ipim.online/admin/wp-json` continua respondendo (compat).
+- `berea.1ipim.online` — **placeholder** com as quatro cores da igreja + dourado;
+  app real na fase 5.
+- `1ipim.online`, `staging.1ipim.online` — 200.
+- Produção recebeu `portal-auth/_bootstrap.php` (CORS), o mu-plugin
+  `1ipim-cors.php`, o `.htaccess` com as regras do admin e o build com a base
+  `https://admin.1ipim.online/admin` (backups em
+  `/home2/edu10350/1ipim_backups/manual_*`).
 
 **Alvo:** `admin`, `portal`, `berea` e `staging` em `.1ipim.online`.
 

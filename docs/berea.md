@@ -133,31 +133,49 @@ grupo (líder de PG) é um atributo do grupo, não um papel global.
 
 ## Identidade visual do Berea
 
-O Berea é uma **app social** com identidade distinta do portal (teal + Inter,
-administrativo). Parâmetros:
+O Berea é uma **app social** com identidade **da igreja**: parte das **quatro
+cores de Atos 2:42** e usa o **dourado apenas como destaque**. Distinta do
+portal administrativo (teal + Inter), com cara de rede social.
+
+### As quatro cores da igreja (base)
+
+| Pilar | Cor | Uso no Berea |
+|---|---|---|
+| **Doutrina** | `#7ccece` | categorias de leitura, tags, ícones |
+| **Comunhão** | `#6fc7b0` | salas/grupos, presença, avatares |
+| **Partir do pão** | `#beeb69` | desafios, conquistas, progresso |
+| **Orações** | `#7bcfa0` | streak, check-ins, pódio |
+
+> As quatro cores são a base da identidade (marca, ícones, categorias, badges).
+> O **dourado é só destaque**: CTAs principais, notificações e streak.
+
+### Parâmetros
 
 | Parâmetro | Valor |
 |---|---|
 | Posicionamento | App própria em `berea.1ipim.online`, sem o navbar/footer do site |
 | Tema padrão | **Light-first**, com toggle para dark |
-| Accent | **Dourado quente** `#f59e0b` (500) + `#d97706` (600) para texto/AA — feed, streak, check-in |
+| Cores base | as quatro cores da igreja (acima) |
+| Destaque | **Dourado quente** `#f59e0b` (500) / `#d97706` (600) — só CTAs/streak |
 | Neutros | Zinc (mesma família de cinzas do portal) |
 | Destrutivo | `#f87171` (red-400) |
 | Tipografia | Inter (corpo) + Cormorant Garamond (títulos/versículos) |
 | Ícones | **Material Symbols** (diferente do Font Awesome do site/portal) |
 | Navegação | Bottom tab bar (mobile) / left rail (desktop) + FAB de check-in |
 | Superfícies | Raios generosos, cards de feed, avatares circulares |
-| Gamificação | Streak, badges e pódio com accent âmbar |
+| Gamificação | Streak, badges e pódio com as quatro cores + destaque dourado |
 
-Paleta (referência do app Bible-Rats, ajustada para light-first):
+Paleta técnica:
 
 - superfície clara `#ffffff` / `#f4f4f5` / `#e4e4e7`; bordas `#e4e4e7`;
 - superfície escura (dark) `#151718` / `#202425` / `#27272a`;
-- accent dourado quente `#f59e0b` (500), com `#d97706` (600) para texto/botões e `#b45309` para AA;
-- destrutivo `#f87171`.
+- base: `#7ccece` (Doutrina), `#6fc7b0` (Comunhão), `#beeb69` (Partir do pão),
+  `#7bcfa0` (Orações);
+- destaque: `#f59e0b` / `#d97706` (AA) / `#b45309`;
+- destrutivo: `#f87171`.
 
-> Criar tokens `--color-amber-50…700` no `@theme` e validar contraste AA do
-> texto dourado sobre superfícies claras (usar o tom 600/700 quando necessário).
+> Tokens: `--color-berea-*` para as quatro cores e `--color-amber-*` para o
+> destaque. Validar contraste AA do dourado sobre superfícies claras.
 
 ## Quem edita o conteúdo inicial
 

@@ -115,6 +115,13 @@ onPageReady("#audit-table-body", async () => {
     equipe_nomes: "Equipe",
     equipe_emails: "E-mails",
     account_type: "Tipo de conta",
+    inserted: "Inseridos",
+    updated: "Atualizados",
+    skipped: "Ignorados",
+    changed: "Alterados",
+    total: "Total",
+    file: "Arquivo",
+    count: "Quantidade",
   };
 
   function label(key: string): string {

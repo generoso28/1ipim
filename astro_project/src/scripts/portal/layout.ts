@@ -49,11 +49,25 @@ function buildNavItems(permissions: Permissions): NavItem[] {
       label: "Pequenos Grupos",
     });
   }
+  if (permissions.canProgramacao) {
+    items.push({
+      href: "/portal/programacao",
+      icon: "fa-solid fa-calendar-days",
+      label: "Programação",
+    });
+  }
   if (permissions.canMinistries) {
     items.push({
       href: "/portal/ministerios",
       icon: "fa-solid fa-layer-group",
       label: "Ministérios",
+    });
+  }
+  if (permissions.canAuditoria) {
+    items.push({
+      href: "/portal/auditoria",
+      icon: "fa-solid fa-clipboard-list",
+      label: "Auditoria",
     });
   }
   if (permissions.isAdmin) {
@@ -62,11 +76,6 @@ function buildNavItems(permissions: Permissions): NavItem[] {
         href: "/portal/usuarios",
         icon: "fa-solid fa-users-gear",
         label: "Voluntários",
-      },
-      {
-        href: "/portal/auditoria",
-        icon: "fa-solid fa-clipboard-list",
-        label: "Auditoria",
       },
       {
         href: WP_ADMIN_URL,

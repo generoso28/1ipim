@@ -1,0 +1,151 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+const title = 'Programação - Portal 1IPIM';
+const description = 'Gestão dos cultos semanais e eventos da igreja.';
+---
+<PortalLayout title={title} description={description}>
+  <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <p class="text-[var(--color-brand)] font-bold uppercase tracking-widest text-xs mb-2">Agenda</p>
+      <h1 class="text-3xl md:text-4xl font-black text-gray-900 dark:text-white">Programação</h1>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Cultos semanais por dia da semana e eventos com data única, filtrados pelo ano corrente no site.</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button id="novo-semanal" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg transition-all flex items-center gap-2">
+        <i class="fa-solid fa-plus"></i> Novo culto
+      </button>
+      <button id="novo-evento" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-xl font-bold text-sm shadow-lg transition-all flex items-center gap-2">
+        <i class="fa-solid fa-calendar-plus"></i> Novo evento
+      </button>
+    </div>
+  </div>
+
+  <div id="programacao-feedback" class="hidden mb-6 p-4 rounded-xl text-sm font-bold"></div>
+
+  <section class="mb-12">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-10 h-10 rounded-2xl bg-[var(--color-brand)]/10 text-[var(--color-brand)] flex items-center justify-center">
+        <i class="fa-regular fa-calendar-check"></i>
+      </span>
+      <div>
+        <h2 class="text-2xl font-black text-gray-900 dark:text-white">Cultos semanais</h2>
+        <p class="text-sm text-gray-500">Definidos pelo dia da semana; sem recorrência no banco.</p>
+      </div>
+    </div>
+    <div id="semanal-lista" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+  </section>
+
+  <section>
+    <div class="flex items-center gap-3 mb-4">
+      <span class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 flex items-center justify-center">
+        <i class="fa-solid fa-calendar-days"></i>
+      </span>
+      <div>
+        <h2 class="text-2xl font-black text-gray-900 dark:text-white">Eventos</h2>
+        <p id="eventos-ano-info" class="text-sm text-gray-500">Data única; o site mostra apenas o ano corrente.</p>
+      </div>
+    </div>
+    <div id="evento-lista" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+  </section>
+</PortalLayout>
+
+<!-- Modal -->
+<div id="programacao-modal" class="hidden fixed inset-0 z-[2000] bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
+  <div class="max-w-2xl mx-auto my-8 bg-white dark:bg-slate-800 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-slate-700 p-6 md:p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 id="programacao-modal-title" class="text-2xl font-black text-gray-900 dark:text-white">Novo item</h2>
+      <button id="fechar-programacao-modal" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 flex items-center justify-center" aria-label="Fechar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <form id="programacao-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="hidden" id="programacao-id">
+      <input type="hidden" id="programacao-tipo">
+
+      <div class="md:col-span-2">
+        <label for="programacao-titulo" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Título</label>
+        <input id="programacao-titulo" required class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="programacao-subtitulo" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Subtítulo (opcional)</label>
+        <input id="programacao-subtitulo" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+
+      <div id="field-dia" class="hidden">
+        <label for="programacao-dia" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Dia da semana</label>
+        <select id="programacao-dia" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+          <option value="0">Domingo</option><option value="1">Segunda</option><option value="2">Terça</option>
+          <option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option><option value="6">Sábado</option>
+        </select>
+      </div>
+
+      <div id="field-data" class="hidden">
+        <label for="programacao-data" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Data</label>
+        <input id="programacao-data" type="date" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+
+      <div>
+        <label for="programacao-horario" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Horário</label>
+        <input id="programacao-horario" type="time" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+
+      <div>
+        <label for="programacao-local" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Local</label>
+        <input id="programacao-local" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+      </div>
+
+      <div id="field-tag">
+        <label for="programacao-tag" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Etiqueta</label>
+        <input id="programacao-tag" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" placeholder="Doutrina, Comunhão...">
+      </div>
+
+      <div id="field-tag-cor">
+        <label for="programacao-tag-cor" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Cor da etiqueta</label>
+        <input id="programacao-tag-cor" type="color" class="w-full h-12 px-2 py-1 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl">
+      </div>
+
+      <div id="field-tipo-evento" class="hidden">
+        <label for="programacao-tipo-evento" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Categoria do evento</label>
+        <select id="programacao-tipo-evento" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+          <option value="special">Especial</option><option value="camp">Acampamento</option><option value="worship">Culto</option>
+          <option value="education">Educação</option><option value="ministry">Ministério</option><option value="youth">Juventude</option>
+          <option value="conference">Conferência</option><option value="celebration">Celebração</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="programacao-status" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Status</label>
+        <select id="programacao-status" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none">
+          <option value="publicado">Publicado</option><option value="rascunho">Rascunho</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="programacao-ordem" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Ordem</label>
+        <input id="programacao-ordem" type="number" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" value="0">
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="programacao-link" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Link (opcional)</label>
+        <input id="programacao-link" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none" placeholder="https://...">
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="programacao-descricao" class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Descrição</label>
+        <textarea id="programacao-descricao" rows="4" class="w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white outline-none"></textarea>
+      </div>
+
+      <div id="programacao-form-feedback" class="md:col-span-2 hidden p-3 rounded-xl text-sm font-bold"></div>
+      <div class="md:col-span-2 flex justify-end gap-2 pt-2">
+        <button type="button" id="cancelar-programacao" class="px-5 py-3 rounded-xl border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 font-bold text-sm">Cancelar</button>
+        <button type="submit" id="programacao-submit" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-60">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  import '../../scripts/portal/programacao.ts';
+</script>

@@ -167,16 +167,16 @@ conflito de escalas).
 | FR-84 | Reenvio de confirmação de e-mail no login | ✅ | Botão no login, rate limit, resposta genérica e auditoria |
 | FR-85 | Verificação manual de e-mail pelo admin | ✅ | Admin vê “e-mail pendente”, verifica manualmente e pode reenviar; auditoria registrada |
 | FR-86 | Central de notificações internas | ✅ | Badge, página, marcar lida e marcar todas |
-| FR-87 | Tela de auditoria administrativa | 🟡 | Filtros por ação/autor/alvo e detalhes antes/depois; líderes passam a ver log filtrado ao próprio escopo + relatórios (FR-93) |
+| FR-87 | Tela de auditoria administrativa | ✅ | Filtros por ação/autor/alvo, detalhes antes/depois e abas Log/Relatórios; líderes veem log filtrado ao próprio escopo; admin/pastor veem tudo |
 | FR-88 | Perfil e troca de senha | ✅ | Usuário vê dados e altera a própria senha |
 | FR-89 | Dashboard operacional | ✅ | Pendências, estoque baixo, não lidas e próxima escala |
 | FR-90 | Categorias da Livraria preenchidas | ✅ | 169 livros com categoria; 111 lacunas preenchidas |
 | FR-91 | Revisão de capas por livro | 🟡 | Filtro “sem capa” e busca individual com revisão; lote automático ainda pendente |
 | FR-92 | Página individual do livro com SEO | 🔴 | `/livraria/{slug}` com `Book` JSON-LD |
-| FR-93 | Relatórios operacionais | 🔴 | Emitidos na página de auditoria; líderes emitem do próprio escopo, pastor/admin veem tudo; CSV |
+| FR-93 | Relatórios operacionais | ✅ | Frequência de PG, escalas, voluntários e estoque baixo; emitidos na auditoria; escopo no servidor; CSV autenticado |
 | FR-94 | Busca de capas via Google Books + link Google Imagens | 🟡 | Chave do Books configurada; resultados com revisão; CSE/Google Images interno adiado |
 | FR-95 | Página dinâmica do livro | 🔴 | `/livraria/{slug}` server-rendered a partir da tabela, com `Book` JSON-LD e canonical |
-| FR-96 | Gestão de programação no portal | 🔴 | CRUD de semanais (por dia da semana, sem recorrência) e eventos (data única, filtrados pelo ano corrente); página pública dinâmica mantendo o visual atual |
+| FR-96 | Gestão de programação no portal | ✅ | CRUD de semanais (por dia da semana, sem recorrência) e eventos (data única, filtrados pelo ano corrente); `/portal/programacao`, `/programacao` e `/eventos` dinâmicos, mantendo o visual |
 | FR-97 | Gestão de pequenos grupos no portal | ✅ | CRUD de grupos via portal (ministério `tipo=pequenos_grupos`; líder de PG = colaborador); página pública `/pg` dinâmica |
 | FR-98 | Berea — comunidade | 🔴 | Feed, salas criadas pelos usuários + vinculadas aos PGs, desafios, ranking, moderação delegada |
 | FR-106 | Identidade visual e app do Berea | 🔴 | App própria (sem navbar do site), light-first com toggle dark, **quatro cores da igreja** como base + dourado só de destaque, Material Symbols, bottom tab bar/FAB |
@@ -210,9 +210,9 @@ gatilho externo (GitHub Actions ou endpoint no servidor).
 
 | ID | Requisito | Status | Critério de aceite |
 |---|---|---|---|
-| FR-07 | CRUD de eventos no WordPress: título, data/hora, local, descrição, imagem, link de inscrição | 🔴 | Gestor cria/edita/exclui sem código |
-| FR-08 | Home mostra o próximo evento; `/eventos/` mostra a agenda do ano | 🟡 | Dados vêm do WordPress |
-| FR-09 | Evento tem `Event` JSON-LD com data ISO, local e status | 🟡 | Agenda semanal já tem; eventos especiais ainda não |
+| FR-07 | CRUD de eventos no WordPress: título, data/hora, local, descrição, imagem, link de inscrição | 🟡 | CRUD no portal (título, data única, horário, local, descrição, link, categoria); imagem/inscrição pendentes |
+| FR-08 | Home mostra o próximo evento; `/eventos/` mostra a agenda do ano | 🟡 | `/eventos/` dinâmico e filtrado pelo ano corrente; destaque na home pendente |
+| FR-09 | Evento tem `Event` JSON-LD com data ISO, local e status | 🟡 | Cultos semanais com `Event`; eventos anuais ainda sem JSON-LD por item |
 | FR-10 | Botão “Adicionar ao calendário” (ICS/Google) | 🔴 | Arquivo `.ics` válido |
 | FR-11 | Inscrição com vagas e lista de espera (opcional) | 🔴 | Confirmação por e-mail; vagas controladas |
 
@@ -298,11 +298,11 @@ manual. Sem capa, o catálogo usa um placeholder com o título.
 |---|---|---|---|
 | FR-29 | Diretório de PGs: dia, horário, local, líder e público-alvo | 🟡 | Página pública `/pg` dinâmica (lê a API); filtro por região/dia pendente |
 | FR-30 | Inscrição/interesse em um PG | 🔴 | Líder recebe notificação |
-| FR-31 | Gestão de membros e líderes por PG | 🟡 | Admin/líder edita; líder de PG gerencia o próprio grupo; UI de vínculo de usuários pendente |
-| FR-99 | Registro de encontro do PG: foto, nome, data, texto lido, tema, preletor e público presente | 🟡 | Público = total + lista de nomes; registro no portal; foto por URL (upload pendente); auditável |
+| FR-31 | Gestão de membros e líderes por PG | ✅ | Admin/pastor/líder do ministério vinculam líderes por usuário; líder de PG gerencia o próprio grupo |
+| FR-99 | Registro de encontro do PG: foto, nome, data, texto lido, tema, preletor e público presente | ✅ | Público = total + lista de nomes; upload de foto para a biblioteca de mídia; auditável |
 | FR-101 | Integração do relatório com o Berea | 🔴 | Líder lista presentes, vê quem não tem conta e convida por código, link ou e-mail |
 | FR-102 | Seção de encontros na sala do PG | 🔴 | Aba separada do feed; registros visíveis a todos os líderes de PG no Portal; opção de publicar resumo no feed |
-| FR-100 | Relatório de frequência/público por PG e período | 🔴 | Agregação por grupo/período e exportação CSV; emitido na página de auditoria |
+| FR-100 | Relatório de frequência/público por PG e período | ✅ | Agregação por grupo/período, resumo, detalhe por encontro e CSV; na aba Relatórios da auditoria |
 
 **Modelo:** os PGs são um **ministério** (`tipo=pequenos_grupos`). O líder de PG é
 **colaborador** desse ministério; o **líder do ministério de PGs** é delegado por

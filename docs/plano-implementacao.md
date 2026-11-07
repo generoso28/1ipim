@@ -166,6 +166,12 @@ Tabela `{prefix}1ipim_grupo_encontro_presenca`:
 
 **Objetivo:** substituir a agenda estática por gestão dinâmica, mantendo o visual.
 
+**Status:** backend, portal e páginas públicas implementados (CRUD de cultos
+semanais e eventos, seed da programação atual, `/programacao` e `/eventos`
+dinâmicos com fallback no build). Campos extras em relação ao plano inicial:
+`subtitulo`, `link`, `tag`, `tag_cor` e `tipo_evento` (categoria visual).
+JSON-LD por evento anual fica para a fase de SEO.
+
 ### 4.1 Modelo de dados
 
 Tabela `{prefix}1ipim_programacao`:
@@ -206,6 +212,11 @@ Tabela `{prefix}1ipim_programacao`:
 ## 5. Fase 3 — Relatórios na auditoria + acesso de líderes
 
 **Objetivo:** líderes emitem relatórios do próprio escopo na página de auditoria; pastor/admin veem tudo.
+
+**Status:** implementada. Backend em `1ipim-relatorios.php` (escopo por líder de
+ministério/PG, auditoria filtrada, frequência de PG, escalas, voluntários e
+estoque baixo, CSV). Frontend em abas Log/Relatórios na auditoria. Sessão expõe
+`canRelatorios`/`canAuditoria`.
 
 ### 5.1 Acesso (muda FR-87)
 

@@ -194,6 +194,24 @@ function ipim_grupos_user_leads(int $grupo_id): bool
     ));
 }
 
+/**
+ * O usuário lidera ao menos um PG? (usado por auditoria/relatórios)
+ */
+function ipim_grupos_user_leads_any(int $user_id = 0): bool
+{
+    global $wpdb;
+    $user_id = $user_id > 0 ? $user_id : get_current_user_id();
+    if ($user_id <= 0) {
+        return false;
+    }
+
+    $table = ipim_grupos_table('grupo_lideres');
+    return (bool) $wpdb->get_var($wpdb->prepare(
+        "SELECT 1 FROM {$table} WHERE user_id=%d LIMIT 1",
+        $user_id
+    ));
+}
+
 function ipim_grupos_can_manage_group(int $grupo_id): bool
 {
     return ipim_grupos_can_manage_all() || ipim_grupos_user_leads($grupo_id);
@@ -344,6 +362,89 @@ function ipim_grupos_seed(bool $force = false): array
 }
 
 // --------------------------------------------------------------------------
+// Upload de foto do encontro
+// --------------------------------------------------------------------------
+
+/**
+ * Salva a foto enviada em $_FILES['foto'] e devolve URL + attachment_id.
+ *
+ * @return array{url:string,attachment_id:int}|null
+ */
+function ipim_grupos_upload_photo(int $grupo_id, string $title): ?array
+{
+    if (empty($_FILES['foto']) || !is_array($_FILES['foto'])) {
+        return null;
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+    $overrides = ['test_form' => false];
+    $upload = wp_handle_upload($_FILES['foto'], $overrides);
+    if (!is_array($upload) || isset($upload['error'])) {
+        return null;
+    }
+
+    $attachment_id = wp_insert_attachment([
+        'post_mime_type' => $upload['type'],
+        'post_title' => sanitize_text_field($title),
+        'post_content' => '',
+        'post_status' => 'inherit',
+    ], $upload['file'], $grupo_id);
+
+    if (is_wp_error($attachment_id)) {
+        return null;
+    }
+
+    wp_update_attachment_metadata(
+        (int) $attachment_id,
+        wp_generate_attachment_metadata((int) $attachment_id, $upload['file'])
+    );
+    update_post_meta((int) $attachment_id, '_wp_attachment_image_alt', sanitize_text_field($title));
+
+    return [
+        'url' => (string) wp_get_attachment_url((int) $attachment_id),
+        'attachment_id' => (int) $attachment_id,
+    ];
+}
+
+/**
+ * Candidatos a líder de PG: membros ativos do ministério de Pequenos Grupos.
+ *
+ * @return array<int,array{user_id:int,nome:string,email:string}>
+ */
+function ipim_grupos_leader_candidates(): array
+{
+    $ministry_id = ipim_grupos_ensure_ministry();
+    if ($ministry_id <= 0) {
+        return [];
+    }
+
+    global $wpdb;
+    $table = ipim_rbac_table('ministry_memberships');
+    $user_ids = $wpdb->get_col($wpdb->prepare(
+        "SELECT user_id FROM {$table} WHERE ministry_id=%d AND status='active' ORDER BY user_id",
+        $ministry_id
+    ));
+
+    $candidates = [];
+    foreach ($user_ids ?: [] as $user_id) {
+        $user = get_userdata((int) $user_id);
+        if (!$user instanceof WP_User) {
+            continue;
+        }
+        $candidates[] = [
+            'user_id' => (int) $user->ID,
+            'nome' => (string) $user->display_name,
+            'email' => (string) $user->user_email,
+        ];
+    }
+
+    return $candidates;
+}
+
+// --------------------------------------------------------------------------
 // REST handlers
 // --------------------------------------------------------------------------
 
@@ -455,9 +556,9 @@ function ipim_grupos_rest_save(WP_REST_Request $request): WP_REST_Response
         $id = (int) $wpdb->insert_id;
     }
 
-    // Líderes vinculados (opcional)
+    // Líderes vinculados (opcional). Só admin/pastor/líder do ministério alteram.
     $lideres = $request->get_param('lideres');
-    if (is_array($lideres)) {
+    if (is_array($lideres) && ipim_grupos_can_manage_all()) {
         $leader_table = ipim_grupos_table('grupo_lideres');
         $wpdb->delete($leader_table, ['grupo_id' => $id], ['%d']);
         foreach (array_unique(array_map('intval', $lideres)) as $user_id) {
@@ -527,6 +628,7 @@ function ipim_grupos_rest_encounters(WP_REST_Request $request): WP_REST_Response
         $row['grupo_id'] = (int) $row['grupo_id'];
         $row['publico_presente'] = (int) $row['publico_presente'];
         $row['publicar_feed'] = (bool) $row['publicar_feed'];
+        $row['foto_attachment_id'] = empty($row['foto_attachment_id']) ? null : (int) $row['foto_attachment_id'];
         $row['presenca'] = array_map(static fn (array $p): array => [
             'nome' => (string) $p['nome'],
             'user_id' => $p['user_id'] === null ? null : (int) $p['user_id'],
@@ -561,13 +663,14 @@ function ipim_grupos_rest_create_encounter(WP_REST_Request $request): WP_REST_Re
         'tema' => sanitize_text_field((string) $request->get_param('tema')),
         'preletor' => sanitize_text_field((string) $request->get_param('preletor')),
         'foto_url' => esc_url_raw((string) $request->get_param('foto_url')),
+        'foto_attachment_id' => (int) $request->get_param('foto_attachment_id') ?: null,
         'observacoes' => wp_kses_post((string) $request->get_param('observacoes')),
         'publico_presente' => max(0, (int) $request->get_param('publico_presente')),
         'publicar_feed' => $request->get_param('publicar_feed') ? 1 : 0,
         'created_by' => get_current_user_id(),
         'created_at' => $now,
         'updated_at' => $now,
-    ], ['%d','%s','%s','%s','%s','%s','%s','%d','%d','%d','%s','%s']);
+    ], ['%d','%s','%s','%s','%s','%s','%d','%s','%d','%d','%d','%s','%s']);
 
     $encontro_id = (int) $wpdb->insert_id;
     ipim_grupos_save_presence_rows($encontro_id, $request->get_param('presenca'));
@@ -641,6 +744,39 @@ function ipim_grupos_rest_save_presence(WP_REST_Request $request): WP_REST_Respo
     return rest_ensure_response(['ok' => true, 'encontro_id' => $encontro_id]);
 }
 
+function ipim_grupos_rest_upload_photo(WP_REST_Request $request): WP_REST_Response
+{
+    global $wpdb;
+    $grupo_id = (int) $request->get_param('id');
+    if ($grupo_id <= 0 || !ipim_grupos_can_manage_group($grupo_id)) {
+        return new WP_REST_Response(['error' => 'forbidden'], 403);
+    }
+
+    $table = ipim_grupos_table('grupos');
+    $grupo = $wpdb->get_row($wpdb->prepare("SELECT nome FROM {$table} WHERE id=%d", $grupo_id));
+    if (!$grupo) {
+        return new WP_REST_Response(['error' => 'not_found'], 404);
+    }
+
+    $photo = ipim_grupos_upload_photo($grupo_id, $grupo->nome . ' - encontro');
+    if (!$photo) {
+        return new WP_REST_Response(['error' => 'upload_failed'], 400);
+    }
+
+    ipim_rbac_audit(get_current_user_id(), 'grupo_encontro_foto', 'grupo', $grupo_id, null, $photo);
+
+    return rest_ensure_response($photo);
+}
+
+function ipim_grupos_rest_candidates(): WP_REST_Response
+{
+    if (!ipim_grupos_can_manage_all()) {
+        return new WP_REST_Response(['error' => 'forbidden'], 403);
+    }
+
+    return rest_ensure_response(ipim_grupos_leader_candidates());
+}
+
 function ipim_grupos_rest_seed(WP_REST_Request $request): WP_REST_Response
 {
     if (!ipim_rbac_is_admin()) {
@@ -704,6 +840,18 @@ add_action('rest_api_init', static function (): void {
             'callback' => 'ipim_grupos_rest_create_encounter',
             'permission_callback' => 'ipim_grupos_rest_access',
         ],
+    ]);
+
+    register_rest_route('1ipim/v1', '/admin/grupos/(?P<id>\d+)/foto', [
+        'methods' => 'POST',
+        'callback' => 'ipim_grupos_rest_upload_photo',
+        'permission_callback' => 'ipim_grupos_rest_access',
+    ]);
+
+    register_rest_route('1ipim/v1', '/admin/grupos/candidatos', [
+        'methods' => 'GET',
+        'callback' => 'ipim_grupos_rest_candidates',
+        'permission_callback' => 'ipim_grupos_rest_manage',
     ]);
 
     register_rest_route('1ipim/v1', '/admin/grupos/encontros/(?P<encontro_id>\d+)/presenca', [

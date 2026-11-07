@@ -80,8 +80,8 @@ test.describe("Portal", () => {
     await page.click("#submit-btn");
 
     await expect(page).toHaveURL(/\/portal\/?$/);
-    await expect(page.locator("#dashboard-grid a")).toHaveCount(6);
-    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(10);
+    await expect(page.locator("#dashboard-grid a")).toHaveCount(8);
+    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(11);
 
     const session = await page.evaluate(() => ({
       nonce: localStorage.getItem("1ipim_auth_nonce"),
@@ -107,8 +107,8 @@ test.describe("Portal autenticado", () => {
   test("dashboard e navegação por papel", async ({ page }) => {
     await page.goto("/portal/", { waitUntil: "domcontentloaded" });
     await expect(page.locator("h1")).toContainText("Teste E2E");
-    await expect(page.locator("#dashboard-grid a")).toHaveCount(6);
-    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(10);
+    await expect(page.locator("#dashboard-grid a")).toHaveCount(8);
+    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(11);
     await expect(page.locator("#user-nav-role")).toHaveText("Administrador");
   });
 

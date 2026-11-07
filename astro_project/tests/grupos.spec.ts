@@ -68,4 +68,28 @@ test.describe("Pequenos Grupos", () => {
     await expect(page.locator("#grupo-modal")).toBeVisible();
     await expect(page.locator("#grupo-modal-title")).toHaveText("Novo grupo");
   });
+
+  test("portal oferece upload de foto e seleção de líderes", async ({ page, context }) => {
+    await seedSession(context);
+    await mockAuthSession(page);
+    await mockGroups(page, "admin/grupos");
+    await page.route("**/admin/wp-json/1ipim/v1/admin/grupos/candidatos", (route) =>
+      json(route, [{ user_id: 7, nome: "Ana Líder", email: "ana@example.com" }]),
+    );
+    await page.route("**/admin/wp-json/1ipim/v1/admin/grupos/1/encontros", (route) =>
+      json(route, []),
+    );
+
+    await page.goto("/portal/pequenos-grupos/", { waitUntil: "domcontentloaded" });
+
+    await page.locator("#novo-grupo").click();
+    await expect(page.locator("#grupo-lideres-wrap")).toBeVisible();
+    await expect(page.locator("#grupo-lideres input[type=checkbox]")).toHaveCount(1);
+    await page.locator("#fechar-grupo-modal").click();
+
+    await page.locator('[data-encounters="1"]').click();
+    await expect(page.locator("#grupo-panel")).toBeVisible();
+    await page.locator("#novo-encontro").click();
+    await expect(page.locator("#encontro-foto-file")).toBeVisible();
+  });
 });

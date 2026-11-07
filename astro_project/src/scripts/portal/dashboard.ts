@@ -65,6 +65,17 @@ function buildCards(permissions: Permissions): DashboardCard[] {
     });
   }
 
+  if (permissions.canProgramacao) {
+    cards.push({
+      title: "Programação",
+      description: "Cultos semanais e eventos do ano no site.",
+      icon: "fa-calendar-days",
+      color:
+        "bg-sky-100 text-sky-600 dark:bg-sky-900/30 dark:text-sky-400",
+      href: "/portal/programacao",
+    });
+  }
+
   if (permissions.canMinistries) {
     cards.push({
       title: "Ministérios",
@@ -86,6 +97,19 @@ function buildCards(permissions: Permissions): DashboardCard[] {
       color:
         "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300",
       href: "/portal/usuarios",
+    });
+  }
+
+  if (permissions.canAuditoria) {
+    cards.push({
+      title: "Auditoria e relatórios",
+      description: permissions.isAdmin
+        ? "Veja o log completo e emita relatórios da igreja."
+        : "Veja o log do seu escopo e emita relatórios.",
+      icon: "fa-clipboard-list",
+      color:
+        "bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400",
+      href: "/portal/auditoria",
     });
   }
 

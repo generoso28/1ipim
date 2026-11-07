@@ -1,6 +1,15 @@
 import type { Permissions } from "./types";
 
-type PermissionSet = Omit<Permissions, "isPrivileged" | "isMinistryLeader" | "canGrupos">;
+type PermissionSet = Omit<
+  Permissions,
+  | "isPrivileged"
+  | "isMinistryLeader"
+  | "canGrupos"
+  | "canGruposAll"
+  | "canProgramacao"
+  | "canRelatorios"
+  | "canAuditoria"
+>;
 
 const ROLE_PERMISSIONS: Record<string, PermissionSet> = {
   pastor: {
@@ -114,6 +123,10 @@ interface PermissionUser {
   isMinistryLeader?: boolean;
   canManageLivraria?: boolean;
   canManageGrupos?: boolean;
+  canManageGruposAll?: boolean;
+  canProgramacao?: boolean;
+  canRelatorios?: boolean;
+  canAuditoria?: boolean;
 }
 
 export function getPermissions(
@@ -148,6 +161,11 @@ export function getPermissions(
     canMinistries: isAdmin || isMinistryLeader,
     canLivraria: isAdmin || Boolean(user.canManageLivraria),
     canGrupos: isAdmin || Boolean(user.canManageGrupos),
+    canGruposAll: isAdmin || Boolean(user.canManageGruposAll),
+    canProgramacao: isAdmin || Boolean(user.canProgramacao),
+    canRelatorios:
+      isAdmin || isMinistryLeader || Boolean(user.canRelatorios),
+    canAuditoria: isAdmin || isMinistryLeader || Boolean(user.canAuditoria),
     isAdmin,
     isPrivileged: isAdmin || isMinistryLeader,
     isMinistryLeader,

@@ -130,6 +130,20 @@ function user_payload(WP_User $user): array
         $gruposId > 0 && function_exists('ipim_rbac_can_view_ministry')
         && ipim_rbac_can_view_ministry((int) $user->ID, (int) $gruposId)
     );
+    $canManageGruposAll = $isAdmin || $isPastor || (
+        $gruposId > 0 && function_exists('ipim_rbac_can_manage_ministry')
+        && ipim_rbac_can_manage_ministry((int) $user->ID, (int) $gruposId)
+    );
+
+    $programacaoId = function_exists('ipim_programacao_ensure_ministry') ? ipim_programacao_ensure_ministry() : 0;
+    $canProgramacao = $isAdmin || $isPastor || (
+        $programacaoId > 0 && function_exists('ipim_rbac_can_manage_ministry')
+        && ipim_rbac_can_manage_ministry((int) $user->ID, (int) $programacaoId)
+    );
+
+    $canRelatorios = $isAdmin || $isPastor
+        || $isMinistryLeader
+        || (function_exists('ipim_grupos_user_leads_any') && ipim_grupos_user_leads_any((int) $user->ID));
 
     return [
         'id' => (string) $user->ID,
@@ -146,6 +160,10 @@ function user_payload(WP_User $user): array
         'canManageLivraria' => $canManageLivraria,
         'canManageLivrariaStock' => $canManageLivrariaStock,
         'canManageGrupos' => $canManageGrupos,
+        'canManageGruposAll' => $canManageGruposAll,
+        'canProgramacao' => $canProgramacao,
+        'canRelatorios' => $canRelatorios,
+        'canAuditoria' => $canRelatorios,
         'nonce' => wp_create_nonce('wp_rest'),
     ];
 }

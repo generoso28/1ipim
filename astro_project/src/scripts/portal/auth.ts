@@ -31,6 +31,10 @@ export const AUTH_KEYS = {
   canManageLivraria: "1ipim_user_can_manage_livraria",
   canManageLivrariaStock: "1ipim_user_can_manage_livraria_stock",
   canManageGrupos: "1ipim_user_can_manage_grupos",
+  canManageGruposAll: "1ipim_user_can_manage_grupos_all",
+  canProgramacao: "1ipim_user_can_programacao",
+  canRelatorios: "1ipim_user_can_relatorios",
+  canAuditoria: "1ipim_user_can_auditoria",
 } as const;
 
 /** Chave do JWT antigo: removida para não confundir navegadores com cache velho. */
@@ -107,6 +111,10 @@ export const auth = {
       canManageLivraria: readKey(AUTH_KEYS.canManageLivraria) === "1",
       canManageLivrariaStock: readKey(AUTH_KEYS.canManageLivrariaStock) === "1",
       canManageGrupos: readKey(AUTH_KEYS.canManageGrupos) === "1",
+      canManageGruposAll: readKey(AUTH_KEYS.canManageGruposAll) === "1",
+      canProgramacao: readKey(AUTH_KEYS.canProgramacao) === "1",
+      canRelatorios: readKey(AUTH_KEYS.canRelatorios) === "1",
+      canAuditoria: readKey(AUTH_KEYS.canAuditoria) === "1",
     };
   },
 
@@ -140,6 +148,13 @@ export const auth = {
       session.canManageLivrariaStock ? "1" : "0",
     );
     writeKey(AUTH_KEYS.canManageGrupos, session.canManageGrupos ? "1" : "0");
+    writeKey(
+      AUTH_KEYS.canManageGruposAll,
+      session.canManageGruposAll ? "1" : "0",
+    );
+    writeKey(AUTH_KEYS.canProgramacao, session.canProgramacao ? "1" : "0");
+    writeKey(AUTH_KEYS.canRelatorios, session.canRelatorios ? "1" : "0");
+    writeKey(AUTH_KEYS.canAuditoria, session.canAuditoria ? "1" : "0");
   },
 
   setRole(role: string): void {

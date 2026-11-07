@@ -2,7 +2,7 @@
 import PortalLayout from '../../layouts/PortalLayout.astro';
 
 const title = 'Auditoria - Portal 1IPIM';
-const description = 'Registro de ações administrativas do Portal 1IPIM.';
+const description = 'Registro de ações administrativas e relatórios do Portal 1IPIM.';
 ---
 <PortalLayout title={title} description={description}>
   <div class="mb-8">
@@ -11,65 +11,138 @@ const description = 'Registro de ações administrativas do Portal 1IPIM.';
     <p class="text-gray-500 mt-2">Quem alterou o quê, quando e em qual registro.</p>
   </div>
 
-  <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 p-5 md:p-6 shadow-sm mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-      <label>
-        <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Ação</span>
-        <input id="audit-action" type="search" placeholder="Ex: schedule_join" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
-      </label>
-      <label>
-        <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Tipo de alvo</span>
-        <select id="audit-target" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
-          <option value="">Todos</option>
-          <option value="user">Usuário</option>
-          <option value="escala">Escala</option>
-          <option value="ministerio">Ministério</option>
-          <option value="livro">Livro</option>
-          <option value="system">Sistema</option>
-        </select>
-      </label>
-      <label>
-        <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">ID do alvo</span>
-        <input id="audit-target-id" type="number" min="0" placeholder="Opcional" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
-      </label>
-      <label>
-        <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">ID do autor</span>
-        <input id="audit-actor" type="number" min="0" placeholder="Opcional" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
-      </label>
-    </div>
+  <div class="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Seções da auditoria">
+    <button id="tab-btn-log" type="button" role="tab" aria-selected="true" aria-controls="tab-panel-log" class="tab-button px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-[var(--color-brand)] text-white shadow-sm transition-all">
+      <i class="fa-solid fa-list-ul mr-2"></i> Log
+    </button>
+    <button id="tab-btn-relatorios" type="button" role="tab" aria-selected="false" aria-controls="tab-panel-relatorios" class="tab-button px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-white dark:bg-slate-800 text-gray-500 dark:text-gray-300 border border-gray-100 dark:border-slate-700 transition-all">
+      <i class="fa-solid fa-chart-column mr-2"></i> Relatórios
+    </button>
   </div>
 
-  <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse min-w-[900px]">
-        <thead>
-          <tr class="border-b border-gray-100 dark:border-slate-700">
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Data</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Autor</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Ação</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Alvo</th>
-            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Detalhes</th>
-          </tr>
-        </thead>
-        <tbody id="audit-table-body"></tbody>
-      </table>
-    </div>
-    <div id="audit-loading" class="py-24 text-center">
-      <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div>
-      <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Carregando auditoria...</p>
-    </div>
-    <div id="audit-empty" class="hidden py-24 text-center">
-      <i class="fa-solid fa-clipboard-list text-4xl text-gray-200 mb-4"></i>
-      <p class="text-gray-500 font-bold">Nenhum registro encontrado.</p>
-    </div>
-    <div class="flex items-center justify-between gap-4 px-6 py-4 border-t border-gray-100 dark:border-slate-700">
-      <p id="audit-page-info" class="text-[11px] font-bold text-gray-500"></p>
-      <div class="flex items-center gap-2">
-        <button id="audit-prev" type="button" class="px-4 py-2 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-xs font-black uppercase text-gray-500 disabled:opacity-40">Anterior</button>
-        <button id="audit-next" type="button" class="px-4 py-2 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-xs font-black uppercase text-gray-500 disabled:opacity-40">Próxima</button>
+  <section id="tab-panel-log" role="tabpanel" aria-labelledby="tab-btn-log">
+    <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 p-5 md:p-6 shadow-sm mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <label>
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Ação</span>
+          <input id="audit-action" type="search" placeholder="Ex: schedule_join" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+        </label>
+        <label>
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Tipo de alvo</span>
+          <select id="audit-target" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+            <option value="">Todos</option>
+            <option value="user">Usuário</option>
+            <option value="escala">Escala</option>
+            <option value="ministerio">Ministério</option>
+            <option value="livro">Livro</option>
+            <option value="programacao">Programação</option>
+            <option value="grupo">PG</option>
+            <option value="system">Sistema</option>
+          </select>
+        </label>
+        <label>
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">ID do alvo</span>
+          <input id="audit-target-id" type="number" min="0" placeholder="Opcional" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+        </label>
+        <label>
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">ID do autor</span>
+          <input id="audit-actor" type="number" min="0" placeholder="Opcional" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+        </label>
       </div>
     </div>
-  </div>
+
+    <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[900px]">
+          <thead>
+            <tr class="border-b border-gray-100 dark:border-slate-700">
+              <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Data</th>
+              <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Autor</th>
+              <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Ação</th>
+              <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Alvo</th>
+              <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Detalhes</th>
+            </tr>
+          </thead>
+          <tbody id="audit-table-body"></tbody>
+        </table>
+      </div>
+      <div id="audit-loading" class="py-24 text-center">
+        <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div>
+        <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Carregando auditoria...</p>
+      </div>
+      <div id="audit-empty" class="hidden py-24 text-center">
+        <i class="fa-solid fa-clipboard-list text-4xl text-gray-200 mb-4"></i>
+        <p class="text-gray-500 font-bold">Nenhum registro encontrado.</p>
+      </div>
+      <div class="flex items-center justify-between gap-4 px-6 py-4 border-t border-gray-100 dark:border-slate-700">
+        <p id="audit-page-info" class="text-[11px] font-bold text-gray-500"></p>
+        <div class="flex items-center gap-2">
+          <button id="audit-prev" type="button" class="px-4 py-2 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-xs font-black uppercase text-gray-500 disabled:opacity-40">Anterior</button>
+          <button id="audit-next" type="button" class="px-4 py-2 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-xs font-black uppercase text-gray-500 disabled:opacity-40">Próxima</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-panel-relatorios" role="tabpanel" aria-labelledby="tab-btn-relatorios" class="hidden">
+    <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 p-5 md:p-6 shadow-sm mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <label class="md:col-span-3">
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Relatório</span>
+          <select id="report-select" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+            <option value="frequencia">Frequência de PG</option>
+            <option value="escalas">Escalas</option>
+            <option value="voluntarios">Voluntários</option>
+            <option value="estoque">Estoque baixo (Livraria)</option>
+          </select>
+        </label>
+        <label id="report-group-wrap">
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Grupo</span>
+          <select id="report-group" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+            <option value="">Todos</option>
+          </select>
+        </label>
+        <label id="report-ministry-wrap" class="hidden">
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Ministério</span>
+          <select id="report-ministry" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+            <option value="">Todos</option>
+          </select>
+        </label>
+        <label id="report-de-wrap">
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">De</span>
+          <input id="report-de" type="date" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+        </label>
+        <label id="report-ate-wrap">
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Até</span>
+          <input id="report-ate" type="date" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+        </label>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 mt-4">
+        <button id="report-run" type="button" class="bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-5 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-60">
+          <i class="fa-solid fa-play mr-2"></i> Gerar
+        </button>
+        <button id="report-csv" type="button" class="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 px-5 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-60" disabled>
+          <i class="fa-solid fa-file-csv mr-2"></i> Baixar CSV
+        </button>
+        <p id="report-feedback" class="hidden ml-auto text-xs font-bold"></p>
+      </div>
+    </div>
+
+    <div id="report-summary" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6"></div>
+
+    <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[760px]">
+          <thead id="report-thead"></thead>
+          <tbody id="report-tbody"></tbody>
+        </table>
+      </div>
+      <div id="report-empty" class="hidden py-24 text-center">
+        <i class="fa-solid fa-chart-column text-4xl text-gray-200 mb-4"></i>
+        <p class="text-gray-500 font-bold">Nenhum dado para o filtro escolhido.</p>
+      </div>
+    </div>
+  </section>
 </PortalLayout>
 
 <script>

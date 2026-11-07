@@ -35,6 +35,10 @@ export interface PortalUser {
   canManageLivraria?: boolean;
   canManageLivrariaStock?: boolean;
   canManageGrupos?: boolean;
+  canManageGruposAll?: boolean;
+  canProgramacao?: boolean;
+  canRelatorios?: boolean;
+  canAuditoria?: boolean;
 }
 
 export interface Permissions {
@@ -45,6 +49,10 @@ export interface Permissions {
   canMinistries: boolean;
   canLivraria: boolean;
   canGrupos: boolean;
+  canGruposAll: boolean;
+  canProgramacao: boolean;
+  canRelatorios: boolean;
+  canAuditoria: boolean;
   isAdmin: boolean;
   isPrivileged: boolean;
   isMinistryLeader: boolean;

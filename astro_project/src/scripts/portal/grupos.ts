@@ -18,6 +18,7 @@ interface Grupo {
   responsavel: string;
   imagem: string;
   status: string;
+  lideres?: Array<{ user_id: number; papel: string; nome: string }>;
 }
 
 interface Encontro {
@@ -31,7 +32,14 @@ interface Encontro {
   observacoes: string;
   publico_presente: number;
   publicar_feed: boolean;
+  foto_attachment_id?: number | null;
   presenca: Array<{ nome: string; user_id: number | null }>;
+}
+
+interface LiderCandidate {
+  user_id: number;
+  nome: string;
+  email: string;
 }
 
 const DIAS = ["", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
@@ -39,6 +47,8 @@ const DIAS = ["", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "
 let permissions: Permissions;
 let groups: Grupo[] = [];
 let current: Grupo | null = null;
+let candidates: LiderCandidate[] = [];
+let editingLeaders: number[] = [];
 
 function $(id: string): HTMLElement | null {
   return document.getElementById(id);
@@ -131,7 +141,47 @@ function getValue(id: string): string {
   return el ? el.value.trim() : "";
 }
 
-function openGroupModal(grupo?: Grupo): void {
+async function loadCandidates(): Promise<void> {
+  if (!permissions.canGruposAll || candidates.length > 0) return;
+  try {
+    const response = await apiFetch("/wp-json/1ipim/v1/admin/grupos/candidatos");
+    if (response.ok) {
+      candidates = (await response.json()) as LiderCandidate[];
+    }
+  } catch {
+    candidates = [];
+  }
+}
+
+function renderLeaderOptions(selected: number[]): void {
+  const wrap = $("grupo-lideres-wrap");
+  const list = $("grupo-lideres");
+  if (!wrap || !list) return;
+
+  if (!permissions.canGruposAll) {
+    wrap.classList.add("hidden");
+    return;
+  }
+
+  wrap.classList.remove("hidden");
+  if (candidates.length === 0) {
+    list.innerHTML = `<p class="text-xs text-gray-500 sm:col-span-2">Nenhum membro do ministério de PGs cadastrado. Vincule usuários em Ministérios.</p>`;
+    return;
+  }
+
+  list.innerHTML = candidates
+    .map(
+      (candidate) => `
+        <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+          <input type="checkbox" value="${candidate.user_id}" ${selected.includes(candidate.user_id) ? "checked" : ""} class="w-4 h-4 accent-[var(--color-brand)]">
+          <span class="truncate" title="${escapeHtml(candidate.email)}">${escapeHtml(candidate.nome)}</span>
+        </label>
+      `,
+    )
+    .join("");
+}
+
+async function openGroupModal(grupo?: Grupo): Promise<void> {
   const modal = $("grupo-modal");
   const title = $("grupo-modal-title");
   const feedbackBox = $("grupo-form-feedback");
@@ -153,6 +203,10 @@ function openGroupModal(grupo?: Grupo): void {
   setValue("grupo-status", grupo?.status || "ativo");
   setValue("grupo-descricao", grupo?.descricao ?? "");
 
+  editingLeaders = (grupo?.lideres ?? []).map((leader) => leader.user_id);
+  await loadCandidates();
+  renderLeaderOptions(editingLeaders);
+
   modal.classList.remove("hidden");
 }
 
@@ -164,7 +218,10 @@ async function saveGroup(event: Event): Promise<void> {
   event.preventDefault();
   const feedbackBox = $("grupo-form-feedback");
   const id = Number(getValue("grupo-id") || 0);
-  const payload = {
+  const leaderIds = Array.from(
+    document.querySelectorAll<HTMLInputElement>("#grupo-lideres input[type=checkbox]:checked"),
+  ).map((input) => Number(input.value));
+  const payload: Record<string, unknown> = {
     id: id || undefined,
     nome: getValue("grupo-nome"),
     publico_alvo: getValue("grupo-publico"),
@@ -178,6 +235,10 @@ async function saveGroup(event: Event): Promise<void> {
     status: getValue("grupo-status"),
     descricao: getValue("grupo-descricao"),
   };
+
+  if (permissions.canGruposAll) {
+    payload.lideres = leaderIds;
+  }
 
   try {
     const path = id
@@ -230,6 +291,7 @@ function encounterCard(e: Encontro): string {
     : "Sem lista nominal";
   return `
     <div class="bg-gray-50 dark:bg-slate-900/40 rounded-2xl p-5 border border-gray-100 dark:border-slate-700">
+      ${e.foto_url ? `<img src="${escapeHtml(e.foto_url)}" alt="Foto do encontro de ${escapeHtml(formatDate(e.data))}" class="w-full h-44 object-cover rounded-xl mb-3" loading="lazy">` : ""}
       <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
         <p class="font-black text-gray-900 dark:text-white">${escapeHtml(formatDate(e.data))}</p>
         <span class="text-xs font-bold text-[var(--color-brand)] bg-[var(--color-brand)]/10 px-2 py-1 rounded-full">${e.publico_presente} presentes</span>
@@ -285,14 +347,49 @@ function openEncounterModal(): void {
   setValue("encontro-foto", "");
   setValue("encontro-observacoes", "");
   setValue("encontro-presenca", "");
+  const photoInput = $("encontro-foto-file") as HTMLInputElement | null;
+  if (photoInput) photoInput.value = "";
+  $("encontro-foto-preview")?.classList.add("hidden");
   const feed = $("encontro-feed") as HTMLInputElement | null;
   if (feed) feed.checked = false;
   $("encontro-modal")?.classList.remove("hidden");
 }
 
+function previewPhoto(): void {
+  const input = $("encontro-foto-file") as HTMLInputElement | null;
+  const preview = $("encontro-foto-preview");
+  if (!input || !preview) return;
+
+  const file = input.files?.[0];
+  if (!file) {
+    preview.classList.add("hidden");
+    preview.innerHTML = "";
+    return;
+  }
+
+  const url = URL.createObjectURL(file);
+  preview.innerHTML = `<img src="${url}" alt="Prévia da foto do encontro" class="w-full max-h-64 object-cover">`;
+  preview.classList.remove("hidden");
+}
+
+async function uploadPhoto(grupoId: number, file: File): Promise<{ url: string; attachment_id: number }> {
+  const formData = new FormData();
+  formData.append("foto", file);
+  const response = await apiFetch(`/wp-json/1ipim/v1/admin/grupos/${grupoId}/foto`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) {
+    const data = (await response.json().catch(() => ({}))) as { error?: string };
+    throw new Error(data.error || "Não foi possível enviar a foto.");
+  }
+  return (await response.json()) as { url: string; attachment_id: number };
+}
+
 async function saveEncounter(event: Event): Promise<void> {
   event.preventDefault();
   const feedbackBox = $("encontro-form-feedback");
+  const submit = $("encontro-submit") as HTMLButtonElement | null;
   const grupoId = Number(getValue("encontro-grupo-id"));
   if (!grupoId) return;
 
@@ -302,19 +399,40 @@ async function saveEncounter(event: Event): Promise<void> {
     .filter(Boolean)
     .map((nome) => ({ nome }));
 
-  const payload = {
-    data: getValue("encontro-data"),
-    texto_lido: getValue("encontro-texto"),
-    tema: getValue("encontro-tema"),
-    preletor: getValue("encontro-preletor"),
-    foto_url: getValue("encontro-foto"),
-    observacoes: getValue("encontro-observacoes"),
-    publico_presente: Number(getValue("encontro-publico") || 0),
-    publicar_feed: ($("encontro-feed") as HTMLInputElement | null)?.checked ? 1 : 0,
-    presenca: names,
-  };
-
   try {
+    let fotoUrl = getValue("encontro-foto");
+    let fotoAttachmentId = 0;
+
+    const photoInput = $("encontro-foto-file") as HTMLInputElement | null;
+    const file = photoInput?.files?.[0];
+    if (file) {
+      if (submit) {
+        submit.disabled = true;
+        submit.textContent = "Enviando foto...";
+      }
+      const uploaded = await uploadPhoto(grupoId, file);
+      fotoUrl = uploaded.url;
+      fotoAttachmentId = uploaded.attachment_id;
+    }
+
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = "Salvando...";
+    }
+
+    const payload = {
+      data: getValue("encontro-data"),
+      texto_lido: getValue("encontro-texto"),
+      tema: getValue("encontro-tema"),
+      preletor: getValue("encontro-preletor"),
+      foto_url: fotoUrl,
+      foto_attachment_id: fotoAttachmentId || null,
+      observacoes: getValue("encontro-observacoes"),
+      publico_presente: Number(getValue("encontro-publico") || 0),
+      publicar_feed: ($("encontro-feed") as HTMLInputElement | null)?.checked ? 1 : 0,
+      presenca: names,
+    };
+
     const response = await apiFetch(`/wp-json/1ipim/v1/admin/grupos/${grupoId}/encontros`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -329,16 +447,22 @@ async function saveEncounter(event: Event): Promise<void> {
     if (current) await openEncounters(current);
   } catch (error) {
     feedback(feedbackBox, "error", getErrorMessage(error, "Não foi possível salvar o encontro."));
+  } finally {
+    if (submit) {
+      submit.disabled = false;
+      submit.textContent = "Salvar encontro";
+    }
   }
 }
 
 function bind(): void {
-  $("novo-grupo")?.addEventListener("click", () => openGroupModal());
+  $("novo-grupo")?.addEventListener("click", () => void openGroupModal());
   $("fechar-grupo-modal")?.addEventListener("click", () => closeModal("grupo-modal"));
   $("cancelar-grupo")?.addEventListener("click", () => closeModal("grupo-modal"));
   $("fechar-encontro-modal")?.addEventListener("click", () => closeModal("encontro-modal"));
   $("cancelar-encontro")?.addEventListener("click", () => closeModal("encontro-modal"));
   $("novo-encontro")?.addEventListener("click", openEncounterModal);
+  $("encontro-foto-file")?.addEventListener("change", previewPhoto);
   $("fechar-painel")?.addEventListener("click", () => $("grupo-panel")?.classList.add("hidden"));
   $("grupo-form")?.addEventListener("submit", (event) => void saveGroup(event));
   $("encontro-form")?.addEventListener("submit", (event) => void saveEncounter(event));
@@ -351,7 +475,7 @@ function bind(): void {
 
     if (edit) {
       const grupo = groups.find((g) => g.id === Number(edit.dataset.edit));
-      if (grupo) openGroupModal(grupo);
+      if (grupo) void openGroupModal(grupo);
     } else if (enc) {
       const grupo = groups.find((g) => g.id === Number(enc.dataset.encounters));
       if (grupo) void openEncounters(grupo);

@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/1ipim-rbac.php';
+require_once __DIR__ . '/1ipim-relatorios.php';
 
 /* -------------------------------------------------------------------------
  * Helpers de domínio
@@ -881,8 +882,10 @@ add_action('rest_api_init', static function (): void {
     register_rest_route('1ipim/v1', '/admin/audit', [
         'methods' => 'GET',
         'callback' => static function (WP_REST_Request $request): array {
-            if (!ipim_rbac_is_admin() && !ipim_rbac_is_pastor()) {
-                return ['items' => [], 'total' => 0, 'page' => 1, 'pages' => 0];
+            $isGlobal = ipim_rbac_is_admin() || ipim_rbac_is_pastor();
+            $hasScope = function_exists('ipim_relatorios_has_scope') && ipim_relatorios_has_scope();
+            if (!$isGlobal && !$hasScope) {
+                return ['items' => [], 'total' => 0, 'page' => 1, 'pages' => 0, 'per_page' => 30];
             }
 
             global $wpdb;
@@ -911,6 +914,12 @@ add_action('rest_api_init', static function (): void {
             if ($target_id > 0) {
                 $where[] = 'target_id = %d';
                 $params[] = $target_id;
+            }
+
+            if (!$isGlobal && function_exists('ipim_relatorios_audit_where')) {
+                [$scope_sql, $scope_params] = ipim_relatorios_audit_where();
+                $where[] = $scope_sql;
+                $params = array_merge($params, $scope_params);
             }
 
             $where_sql = implode(' AND ', $where);

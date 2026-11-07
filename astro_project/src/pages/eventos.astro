@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { WP_REST_BASE } from '../config/api';
 
 const specialEvents = [
     { title: "Acampamento Maanaim", link: "https://acampamaanaim.com.br", description: "O retiro anual da Igreja para jovens e adultos resgatarem o ânimo e a fé de forma imersiva e vibrante — com temporadas ao longo do ano.", icon: "fa-solid fa-fire", color: "from-orange-500 to-red-500", glow: "bg-orange-500/30" },
@@ -8,89 +9,110 @@ const specialEvents = [
     { title: "Conferência Missionária", link: "https://www.instagram.com/sec.missoes.1ipi.machado/", description: "Dias separados para reacender a chama por missões em nossa comunidade e além-fronteiras.", icon: "fa-solid fa-earth-americas", color: "from-purple-500 to-indigo-600", glow: "bg-purple-500/30" }
 ];
 
+interface ApiEvent {
+    id: number;
+    titulo: string;
+    subtitulo: string;
+    descricao: string;
+    data: string | null;
+    horario: string;
+    local: string;
+    link: string;
+    tipo_evento: string;
+}
+
+type EventType = 'camp' | 'worship' | 'education' | 'special' | 'ministry' | 'youth' | 'conference' | 'celebration';
+
 interface CalendarEvent {
     date: string;
     label: string;
     sub?: string;
-    type: 'camp' | 'worship' | 'education' | 'special' | 'ministry' | 'youth' | 'conference' | 'celebration';
-}
-interface CalendarMonth {
-    month: string;
-    abbrev: string;
-    events: CalendarEvent[];
+    type: EventType;
 }
 
-const calendarMonths: CalendarMonth[] = [
-    {
-        month: "Fevereiro", abbrev: "FEV",
-        events: [
-            { date: "14–17 Fev", label: "Acampamento Maanaim", sub: "Temporada de Verão", type: "camp" }
-        ]
-    },
-    {
-        month: "Março", abbrev: "MAR",
-        events: [
-            { date: "Março", label: "Retorno às Aulas do CREIA", type: "education" },
-            { date: "14 Mar", label: "Encontro da Família", sub: "c/ Rachel Novaes", type: "special" }
-        ]
-    },
-    {
-        month: "Abril", abbrev: "ABR",
-        events: [
-            { date: "2–5 Abr", label: "Acampamento Maanaim", sub: "Temporada de Páscoa", type: "camp" },
-            { date: "29 Abr", label: "Culto Especial", sub: "c/ Hernandes Dias Lopes", type: "worship" }
-        ]
-    },
-    {
-        month: "Maio", abbrev: "MAI",
-        events: [
-            { date: "16–17 Mai", label: "Visita do Rev. Sergio Gini", sub: "Presidente da IPI do Brasil", type: "special" }
-        ]
-    },
-    {
-        month: "Junho", abbrev: "JUN",
-        events: [
-            { date: "Junho", label: "Congresso de Casais", type: "ministry" }
-        ]
-    },
-    {
-        month: "Julho", abbrev: "JUL",
-        events: [
-            { date: "4–5 Jul", label: "Educação Reformada", sub: "c/ Pr. Davi Manso", type: "education" },
-            { date: "20–25 Jul", label: "Semana Jovem 2026", type: "youth" }
-        ]
-    },
-    {
-        month: "Agosto", abbrev: "AGO",
-        events: [
-            { date: "22–25 Ago", label: "Acampamento Maanaim", sub: "Temporada de Festa", type: "camp" }
-        ]
-    },
-    {
-        month: "Setembro", abbrev: "SET",
-        events: [
-            { date: "4–6 Set", label: "Conferência da Fé Reformada", type: "conference" },
-            { date: "Setembro", label: "152 Anos da 1IPIM", sub: "Culto especial c/ Vitor Quevedo", type: "celebration" }
-        ]
-    },
-    {
-        month: "Outubro", abbrev: "OUT",
-        events: [
-            { date: "23–25 Out", label: "Conferência Missionária", type: "conference" },
-            { date: "Outubro", label: "Acampamento Maanaim", sub: "Temporada Kids", type: "camp" }
-        ]
-    },
-    {
-        month: "Nov / Dez", abbrev: "NOV–DEZ",
-        events: [
-            { date: "Nov / Dez", label: "Cultos de Formatura", type: "celebration" },
-            { date: "Dezembro", label: "Culto de Natal", type: "celebration" },
-            { date: "Dezembro", label: "Culto de Ano Novo", type: "celebration" }
-        ]
-    }
+const MESES = [
+    { month: 'Janeiro', abbrev: 'JAN' },
+    { month: 'Fevereiro', abbrev: 'FEV' },
+    { month: 'Março', abbrev: 'MAR' },
+    { month: 'Abril', abbrev: 'ABR' },
+    { month: 'Maio', abbrev: 'MAI' },
+    { month: 'Junho', abbrev: 'JUN' },
+    { month: 'Julho', abbrev: 'JUL' },
+    { month: 'Agosto', abbrev: 'AGO' },
+    { month: 'Setembro', abbrev: 'SET' },
+    { month: 'Outubro', abbrev: 'OUT' },
+    { month: 'Novembro', abbrev: 'NOV' },
+    { month: 'Dezembro', abbrev: 'DEZ' },
 ];
 
-const typeConfig: Record<CalendarEvent['type'], { badge: string; dot: string; label: string }> = {
+const MESES_ABREV = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+
+const year = new Date().getFullYear();
+
+const FALLBACK: ApiEvent[] = [
+    ['Acampamento Maanaim', '02-14', 'Temporada de Verão', 'camp'],
+    ['Retorno às Aulas do CREIA', '03-01', '', 'education'],
+    ['Encontro da Família', '03-14', 'c/ Rachel Novaes', 'special'],
+    ['Acampamento Maanaim', '04-02', 'Temporada de Páscoa', 'camp'],
+    ['Culto Especial', '04-29', 'c/ Hernandes Dias Lopes', 'worship'],
+    ['Visita do Rev. Sergio Gini', '05-16', 'Presidente da IPI do Brasil', 'special'],
+    ['Congresso de Casais', '06-01', '', 'ministry'],
+    ['Educação Reformada', '07-04', 'c/ Pr. Davi Manso', 'education'],
+    ['Semana Jovem', '07-20', '', 'youth'],
+    ['Acampamento Maanaim', '08-22', 'Temporada de Festa', 'camp'],
+    ['Conferência da Fé Reformada', '09-04', '', 'conference'],
+    ['152 Anos da 1IPIM', '09-01', 'Culto especial c/ Vitor Quevedo', 'celebration'],
+    ['Acampamento Maanaim', '10-01', 'Temporada Kids', 'camp'],
+    ['Conferência Missionária', '10-23', '', 'conference'],
+    ['Cultos de Formatura', '11-01', '', 'celebration'],
+    ['Culto de Natal', '12-01', '', 'celebration'],
+    ['Culto de Ano Novo', '12-31', '', 'celebration'],
+].map(([titulo, md, subtitulo, tipo], index) => ({
+    id: -(index + 1),
+    titulo: titulo as string,
+    subtitulo: subtitulo as string,
+    descricao: '',
+    data: `${year}-${md}`,
+    horario: '',
+    local: '',
+    link: '',
+    tipo_evento: tipo as string,
+}));
+
+let apiEvents: ApiEvent[] = [];
+try {
+    const response = await fetch(`${WP_REST_BASE}/programacao?tipo=evento&ano=${year}`, { headers: { Accept: 'application/json' } });
+    if (response.ok) {
+        const data = (await response.json()) as ApiEvent[];
+        if (Array.isArray(data)) apiEvents = data;
+    }
+} catch {
+    apiEvents = [];
+}
+
+const events = (apiEvents.length > 0 ? apiEvents : FALLBACK)
+    .filter((event) => event.data && Number(event.data.slice(0, 4)) === year)
+    .sort((a, b) => (a.data as string).localeCompare(b.data as string));
+
+function dateLabel(value: string): string {
+    const [, month, day] = value.split('-').map(Number);
+    return `${day} ${MESES_ABREV[month - 1] || ''}`.trim();
+}
+
+const calendarMonths = MESES.map((month, index) => {
+    const monthEvents: CalendarEvent[] = events
+        .filter((event) => Number((event.data as string).slice(5, 7)) === index + 1)
+        .map((event) => ({
+            date: dateLabel(event.data as string),
+            label: event.titulo,
+            sub: event.subtitulo || undefined,
+            type: (event.tipo_evento || 'special') as EventType,
+        }));
+
+    return { ...month, events: monthEvents };
+}).filter((month) => month.events.length > 0);
+
+const typeConfig: Record<EventType, { badge: string; dot: string; label: string }> = {
     camp:         { badge: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",   dot: "bg-orange-500",  label: "Acampamento" },
     worship:      { badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", dot: "bg-emerald-500", label: "Culto Especial" },
     education:    { badge: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",           dot: "bg-blue-500",    label: "Educação" },
@@ -101,7 +123,7 @@ const typeConfig: Record<CalendarEvent['type'], { badge: string; dot: string; la
     celebration:  { badge: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-700",   dot: "bg-yellow-500",  label: "Celebração" },
 };
 ---
-<Layout title="Eventos e Calendário - Primeira Igreja Presbiteriana Independente de Machado" description="Agenda 2026 da 1IPIM: acampamento Maanaim, Semana Jovem, Conferência da Fé Reformada, Conferência Missionária e cultos especiais." isImmersive={true}>
+<Layout title="Eventos e Calendário - Primeira Igreja Presbiteriana Independente de Machado" description={`Agenda ${year} da 1IPIM: acampamento Maanaim, Semana Jovem, Conferência da Fé Reformada, Conferência Missionária e cultos especiais.`} isImmersive={true}>
     <header class="bg-white dark:bg-slate-900 relative w-full h-[100svh] min-h-[600px] flex flex-col items-center justify-center transition-colors overflow-hidden border-b border-gray-100 dark:border-slate-800">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--color-brand)_0%,transparent_40%)] opacity-5 dark:opacity-10 pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--color-brand)]/5 rounded-full blur-[120px] pointer-events-none"></div>
@@ -152,7 +174,7 @@ const typeConfig: Record<CalendarEvent['type'], { badge: string; dot: string; la
 
             <!-- Calendário Anual -->
             <div class="text-center max-w-2xl mx-auto mb-6 scroll-card">
-                <h2 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-2">Calendário 2026</h2>
+                <h2 class="font-extrabold text-3xl md:text-4xl text-gray-900 dark:text-white mb-2">Calendário {year}</h2>
                 <p class="text-gray-500 dark:text-gray-400 text-lg">Todos os eventos do ano, mês a mês</p>
             </div>
 

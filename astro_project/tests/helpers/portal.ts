@@ -7,6 +7,11 @@ export const SESSION = {
   "1ipim_user_display_name": "Teste E2E",
   "1ipim_user_email": "teste@example.com",
   "1ipim_user_ministries_approved": '["1"]',
+  "1ipim_user_can_manage_grupos": "1",
+  "1ipim_user_can_manage_grupos_all": "1",
+  "1ipim_user_can_programacao": "1",
+  "1ipim_user_can_relatorios": "1",
+  "1ipim_user_can_auditoria": "1",
 } as const;
 
 /** Usuário devolvido por `/admin/portal-auth/session.php`. */
@@ -23,6 +28,11 @@ export const SESSION_USER = {
   isMinistryLeader: true,
   canManageLivraria: true,
   canManageLivrariaStock: true,
+  canManageGrupos: true,
+  canManageGruposAll: true,
+  canProgramacao: true,
+  canRelatorios: true,
+  canAuditoria: true,
   nonce: "e2e-nonce",
 } as const;
 
@@ -32,7 +42,7 @@ export const SESSION_USER = {
  */
 export async function mockAuthSession(
   page: Page,
-  user: typeof SESSION_USER | null = SESSION_USER,
+  user: Record<string, unknown> | null = SESSION_USER,
 ): Promise<void> {
   await page.route("**/admin/portal-auth/**", async (route) => {
     const url = new URL(route.request().url());
@@ -52,12 +62,15 @@ export async function mockAuthSession(
   });
 }
 
-export async function seedSession(context: BrowserContext): Promise<void> {
-  await context.addInitScript((session) => {
-    Object.entries(session).forEach(([key, value]) =>
+export async function seedSession(
+  context: BrowserContext,
+  session: Record<string, string> = SESSION,
+): Promise<void> {
+  await context.addInitScript((data) => {
+    Object.entries(data).forEach(([key, value]) =>
       localStorage.setItem(key, value as string),
     );
-  }, SESSION);
+  }, session);
 }
 
 function corsHeaders(route: Route): Record<string, string> {

@@ -23,18 +23,20 @@ const {
         </div>
 
         <div class="lg:hidden fixed top-4 right-4 z-50">
-            <button id="mobile-menu-btn" class="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 text-gray-600 dark:text-gray-300">
+            <button id="mobile-menu-btn" aria-label="Abrir menu" aria-controls="portal-sidebar" aria-expanded="false" class="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 text-gray-600 dark:text-gray-300">
                 <i class="fa-solid fa-bars text-xl"></i>
             </button>
         </div>
 
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"></div>
+
         <!-- Sidebar -->
-        <aside id="portal-sidebar" class="fixed lg:relative z-40 h-full w-64 lg:w-20 lg:hover:w-72 bg-white dark:bg-slate-800 border-r border-gray-100 dark:border-slate-700 transition-all duration-300 group overflow-x-hidden flex flex-col transform -translate-x-full lg:translate-x-0">
+        <aside id="portal-sidebar" class="fixed lg:relative z-40 h-full w-64 lg:w-64 bg-white dark:bg-slate-800 border-r border-gray-100 dark:border-slate-700 transition-all duration-300 group overflow-x-hidden flex flex-col transform -translate-x-full lg:translate-x-0">
             <a href="/" class="p-6 flex items-center gap-4" title="Voltar ao site" aria-label="Voltar ao site principal">
                 <div class="w-8 h-8 flex-shrink-0 bg-[var(--color-brand)] rounded-lg flex items-center justify-center text-white">
                     <i class="fa-solid fa-church"></i>
                 </div>
-                <span class="font-black text-gray-900 dark:text-white uppercase tracking-tighter opacity-100 lg:group-hover:opacity-100 lg:opacity-0 transition-opacity whitespace-nowrap overflow-hidden">Portal 1IPIM</span>
+                <span class="font-black text-gray-900 dark:text-white uppercase tracking-tighter opacity-100 transition-opacity whitespace-nowrap overflow-hidden">Portal 1IPIM</span>
             </a>
 
             <nav class="flex-1 px-4 py-8 space-y-2 overflow-y-auto overflow-x-hidden">
@@ -42,7 +44,7 @@ const {
                     <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center">
                         <i class="fa-solid fa-house"></i>
                     </div>
-                    <span class="font-bold text-sm lg:opacity-100 lg:group-hover:opacity-100 opacity-0 transition-opacity">Painel Principal</span>
+                    <span class="font-bold text-sm opacity-100 transition-opacity">Painel Principal</span>
                 </a>
                 <div id="nav-dynamic-links" class="space-y-2"></div>
             </nav>
@@ -52,18 +54,18 @@ const {
                     <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center">
                         <i id="portal-theme-icon" class="fa-solid fa-moon"></i>
                     </div>
-                    <span id="portal-theme-text" class="font-bold text-sm lg:opacity-100 lg:group-hover:opacity-100 opacity-0 transition-opacity">Modo Escuro</span>
+                    <span id="portal-theme-text" class="font-bold text-sm opacity-100 transition-opacity">Modo Escuro</span>
                 </button>
             </div>
 
             <div class="p-4 border-t border-gray-100 dark:border-slate-700">
                 <div id="sidebar-user-info" class="flex items-center gap-3 px-2 py-3 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors overflow-hidden group/user">
-                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 flex-shrink-0 flex items-center justify-center text-gray-500 font-bold uppercase text-xs" id="user-initials">..</div>
-                    <div class="flex-1 min-w-0 opacity-100 lg:group-hover:opacity-100 lg:opacity-0 transition-opacity">
+                    <div class="w-8 h-8 rounded-full bg-[var(--color-brand)] flex-shrink-0 flex items-center justify-center text-white font-bold uppercase text-xs" id="user-initials">..</div>
+                    <div class="flex-1 min-w-0 opacity-100 transition-opacity">
                         <p class="text-xs font-bold text-gray-900 dark:text-white truncate" id="user-nav-name">Usuário</p>
                         <p class="text-[10px] text-gray-500 truncate" id="user-nav-role">Carregando...</p>
                     </div>
-                    <button id="portal-logout-btn" class="text-gray-400 hover:text-red-500 p-2 opacity-100 lg:group-hover:opacity-100 lg:opacity-0 transition-opacity">
+                    <button id="portal-logout-btn" aria-label="Sair do portal" class="text-gray-400 hover:text-red-500 p-2 opacity-100 transition-opacity">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>

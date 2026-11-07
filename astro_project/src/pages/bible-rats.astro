@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Bible Rats - Comunidade de leitura da 1IPIM';
+const description = 'Crie sua conta gratuita no Bible Rats, a comunidade de leitura bíblica da 1IPIM.';
+---
+<Layout title={title} description={description} noindex={true} footerBgClass="bg-white dark:bg-slate-900">
+  <section class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 px-4 py-28 transition-colors">
+    <div class="max-w-lg w-full bg-white dark:bg-slate-800 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-slate-700 p-8 md:p-10">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-[var(--color-brand)]/10 text-[var(--color-brand)] rounded-2xl mb-4">
+          <i class="fa-solid fa-book-open text-2xl"></i>
+        </div>
+        <p class="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--color-brand)] mb-2">Comunidade de leitura</p>
+        <h1 class="text-3xl font-black text-gray-900 dark:text-white mb-2 tracking-tighter uppercase">Bible Rats</h1>
+        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Crie sua conta gratuita para acompanhar a leitura diária de Provérbios, check-ins e sua caminhada com Deus.</p>
+      </div>
+
+      <form id="bible-rats-form" class="space-y-4">
+        <div class="hidden" aria-hidden="true">
+          <label for="br-website">Não preencha este campo</label>
+          <input type="text" id="br-website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <div>
+          <label for="br-name" class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 ml-1">Nome</label>
+          <input id="br-name" name="name" type="text" required autocomplete="name" class="block w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none" placeholder="Seu nome">
+        </div>
+        <div>
+          <label for="br-username" class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 ml-1">Nome de usuário</label>
+          <input id="br-username" name="username" type="text" required autocomplete="username" class="block w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none" placeholder="ex: joao_silva">
+        </div>
+        <div>
+          <label for="br-email" class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 ml-1">E-mail</label>
+          <input id="br-email" name="email" type="email" required autocomplete="email" class="block w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none" placeholder="seu@email.com">
+        </div>
+        <div>
+          <label for="br-password" class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2 ml-1">Senha</label>
+          <input id="br-password" name="password" type="password" required minlength="8" autocomplete="new-password" class="block w-full px-4 py-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none" placeholder="Mínimo de 8 caracteres">
+        </div>
+
+        <div id="br-feedback" class="hidden p-4 rounded-xl text-sm font-bold"></div>
+
+        <button id="br-submit" type="submit" class="w-full bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-black py-4 rounded-xl shadow-lg shadow-[var(--color-brand)]/20 transition-all flex items-center justify-center gap-2 uppercase text-xs tracking-widest">
+          <span id="br-submit-text">Criar conta gratuita</span>
+          <i id="br-loader" class="fa-solid fa-circle-notch animate-spin hidden"></i>
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6">
+        Já tem conta? <a href="/portal/login" class="text-[var(--color-brand)] font-bold hover:underline">Entrar</a>
+      </p>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import '../scripts/bible-rats.ts';
+</script>

@@ -82,37 +82,53 @@ onPageReady("#new-user-form", () => {
       ).map((input) => input.value);
 
       const payload = {
+        name,
+        display_name: name,
         username: formData.get("username"),
         email: formData.get("email"),
-        name,
-        first_name: name.split(" ")[0],
-        password: `Temp!${Math.random().toString(36).slice(2, 8)}!`,
-        roles: ["subscriber"],
-        meta: {
-          ministries_requested: JSON.stringify(selected),
-          ministries_approved: JSON.stringify([]),
-        },
+        ministries: selected,
       };
 
       try {
-        const response = await apiFetch("/wp-json/wp/v2/users/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        const response = await apiFetch(
+          "/wp-json/1ipim/v1/admin/users/invite",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          },
+        );
+        const result = (await response.json().catch(() => ({}))) as {
+          message?: string;
+          invite_sent?: boolean;
+          reset_link?: string;
+        };
 
-        if (!response.ok) throw new Error("Erro ao criar usuário.");
+        if (!response.ok) {
+          throw new Error(result.message || "Erro ao criar usuário.");
+        }
 
         if (feedback) {
-          feedback.innerText = "Usuário criado e aprovado!";
+          feedback.innerHTML = "";
+          const text = document.createElement("span");
+          text.textContent =
+            result.message || "Usuário criado. Convite enviado por e-mail.";
+          feedback.appendChild(text);
+          if (!result.invite_sent && result.reset_link) {
+            const link = document.createElement("a");
+            link.href = result.reset_link;
+            link.textContent = "Definir senha agora";
+            link.className = "underline ml-2";
+            feedback.appendChild(link);
+          }
           feedback.className =
-            "p-5 rounded-xl text-sm font-bold bg-green-50 text-green-600 flex items-center gap-3";
+            "p-5 rounded-xl text-sm font-bold bg-green-50 text-green-700 flex flex-wrap items-center gap-3";
           feedback.classList.remove("hidden");
         }
 
         setTimeout(() => {
           window.location.href = "/portal/usuarios";
-        }, 2000);
+        }, 4000);
       } catch (error) {
         if (feedback) {
           feedback.innerText =

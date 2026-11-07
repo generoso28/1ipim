@@ -123,13 +123,13 @@ onPageReady("#min-list", async () => {
             ${
               isAdmin
                 ? `
-                  <button class="role-member-btn w-5 h-5 flex items-center justify-center rounded-full bg-transparent hover:bg-amber-100 dark:hover:bg-amber-900/40 text-transparent group-hover/member:text-amber-500 transition-all" data-uid="${member.id}" data-mid="${ministry.id}" data-role="${isLeader ? "collaborator" : "leader"}" title="${isLeader ? "Tornar colaborador" : "Tornar líder"}">
+                  <button class="role-member-btn w-5 h-5 flex items-center justify-center rounded-full bg-transparent hover:bg-amber-100 dark:hover:bg-amber-900/40 text-gray-400 lg:text-transparent lg:group-hover/member:text-amber-500 transition-all" aria-label="${isLeader ? "Tornar colaborador" : "Tornar líder"}" data-uid="${member.id}" data-mid="${ministry.id}" data-role="${isLeader ? "collaborator" : "leader"}" title="${isLeader ? "Tornar colaborador" : "Tornar líder"}">
                     <i class="fa-solid ${isLeader ? "fa-user" : "fa-crown"} text-[9px]"></i>
                   </button>
                 `
                 : ""
             }
-            <button class="remove-member-btn w-5 h-5 flex items-center justify-center rounded-full bg-transparent hover:bg-red-100 dark:hover:bg-red-900/40 text-transparent group-hover/member:text-red-500 transition-all" data-uid="${member.id}" data-mid="${ministry.id}" data-uname="${escapeAttribute(member.name)}" title="Remover do time">
+            <button class="remove-member-btn w-5 h-5 flex items-center justify-center rounded-full bg-transparent hover:bg-red-100 dark:hover:bg-red-900/40 text-gray-400 lg:text-transparent lg:group-hover/member:text-red-500 transition-all" aria-label="Remover ${escapeAttribute(member.name)}" data-uid="${member.id}" data-mid="${ministry.id}" data-uname="${escapeAttribute(member.name)}" title="Remover do time">
               <i class="fa-solid fa-xmark text-[10px]"></i>
             </button>
           </div>
@@ -177,7 +177,7 @@ onPageReady("#min-list", async () => {
                   ${
                     isAdmin
                       ? `
-                        <button class="delete-min-btn text-gray-200 hover:text-red-500 transition-all p-3 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl" data-id="${ministry.id}">
+                        <button aria-label="Excluir ministério ${escapeAttribute(ministry.title.rendered)}" class="delete-min-btn text-gray-400 hover:text-red-500 transition-all p-3 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl" data-id="${ministry.id}">
                           <i class="fa-solid fa-trash-can"></i>
                         </button>
                       `
@@ -188,7 +188,7 @@ onPageReady("#min-list", async () => {
                 <div class="flex flex-wrap gap-2 items-center">
                   <span class="text-[9px] uppercase font-black text-gray-400 tracking-widest mr-2">Equipe:</span>
                   ${renderMembers(ministry)}
-                  <button class="add-member-btn ml-2 w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700 text-gray-400 hover:bg-[var(--color-brand)] hover:text-white transition-all shadow-sm" data-mid="${ministry.id}" title="Adicionar Voluntário">
+                  <button aria-label="Adicionar voluntário" class="add-member-btn ml-2 w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700 text-gray-400 hover:bg-[var(--color-brand)] hover:text-white transition-all shadow-sm" data-mid="${ministry.id}" title="Adicionar Voluntário">
                     <i class="fa-solid fa-plus text-[10px]"></i>
                   </button>
                 </div>

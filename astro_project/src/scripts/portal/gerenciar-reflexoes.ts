@@ -74,18 +74,18 @@ onPageReady("#posts-table-body", () => {
             ${
               isDraft
                 ? `
-                  <button class="delete-post-btn w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-green-500 text-gray-400 hover:text-green-500 rounded-xl transition-all shadow-sm" data-id="${post.id}" data-action="restore" title="Restaurar Publicação">
+                  <button aria-label="Restaurar publicação" class="delete-post-btn w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-green-500 text-gray-400 hover:text-green-500 rounded-xl transition-all shadow-sm" data-id="${post.id}" data-action="restore" title="Restaurar Publicação">
                     <i class="fa-solid fa-rotate-left"></i>
                   </button>
-                  <button class="delete-post-btn w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-red-600 text-gray-400 hover:text-red-600 rounded-xl transition-all shadow-sm" data-id="${post.id}" data-action="delete" title="Excluir Permanentemente">
+                  <button aria-label="Excluir permanentemente" class="delete-post-btn w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-red-600 text-gray-400 hover:text-red-600 rounded-xl transition-all shadow-sm" data-id="${post.id}" data-action="delete" title="Excluir Permanentemente">
                     <i class="fa-solid fa-xmark"></i>
                   </button>
                 `
                 : `
-                  <a href="/portal/editar-reflexao?id=${post.id}" class="w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-[var(--color-brand)] text-gray-400 hover:text-[var(--color-brand)] rounded-xl transition-all shadow-sm" title="Editar Mensagem">
+                  <a href="/portal/editar-reflexao?id=${post.id}" aria-label="Editar mensagem" class="w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-[var(--color-brand)] text-gray-400 hover:text-[var(--color-brand)] rounded-xl transition-all shadow-sm" title="Editar Mensagem">
                     <i class="fa-solid fa-pen-to-square"></i>
                   </a>
-                  <button class="delete-post-btn w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-orange-500 text-gray-400 hover:text-orange-500 rounded-xl transition-all shadow-sm" data-id="${post.id}" data-action="trash" title="Enviar para Lixeira">
+                  <button aria-label="Enviar para a lixeira" class="delete-post-btn w-10 h-10 flex items-center justify-center bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-orange-500 text-gray-400 hover:text-orange-500 rounded-xl transition-all shadow-sm" data-id="${post.id}" data-action="trash" title="Enviar para Lixeira">
                     <i class="fa-solid fa-trash-can"></i>
                   </button>
                 `

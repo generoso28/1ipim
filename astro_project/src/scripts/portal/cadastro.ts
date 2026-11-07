@@ -7,8 +7,8 @@ interface RegistrationPayload {
   email: string;
   password: string;
   display_name: string;
-  description: string;
-  meta_input: { ministries_requested: string };
+  ministries: string[];
+  website: string;
 }
 
 async function loadMinistries(): Promise<void> {
@@ -117,12 +117,12 @@ onPageReady("#register-form", () => {
       email: String(data.get("email") || ""),
       password: String(data.get("password") || ""),
       display_name: String(data.get("name") || ""),
-      description: `Interessado em: ${ministryNames.join(", ")}`,
-      meta_input: { ministries_requested: JSON.stringify(ministryIds) },
+      ministries: ministryIds,
+      website: String(data.get("website") || ""),
     };
 
     try {
-      const response = await apiFetch("/wp-json/wp/v2/users/register/", {
+      const response = await apiFetch("/wp-json/1ipim/v1/registrar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -135,7 +135,7 @@ onPageReady("#register-form", () => {
 
       showFeedback(
         "success",
-        "Conta criada com sucesso! Aguarde a liberação do acesso pelo gestor.",
+        "Cadastro realizado! Aguarde a aprovação de um líder ou administrador.",
         feedbackIcon,
         feedbackBox,
         feedbackMessage,

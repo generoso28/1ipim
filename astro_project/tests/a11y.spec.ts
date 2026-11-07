@@ -16,6 +16,7 @@ const PAGES = [
   "/pg/",
   "/contato/",
   "/privacidade/",
+  "/bible-rats/",
 ];
 
 test.describe("Acessibilidade (axe)", () => {

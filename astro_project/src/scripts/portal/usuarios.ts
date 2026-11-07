@@ -132,10 +132,10 @@ onPageReady("#users-table-body", async () => {
                 ? '<span class="text-[10px] text-gray-300 italic px-2">Gerenciado pelo WP</span>'
                 : `
                   <div class="relative group/menu">
-                    <button class="bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-[var(--color-brand)] p-2 rounded-xl text-gray-400 hover:text-[var(--color-brand)] transition-all shadow-sm">
+                    <button aria-label="Ações de ${escapeAttribute(user.name)}" aria-haspopup="true" class="bg-white dark:bg-slate-700 border border-gray-100 dark:border-slate-600 hover:border-[var(--color-brand)] p-2 rounded-xl text-gray-400 hover:text-[var(--color-brand)] transition-all shadow-sm">
                       <i class="fa-solid fa-ellipsis-vertical"></i>
                     </button>
-                    <div class="absolute right-0 top-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-700 py-3 min-w-[200px] hidden group-hover/menu:block z-50 animate-slide-up">
+                    <div class="absolute right-0 top-full mt-2 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-700 py-3 min-w-[200px] hidden group-hover/menu:block group-focus-within/menu:block z-50 animate-slide-up">
                       <p class="px-4 py-2 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 dark:border-slate-700 mb-2">Alterar Nível</p>
                       <button class="promote-btn w-full text-left px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-[var(--color-brand)]" data-id="${user.id}" data-to="administrator">
                         <i class="fa-solid fa-crown mr-2 text-amber-500"></i> Tornar Admin

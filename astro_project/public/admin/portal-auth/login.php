@@ -30,6 +30,13 @@ $user = wp_signon([
 ], true);
 
 if (is_wp_error($user) || !($user instanceof WP_User)) {
+    if (is_wp_error($user) && $user->get_error_code() === 'ipim_email_unverified') {
+        json_response(403, [
+            'error' => 'email_unverified',
+            'message' => $user->get_error_message(),
+        ]);
+    }
+
     register_failed_login($ip);
     json_response(401, [
         'error' => 'invalid_credentials',

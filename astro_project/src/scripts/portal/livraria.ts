@@ -258,7 +258,7 @@ onPageReady("#livraria-manager", async () => {
               </span>
             </td>
             <td class="px-6 py-4 text-right">
-              <button type="button" class="edit-book-btn w-10 h-10 rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-400 hover:text-[var(--color-brand)] transition-colors" data-id="${book.id}" title="Editar">
+              <button type="button" aria-label="Editar ${escapeAttribute(book.titulo)}" class="edit-book-btn w-10 h-10 rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-400 hover:text-[var(--color-brand)] transition-colors" data-id="${book.id}" title="Editar">
                 <i class="fa-solid fa-pen"></i>
               </button>
             </td>

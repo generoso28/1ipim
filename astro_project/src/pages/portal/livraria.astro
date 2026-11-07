@@ -26,7 +26,8 @@ const description = 'Gestão do catálogo, estoque e capas da livraria da 1IPIM.
           <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
           <input id="livraria-search" type="search" placeholder="Buscar por título, autor, editora ou categoria..." class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-medium text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
         </label>
-        <select id="livraria-category" class="md:w-64 px-4 py-3.5 rounded-2xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+        <label for="livraria-category" class="sr-only">Filtrar por categoria</label>
+        <select id="livraria-category" aria-label="Filtrar por categoria" class="md:w-64 px-4 py-3.5 rounded-2xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-600 dark:text-gray-300 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
           <option value="">Todas as categorias</option>
         </select>
       </div>

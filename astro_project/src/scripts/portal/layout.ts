@@ -71,7 +71,7 @@ function renderNavigation(permissions: Permissions): void {
       const active =
         !item.external && window.location.pathname.startsWith(item.href);
       return `
-        <a href="${item.href}" ${item.external ? 'target="_blank" rel="nofollow"' : ""} class="nav-link flex items-center gap-4 px-3 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-[var(--color-brand)] transition-all group/link overflow-hidden whitespace-nowrap ${active ? "bg-gray-50 dark:bg-slate-700/50 text-[var(--color-brand)]" : ""}">
+        <a href="${item.href}" ${item.external ? 'target="_blank" rel="nofollow"' : ""} ${active ? 'aria-current="page"' : ""} class="nav-link flex items-center gap-4 px-3 py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-[var(--color-brand)] transition-all group/link overflow-hidden whitespace-nowrap ${active ? "bg-gray-50 dark:bg-slate-700/50 text-[var(--color-brand)]" : ""}">
           <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center">
             <i class="${item.icon}"></i>
           </div>
@@ -119,9 +119,23 @@ function setupThemeToggle(): void {
 function setupMobileMenu(): void {
   const button = document.getElementById("mobile-menu-btn");
   const sidebar = document.getElementById("portal-sidebar");
-  if (button && sidebar) {
-    button.onclick = () => sidebar.classList.toggle("-translate-x-full");
-  }
+  const backdrop = document.getElementById("sidebar-backdrop");
+  if (!button || !sidebar) return;
+
+  const setOpen = (open: boolean): void => {
+    sidebar.classList.toggle("-translate-x-full", !open);
+    backdrop?.classList.toggle("hidden", !open);
+    button.setAttribute("aria-expanded", open ? "true" : "false");
+    button.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+  };
+
+  button.onclick = () => {
+    setOpen(sidebar.classList.contains("-translate-x-full"));
+  };
+  backdrop?.addEventListener("click", () => setOpen(false));
+  sidebar.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setOpen(false));
+  });
 }
 
 function setupLogout(): void {
@@ -161,6 +175,19 @@ onPageReady("#portal-root", () => {
   setupThemeToggle();
   setupMobileMenu();
   setupLogout();
+
+  const path = window.location.pathname.replace(/\/+$/, "");
+  const homeLink = document.querySelector<HTMLAnchorElement>(
+    '#portal-sidebar nav > a[href="/portal"]',
+  );
+  if (homeLink && path === "/portal") {
+    homeLink.classList.add(
+      "bg-gray-50",
+      "dark:bg-slate-700/50",
+      "text-[var(--color-brand)]",
+    );
+    homeLink.setAttribute("aria-current", "page");
+  }
 
   // Compatibilidade com scripts antigos que chamam window.showToast.
   (window as Window & { showToast?: typeof showToast }).showToast = showToast;

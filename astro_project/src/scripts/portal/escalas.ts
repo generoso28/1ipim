@@ -495,10 +495,10 @@ onPageReady("#form-container", async () => {
               ${
                 isManager
                   ? `
-                    <button class="edit-scale-btn w-12 h-12 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all border border-transparent hover:border-blue-100 dark:hover:border-blue-900" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(meta.date)}" data-minid="${escapeAttribute(meta.ministryId)}" title="Editar Equipe">
+                    <button aria-label="Editar equipe" class="edit-scale-btn w-12 h-12 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all border border-transparent hover:border-blue-100 dark:hover:border-blue-900" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(meta.date)}" data-minid="${escapeAttribute(meta.ministryId)}" title="Editar Equipe">
                       <i class="fa-solid fa-pen"></i>
                     </button>
-                    <button class="delete-scale-btn w-12 h-12 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900" data-id="${schedule.id}">
+                    <button aria-label="Excluir escala" class="delete-scale-btn w-12 h-12 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all border border-transparent hover:border-red-100 dark:hover:border-red-900" data-id="${schedule.id}">
                       <i class="fa-solid fa-trash-can"></i>
                     </button>
                   `
@@ -544,8 +544,8 @@ onPageReady("#form-container", async () => {
                 ${
                   isManager
                     ? `
-                      <button class="edit-scale-btn w-9 h-9 flex items-center justify-center rounded-xl bg-white dark:bg-slate-700 text-blue-500 border border-gray-100 dark:border-slate-600" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(date)}" data-minid="${escapeAttribute(meta.ministryId)}"><i class="fa-solid fa-pen text-xs"></i></button>
-                      <button class="delete-scale-btn w-9 h-9 flex items-center justify-center rounded-xl bg-white dark:bg-slate-700 text-red-500 border border-gray-100 dark:border-slate-600" data-id="${schedule.id}"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                      <button aria-label="Editar equipe" class="edit-scale-btn w-9 h-9 flex items-center justify-center rounded-xl bg-white dark:bg-slate-700 text-blue-500 border border-gray-100 dark:border-slate-600" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(date)}" data-minid="${escapeAttribute(meta.ministryId)}"><i class="fa-solid fa-pen text-xs"></i></button>
+                      <button aria-label="Excluir escala" class="delete-scale-btn w-9 h-9 flex items-center justify-center rounded-xl bg-white dark:bg-slate-700 text-red-500 border border-gray-100 dark:border-slate-600" data-id="${schedule.id}"><i class="fa-solid fa-trash-can text-xs"></i></button>
                     `
                     : ""
                 }
@@ -843,7 +843,8 @@ onPageReady("#form-container", async () => {
   }
 
   async function initialize(): Promise<void> {
-    await Promise.all([loadMinistries(), loadVolunteers(), loadSchedules()]);
+    await Promise.all([loadMinistries(), loadVolunteers()]);
+    await loadSchedules();
   }
 
   setupModal();

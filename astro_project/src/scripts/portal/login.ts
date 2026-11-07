@@ -16,6 +16,22 @@ onPageReady("#login-form", () => {
   const buttonLabel = document.getElementById("btn-text");
   const buttonLoader = document.getElementById("btn-loader");
   const buttonArrow = document.getElementById("btn-arrow");
+  const notice = document.getElementById("login-notice");
+  const params = new URLSearchParams(window.location.search);
+
+  if (notice && params.get("verified") === "1") {
+    notice.className =
+      "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 rounded-xl text-green-700 dark:text-green-300 text-sm font-bold";
+    notice.innerText =
+      "E-mail confirmado! Sua conta Bible Rats está ativa. Faça login para continuar.";
+    notice.classList.remove("hidden");
+  } else if (notice && params.get("verify_error")) {
+    notice.className =
+      "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 rounded-xl text-red-600 dark:text-red-400 text-sm font-bold";
+    notice.innerText =
+      "Não foi possível confirmar o e-mail. O link pode ter expirado; solicite um novo cadastro.";
+    notice.classList.remove("hidden");
+  }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();

@@ -5,111 +5,149 @@
   --color-brand: #008169;
   --color-brand-dark: #005f4d;
   --color-brand-light: #339987;
-  --color-success: #146c43; 
+  --color-success: #146c43;
 }
 
 /* We will keep the custom CSS that handles GSAP scrolling for compatibility */
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 body {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 .scroll-card {
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(50px);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(50px);
 }
 
-.gmap_canvas, .gmap_iframe {
-    overflow: hidden;
-    background: none !important;
-    width: 100%;
-    height: 100%;
+.gmap_canvas,
+.gmap_iframe {
+  overflow: hidden;
+  background: none !important;
+  width: 100%;
+  height: 100%;
 }
 
 .mapouter {
-    position: relative;
-    text-align: right;
-    width: 100%;
-    height: 100%;
+  position: relative;
+  text-align: right;
+  width: 100%;
+  height: 100%;
 }
 
 .bg-primary-gradient {
-    background: linear-gradient(135deg, var(--color-brand-light) 0%, var(--color-brand) 100%);
-    color: white;
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-light) 0%,
+    var(--color-brand) 100%
+  );
+  color: white;
 }
 
 #insta-frame {
-    width: 100%;
-    border: none;
-    overflow: hidden;
-    border-radius: 1rem;
-    height: 340px;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  width: 100%;
+  border: none;
+  overflow: hidden;
+  border-radius: 1rem;
+  height: 340px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 #insta-frame::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
-@media (max-width: 600px) { #insta-frame { height: 500px; } }
-@media (min-width: 601px) and (max-height: 700px) { #insta-frame { height: 480px; } }
-@media (min-width: 701px) and (max-height: 750px) { #insta-frame { height: 470px; } }
-@media (min-width: 751px) and (max-height: 800px) { #insta-frame { height: 450px; } }
-@media (min-width: 801px) and (max-height: 900px) { #insta-frame { height: 420px; } }
+@media (max-width: 600px) {
+  #insta-frame {
+    height: 500px;
+  }
+}
+@media (min-width: 601px) and (max-height: 700px) {
+  #insta-frame {
+    height: 480px;
+  }
+}
+@media (min-width: 701px) and (max-height: 750px) {
+  #insta-frame {
+    height: 470px;
+  }
+}
+@media (min-width: 751px) and (max-height: 800px) {
+  #insta-frame {
+    height: 450px;
+  }
+}
+@media (min-width: 801px) and (max-height: 900px) {
+  #insta-frame {
+    height: 420px;
+  }
+}
 /* Acessibilidade: respeita quem prefere menos movimento. */
 @media (prefers-reduced-motion: reduce) {
-    html {
-        scroll-behavior: auto;
-    }
+  html {
+    scroll-behavior: auto;
+  }
 
-    .scroll-card {
-        visibility: visible !important;
-        opacity: 1 !important;
-        transform: none !important;
-    }
+  .scroll-card {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
-
 
 /* Fontes self-hosted (sem requisições ao Google Fonts) */
 @font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 300 800;
-    font-display: swap;
-    src: url('/assets/fonts/inter-latin.woff2') format('woff2');
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("/assets/fonts/inter-latin.woff2") format("woff2");
 }
 
 @font-face {
-    font-family: 'Cormorant Garamond';
-    font-style: normal;
-    font-weight: 400 700;
-    font-display: swap;
-    src: url('/assets/fonts/cormorant-garamond-normal.woff2') format('woff2');
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/assets/fonts/cormorant-garamond-normal.woff2") format("woff2");
 }
 
 @font-face {
-    font-family: 'Cormorant Garamond';
-    font-style: italic;
-    font-weight: 400 700;
-    font-display: swap;
-    src: url('/assets/fonts/cormorant-garamond-italic.woff2') format('woff2');
+  font-family: "Cormorant Garamond";
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/assets/fonts/cormorant-garamond-italic.woff2") format("woff2");
 }
 
 @font-face {
-    font-family: 'Archivo Narrow';
-    font-style: normal;
-    font-weight: 400 700;
-    font-display: swap;
-    src: url('/assets/fonts/archivo-narrow.woff2') format('woff2');
+  font-family: "Archivo Narrow";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/assets/fonts/archivo-narrow.woff2") format("woff2");
+}
+
+/*
+ * O Font Awesome declara display:inline-block nos ícones. Por causa das
+ * cascade layers do Tailwind, isso vence a utilitária .hidden. Esta regra
+ * garante que spinners e ícones alternáveis realmente fiquem ocultos.
+ */
+.fa-solid.hidden,
+.fa-regular.hidden,
+.fa-brands.hidden,
+.fa-light.hidden,
+.fa-thin.hidden,
+.fa-duotone.hidden {
+  display: none !important;
 }

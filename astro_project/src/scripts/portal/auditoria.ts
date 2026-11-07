@@ -188,8 +188,6 @@ onPageReady("#audit-table-body", async () => {
     empty?.classList.add("hidden");
     tableBody.innerHTML = items
       .map((item) => {
-        const before = pretty(item.before_json);
-        const after = pretty(item.after_json);
         return `
           <tr class="border-b border-gray-50 dark:border-slate-800/60 hover:bg-gray-50/60 dark:hover:bg-slate-700/20 align-top">
             <td class="px-6 py-4 text-[11px] text-gray-500 whitespace-nowrap">${escapeHtml(item.created_at)}</td>

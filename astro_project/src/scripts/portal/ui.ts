@@ -1,8 +1,8 @@
 import type { ToastType } from "./types";
 
 const TOAST_STYLES: Record<ToastType, string> = {
-  success: "bg-green-500 text-white",
-  error: "bg-red-500 text-white",
+  success: "bg-green-700 text-white",
+  error: "bg-red-700 text-white",
   info: "bg-[var(--color-brand)] text-white",
 };
 

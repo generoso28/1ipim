@@ -60,7 +60,7 @@ function ipim_emails(string $raw): array
 {
     $items = array_map('trim', explode(',', $raw));
     $items = array_map('strtolower', $items);
-    $items = array_filter($items, static fn (string $email): bool => $email !== '');
+    $items = array_filter($items, static fn (string $email): bool => $email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL));
 
     return array_values(array_unique($items));
 }
@@ -253,37 +253,27 @@ function ipim_schedule_normalize_participants(array $data): array
     $emails = ipim_emails((string) ($data['emails'] ?? ''));
     $names = ipim_names((string) ($data['names'] ?? ''));
 
-    if ($emails !== []) {
-        $pairs = [];
-        $seen = [];
-        foreach ($emails as $index => $email) {
-            if (isset($seen[$email])) {
-                continue;
-            }
-            $seen[$email] = true;
-            $pairs[] = [
-                'email' => $email,
-                'name' => $names[$index] ?? '',
-            ];
+    $uniqueNames = [];
+    $seenNames = [];
+    foreach ($names as $name) {
+        $key = strtolower($name);
+        if (!isset($seenNames[$key])) {
+            $seenNames[$key] = true;
+            $uniqueNames[] = $name;
         }
+    }
 
+    if (count($uniqueNames) === count($emails)) {
         return [
-            'names' => implode(', ', array_column($pairs, 'name')),
-            'emails' => implode(', ', array_column($pairs, 'email')),
+            'names' => implode(', ', $uniqueNames),
+            'emails' => implode(', ', $emails),
         ];
     }
 
-    $unique = [];
-    $seen = [];
-    foreach ($names as $name) {
-        $key = strtolower($name);
-        if (!isset($seen[$key])) {
-            $seen[$key] = true;
-            $unique[] = $name;
-        }
-    }
-
-    return ['names' => implode(', ', $unique), 'emails' => ''];
+    return [
+        'names' => implode(', ', $uniqueNames),
+        'emails' => implode(', ', $emails),
+    ];
 }
 
 /**

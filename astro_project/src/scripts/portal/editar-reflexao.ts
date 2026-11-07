@@ -1,7 +1,11 @@
 import { apiFetch, getErrorMessage } from "./api";
+import { auth } from "./auth";
 import { escapeHtml, showToast, onPageReady } from "./ui";
 
-onPageReady("#edit-form", () => {
+onPageReady("#edit-form", async () => {
+  const session = await auth.ensureSession();
+  if (!session) return;
+
   const form = document.getElementById("edit-form") as HTMLFormElement | null;
   const spinner = document.getElementById("loading-spinner");
   const saveButton = document.getElementById(

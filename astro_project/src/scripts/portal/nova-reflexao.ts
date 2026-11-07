@@ -1,7 +1,11 @@
 import { apiFetch } from "./api";
+import { auth } from "./auth";
 import { showToast, onPageReady } from "./ui";
 
-onPageReady("#post-form", () => {
+onPageReady("#post-form", async () => {
+  const session = await auth.ensureSession();
+  if (!session) return;
+
   const form = document.getElementById("post-form") as HTMLFormElement | null;
   if (!form) return;
 

@@ -1,8 +1,12 @@
 import { apiFetch } from "./api";
+import { auth } from "./auth";
 import { escapeAttribute, escapeHtml, showToast, onPageReady } from "./ui";
 import type { WpPost } from "./types";
 
-onPageReady("#posts-table-body", () => {
+onPageReady("#posts-table-body", async () => {
+  const session = await auth.ensureSession();
+  if (!session) return;
+
   const tableBody = document.getElementById("posts-table-body");
   const loading = document.getElementById("loading-posts");
   const emptyState = document.getElementById("no-posts");

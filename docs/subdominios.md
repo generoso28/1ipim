@@ -1,6 +1,16 @@
 # Migração para subdomínios — runbook
 
-**Status:** subdomínios cadastrados; código preparado (Fase 6 do plano).
+**Status:** subdomínios cadastrados e com SSL wildcard (`*.1ipim.online`).
+**Estado em 07/11/2026:**
+- `portal.1ipim.online` — **publicado** (Astro `dist`; `/` → `/portal/`), validado
+  em navegador e com 13 testes Playwright verdes.
+- `admin.1ipim.online` — **redirect interino 301** para `https://1ipim.online/admin/`
+  (alias definitivo com `WP_HOME`/`search-replace` pendente).
+- `berea.1ipim.online` — **placeholder** com a identidade; app real na fase 5.
+- `1ipim.online`, `staging.1ipim.online` — inalterados (200).
+- Produção recebeu `portal-auth/_bootstrap.php` (CORS) e o mu-plugin
+  `1ipim-cors.php` (backups em `/home2/edu10350/1ipim_backups/manual_*`).
+
 **Alvo:** `admin`, `portal`, `berea` e `staging` em `.1ipim.online`.
 
 ---

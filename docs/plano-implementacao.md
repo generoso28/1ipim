@@ -328,8 +328,8 @@ Reutiliza o modelo sugerido na seção 3.14 de `requisitos-funcionais.md`
 
 **Objetivo:** ativar `admin`, `portal`, `berea` e `staging` em `.1ipim.online`.
 
-**Status:** código preparado (CORS, CSP e config por ambiente); passos de
-servidor (DNS/docroot/SSL/cookie/redirects) no runbook
+**Status:** `portal.1ipim.online` publicado e validado (13 testes verdes);
+`admin` em redirect interino e `berea` com placeholder — ver
 [`docs/subdominios.md`](subdominios.md).
 
 1. Cookie de sessão em `.1ipim.online` (HttpOnly + Secure).

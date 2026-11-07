@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800" role="img" aria-label="Capa não disponível">
+  <rect width="600" height="800" fill="#f1f5f9"/>
+  <rect x="90" y="110" width="420" height="580" rx="24" fill="#e2e8f0"/>
+  <path d="M190 260h220v22H190zm0 52h220v14H190zm0 36h160v14H190z" fill="#cbd5e1"/>
+  <path d="M250 470c0-28 22-50 50-50s50 22 50 50v120h-36V510c0-8-6-14-14-14s-14 6-14 14v80h-36zm-36 120V470c0-47 38-86 86-86s86 39 86 86v120h-36V470c0-28-22-50-50-50s-50 22-50 50v120z" fill="#94a3b8"/>
+  <text x="300" y="730" text-anchor="middle" font-family="system-ui, sans-serif" font-size="24" fill="#64748b">Capa não disponível</text>
+</svg>

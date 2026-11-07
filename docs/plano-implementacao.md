@@ -373,7 +373,7 @@ Reutiliza o modelo sugerido na seção 3.14 de `requisitos-funcionais.md`
 | **2** | Programação (semanais + eventos) | Agenda editável sem programador |
 | **3** | Relatórios na auditoria + acesso de líderes | Líder emite do próprio escopo |
 | **4** | Portal restrito (FR-104) | Solicitação/aprovação funcionando |
-| **5** | Berea MVP (app social + identidade + salas) | Comunidade no ar |
+| **5** | Berea MVP (app social + identidade + salas) | Concluída — backend + API registrados |
 | **6** | Migração de subdomínios | `portal`/`berea`/`admin` ativos |
 
 > Fases 1–2 podem ser paralelizadas com 3; a Fase 5 depende de 1 (salas vinculadas)

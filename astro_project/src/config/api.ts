@@ -23,6 +23,11 @@ export const WP_ADMIN_BASE =
   stripTrailingSlashes(readEnv("PUBLIC_WP_ADMIN_BASE")) ||
   "https://admin.1ipim.online/admin";
 
+/** Base específica do app Berea (opcional, deriva de WP_ADMIN_BASE se não definida). */
+export const BEREA_BASE =
+  stripTrailingSlashes(readEnv("PUBLIC_BEREA_BASE")) ||
+  `${WP_ADMIN_BASE}/wp-json/1ipim/v1`;
+
 /** REST API do projeto. */
 export const WP_REST_BASE = `${WP_ADMIN_BASE}/wp-json/1ipim/v1`;
 
@@ -35,3 +40,11 @@ export const WP_ADMIN_URL = `${WP_ADMIN_BASE}/wp-admin`;
 /** Origem do site público (contato, etc.). */
 export const SITE_ORIGIN =
   stripTrailingSlashes(readEnv("PUBLIC_SITE_ORIGIN")) || "https://1ipim.online";
+
+/** Origem do app Berea. */
+export const BEREA_ORIGIN =
+  stripTrailingSlashes(readEnv("PUBLIC_BEREA_ORIGIN")) || "https://berea.1ipim.online";
+
+/** Origem da API do Berea (para requisições fetch). */
+export const BEREA_API_BASE =
+  stripTrailingSlashes(readEnv("PUBLIC_BEREA_API_BASE")) || `${WP_ADMIN_BASE}/wp-json/1ipim/v1`;

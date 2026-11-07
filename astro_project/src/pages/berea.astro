@@ -1,0 +1,199 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/berea.css';
+
+const title = 'Berea — Juntos, nas Escrituras';
+const description = 'Comunidade de leitura bíblica da 1ª Igreja Presbiteriana Independente de Machado. Leia, compartilhe e cresça junto na Palavra.';
+---
+<Layout title={title} description={description} noindex={true} hideChrome={true}>
+  <div id="berea-root" class="min-h-screen bg-white dark:bg-zinc-900 flex flex-col">
+    <!-- Header / Top Bar (desktop) -->
+    <header class="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-700">
+      <div class="max-w-md mx-auto h-14 flex items-center justify-between px-4">
+        <h1 class="font-cormorant text-xl font-bold text-zinc-900 dark:text-white">Berea</h1>
+        <div class="flex items-center gap-2">
+          <button id="theme-toggle" class="p-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800" aria-label="Alternar tema">
+            <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+            <span class="material-symbols-outlined hidden dark:block">light_mode</span>
+          </button>
+          <button id="menu-toggle" class="p-2 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800" aria-label="Menu">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Left Rail (desktop) -->
+    <aside id="left-rail" class="hidden lg:flex lg:flex-col fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700 flex-col transition-transform duration-300">
+      <div class="p-6 border-b border-zinc-200 dark:border-zinc-700">
+        <a href="/" class="flex items-center gap-3" aria-label="Berea — voltar ao início">
+          <div class="w-10 h-10 rounded-xl bg-berea-doutrina flex items-center justify-center">
+            <span class="material-symbols-outlined text-white text-2xl">menu_book</span>
+          </div>
+          <div>
+            <h2 class="font-cormorant text-lg font-bold text-zinc-900 dark:text-white">Berea</h2>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400">Juntos, nas Escrituras</p>
+          </div>
+        </a>
+      </div>
+
+      <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto" aria-label="Navegação principal">
+        <a href="/feed" class="nav-item flex items-center gap-3 px-3 py-3 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" data-tab="feed">
+          <span class="material-symbols-outlined text-lg">home</span>
+          <span class="font-medium">Feed</span>
+        </a>
+        <a href="/diario" class="nav-item flex items-center gap-3 px-3 py-3 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" data-tab="diario">
+          <span class="material-symbols-outlined text-lg">book</span>
+          <span class="font-medium">Diário</span>
+        </a>
+        <a href="/plano" class="nav-item flex items-center gap-3 px-3 py-3 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" data-tab="plano">
+          <span class="material-symbols-outlined text-lg">calendar_month</span>
+          <span class="font-medium">Plano</span>
+        </a>
+        <a href="/salas" class="nav-item flex items-center gap-3 px-3 py-3 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" data-tab="salas">
+          <span class="material-symbols-outlined text-lg">groups</span>
+          <span class="font-medium">Salas</span>
+        </a>
+        <a href="/perfil" class="nav-item flex items-center gap-3 px-3 py-3 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" data-tab="perfil">
+          <span class="material-symbols-outlined text-lg">person</span>
+          <span class="font-medium">Perfil</span>
+        </a>
+      </nav>
+
+      <div class="p-4 border-t border-zinc-200 dark:border-zinc-700">
+        <div class="flex items-center gap-3 px-3 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800">
+          <div class="w-8 h-8 rounded-full bg-berea-doutrina flex items-center justify-center text-white text-sm font-bold" id="user-initials">..</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-zinc-900 dark:text-white truncate" id="user-name">Carregando...</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 truncate" id="user-streak">Streak: 0 dias</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile bottom tab bar -->
+    <nav id="bottom-tabs" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700 safe-area-bottom">
+      <div class="grid grid-cols-5">
+        <a href="/feed" class="tab-btn flex flex-col items-center gap-1 py-2 px-2 text-zinc-500 dark:text-zinc-400" data-tab="feed">
+          <span class="material-symbols-outlined text-xl">home</span>
+          <span class="text-[10px] font-medium">Feed</span>
+        </a>
+        <a href="/diario" class="tab-btn flex flex-col items-center gap-1 py-2 px-2 text-zinc-500 dark:text-zinc-400" data-tab="diario">
+          <span class="material-symbols-outlined text-xl">book</span>
+          <span class="text-[10px] font-medium">Diário</span>
+        </a>
+        <a href="/checkin" class="tab-btn flex flex-col items-center gap-1 py-2 px-2 -mt-6" data-tab="checkin">
+          <button id="fab-checkin" class="w-14 h-14 rounded-full bg-berea-doutrina flex items-center justify-center shadow-xl" aria-label="Novo check-in">
+            <span class="material-symbols-outlined text-white text-2xl">add</span>
+          </button>
+        </a>
+        <a href="/salas" class="tab-btn flex flex-col items-center gap-1 py-2 px-2 text-zinc-500 dark:text-zinc-400" data-tab="salas">
+          <span class="material-symbols-outlined text-xl">groups</span>
+          <span class="text-[10px] font-medium">Salas</span>
+        </a>
+        <a href="/perfil" class="tab-btn flex flex-col items-center gap-1 py-2 px-2 text-zinc-500 dark:text-zinc-400" data-tab="perfil">
+          <span class="material-symbols-outlined text-xl">person</span>
+          <span class="text-[10px] font-medium">Perfil</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main content area -->
+    <main class="flex-1 lg:ml-64 pt-14 lg:pt-0 pb-20 lg:pb-0 overflow-y-auto">
+      <div class="max-w-3xl mx-auto w-full px-4 py-8">
+        <!-- Feed placeholder -->
+        <section id="view-feed" class="view active space-y-4">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-cormorant text-2xl font-bold text-zinc-900 dark:text-white">Feed</h2>
+          </div>
+          <div id="feed-list" class="space-y-4">
+            <div class="text-center py-12 text-zinc-500 dark:text-zinc-400">
+              <span class="material-symbols-outlined text-4xl mb-2 block">menu_book</span>
+              <p>Nenhum check-in ainda. Seja o primeiro a compartilhar!</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Diário placeholder -->
+        <section id="view-diario" class="view hidden space-y-4">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-cormorant text-2xl font-bold text-zinc-900 dark:text-white">Meu Diário</h2>
+          </div>
+          <div class="text-center py-12 text-zinc-500 dark:text-zinc-400">
+            <span class="material-symbols-outlined text-4xl mb-2 block">book</span>
+            <p>Seus check-ins privados aparecerão aqui.</p>
+          </div>
+        </section>
+
+        <!-- Plano placeholder -->
+        <section id="view-plano" class="view hidden space-y-4">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-cormorant text-2xl font-bold text-zinc-900 dark:text-white">Plano de Leitura</h2>
+          </div>
+          <div class="text-center py-12 text-zinc-500 dark:text-zinc-400">
+            <span class="material-symbols-outlined text-4xl mb-2 block">calendar_month</span>
+            <p>Selecione um plano para começar.</p>
+          </div>
+        </section>
+
+        <!-- Salas placeholder -->
+        <section id="view-salas" class="view hidden space-y-4">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-cormorant text-2xl font-bold text-zinc-900 dark:text-white">Minhas Salas</h2>
+          </div>
+          <div class="text-center py-12 text-zinc-500 dark:text-zinc-400">
+            <span class="material-symbols-outlined text-4xl mb-2 block">groups</span>
+            <p>Você não participa de nenhuma sala ainda.</p>
+          </div>
+        </section>
+
+        <!-- Perfil placeholder -->
+        <section id="view-perfil" class="view hidden space-y-4">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-cormorant text-2xl font-bold text-zinc-900 dark:text-white">Perfil</h2>
+          </div>
+          <div class="text-center py-12 text-zinc-500 dark:text-zinc-400">
+            <span class="material-symbols-outlined text-4xl mb-2 block">person</span>
+            <p>Carregando perfil...</p>
+          </div>
+        </section>
+
+        <!-- Check-in modal trigger (mobile FAB) -->
+        <div id="checkin-modal" class="fixed inset-0 z-50 hidden">
+          <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="modal-backdrop"></div>
+          <div class="absolute bottom-0 left-0 right-0 lg:bottom-auto lg:left-auto lg:right-4 lg:w-96 lg:rounded-t-2xl bg-white dark:bg-zinc-900 rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto" id="modal-content">
+            <div class="sticky top-0 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700 p-4 flex items-center justify-between">
+              <h3 class="font-cormorant text-xl font-bold text-zinc-900 dark:text-white">Novo Check-in</h3>
+              <button id="close-modal" class="p-2 rounded-lg text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+            <form id="checkin-form" class="p-4 space-y-4">
+              <div>
+                <label for="checkin-texto" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">O que chamou sua atenção hoje?</label>
+                <textarea id="checkin-texto" name="texto" rows="4" required class="w-full px-4 py-3 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-white focus:ring-2 focus:ring-berea-doutrina focus:border-transparent outline-none resize-none" placeholder="Escreva uma frase..."></textarea>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Compartilhar em:</label>
+                <div id="checkin-rooms" class="space-y-2 max-h-48 overflow-y-auto">
+                  <p class="text-sm text-zinc-500 dark:text-zinc-400">Carregando salas...</p>
+                </div>
+              </div>
+              <div class="flex gap-3 pt-2">
+                <button type="button" id="cancel-checkin" class="flex-1 px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800">Cancelar</button>
+                <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-berea-doutrina text-white font-medium shadow-lg hover:bg-berea-doutrina/90">Publicar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Sidebar backdrop (mobile) -->
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-20 hidden lg:hidden"></div>
+  </div>
+</Layout>
+
+<script>
+import '../scripts/berea/app.ts';
+</script>

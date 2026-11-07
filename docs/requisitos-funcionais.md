@@ -164,6 +164,8 @@ conflito de escalas).
 | FR-69 | Auditoria por ministério | 🔴 | Log registra `ministry_id` e autor |
 | FR-70 | Movimentação de estoque sem digitar o número: botões de adicionar/subtrair em tela separada (protótipo) | 🔴 | Líder/admin registra entrada/saída por botões, com motivo e auditoria; saldo não fica negativo |
 | FR-71 | Avisos ao visitante no catálogo público sobre estoque e títulos fora do catálogo | ✅ | Mensagem orienta consultar a secretaria durante a semana ou a equipe da Livraria aos domingos; aviso de que o catálogo pode não listar todos os títulos |
+| FR-72 | Reenvio de confirmação de e-mail no login | 🔴 | Usuário solicita novo link; rate limit; resposta genérica para não revelar contas; auditoria |
+| FR-73 | Verificação manual de e-mail pelo admin | 🔴 | Admin vê o status “e-mail pendente” e confirma a conta Bible Rats quando o provedor bloqueia a mensagem; auditoria registrada |
 
 ---
 

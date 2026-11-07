@@ -27,6 +27,18 @@ Os itens P0 foram corrigidos e publicados no build **#37**:
 Pendente para as próximas fases: P1 (ministérios/usuários/escalas/reflexões) e
 P2 (FR-70, notificações, auditoria, perfil, relatórios e dados legados).
 
+### Fallback de confirmação de e-mail
+
+O SMTP aceitou a mensagem, mas um Hotmail específico não recebeu. Fica no
+backlog:
+
+- **FR-72 — reenviar confirmação:** botão no login para solicitar novo link,
+  com rate limit e resposta genérica.
+- **FR-73 — verificação manual:** na lista de usuários, admin vê “e-mail
+  pendente” e pode confirmar a conta Bible Rats, com auditoria.
+- Se o problema se repetir em outros provedores, avaliar um provedor
+  transacional (Resend/SendGrid/Mailgun) como fallback de entrega.
+
 ## Pontos positivos
 
 - Nenhum erro de console ou request nas páginas auditadas.

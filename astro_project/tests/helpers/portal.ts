@@ -18,6 +18,11 @@ export const SESSION_USER = {
   role: "administrator",
   roles: ["administrator"],
   ministries: [1],
+  isAdmin: true,
+  isPastor: false,
+  isMinistryLeader: true,
+  canManageLivraria: true,
+  canManageLivrariaStock: true,
   nonce: "e2e-nonce",
 } as const;
 

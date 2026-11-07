@@ -117,6 +117,14 @@ test.describe("Livraria no portal", () => {
           await json(route, { deleted: true });
           return;
         }
+        if (url.pathname.endsWith("/movimentacoes") && method === "GET") {
+          await json(route, { items: [] });
+          return;
+        }
+        if (url.pathname.endsWith("/movimentacoes") && method === "POST") {
+          await json(route, { estoque: 5 });
+          return;
+        }
         if (url.pathname.endsWith("/admin/livros/capas")) {
           await json(route, [
             {
@@ -138,6 +146,11 @@ test.describe("Livraria no portal", () => {
     await expect(page.locator("#livraria-table-body tr")).toHaveCount(2);
     await expect(page.locator("#livraria-stats")).toContainText("Livros");
     await expect(page.locator("#livraria-stats")).toContainText("169");
+
+    await page.locator(".stock-book-btn").first().click();
+    await expect(page.locator("#stock-modal")).toBeVisible();
+    await page.click("#stock-close");
+    await expect(page.locator("#stock-modal")).toBeHidden();
 
     await page.click("#livraria-new-btn");
     await expect(page.locator("#book-modal")).toBeVisible();

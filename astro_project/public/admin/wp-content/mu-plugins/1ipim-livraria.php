@@ -594,14 +594,24 @@ function ipim_livraria_query(array $args): array
 /**
  * @return array<int,array<string,string>>
  */
-function ipim_livraria_cover_search(string $query): array
+function ipim_livraria_normalize_text(string $text): string
+{
+    $text = remove_accents($text);
+    $text = strtolower($text);
+    $text = preg_replace('/[^a-z0-9 ]+/', ' ', $text);
+
+    return trim(preg_replace('/\s+/', ' ', (string) $text));
+}
+
+function ipim_livraria_cover_search(string $query, string $author = ''): array
 {
     $query = trim($query);
+    $author = trim($author);
     if ($query === '') {
         return [];
     }
 
-    $cache_key = 'ipim_livraria_cover_' . md5(strtolower($query));
+    $cache_key = 'ipim_livraria_cover_' . md5(strtolower($query . '|' . $author));
     $cached = get_transient($cache_key);
     if (is_array($cached)) {
         return $cached;
@@ -610,7 +620,15 @@ function ipim_livraria_cover_search(string $query): array
     $results = [];
     $seen = [];
 
-    $google_url = 'https://www.googleapis.com/books/v1/volumes?q=' . rawurlencode($query) . '&maxResults=8&langRestrict=pt';
+    $google_query = 'intitle:' . $query;
+    if ($author !== '') {
+        $google_query .= ' inauthor:' . $author;
+    }
+    $google_url = 'https://www.googleapis.com/books/v1/volumes?q=' . rawurlencode($google_query) . '&maxResults=8&langRestrict=pt';
+    $api_key = (string) get_option('1ipim_google_books_api_key', '');
+    if ($api_key !== '') {
+        $google_url .= '&key=' . rawurlencode($api_key);
+    }
     $google = wp_remote_get($google_url, ['timeout' => 8, 'headers' => ['Accept' => 'application/json']]);
     if (!is_wp_error($google) && wp_remote_retrieve_response_code($google) === 200) {
         $body = json_decode(wp_remote_retrieve_body($google), true);
@@ -638,10 +656,13 @@ function ipim_livraria_cover_search(string $query): array
         }
     }
 
-    $open_url = 'https://openlibrary.org/search.json?title=' . rawurlencode($query) . '&limit=8';
+    $open_query = trim($query . ' ' . $author);
+    $open_url = 'https://openlibrary.org/search.json?q=' . rawurlencode($open_query) . '&limit=10&fields=title,author_name,cover_i,first_publish_year,publisher';
     $open = wp_remote_get($open_url, ['timeout' => 8, 'headers' => ['Accept' => 'application/json']]);
     if (!is_wp_error($open) && wp_remote_retrieve_response_code($open) === 200) {
         $body = json_decode(wp_remote_retrieve_body($open), true);
+        $normalizedQuery = ipim_livraria_normalize_text($query);
+        $normalizedAuthor = ipim_livraria_normalize_text($author);
         foreach (($body['docs'] ?? []) as $doc) {
             $cover_id = (int) ($doc['cover_i'] ?? 0);
             if ($cover_id <= 0) {
@@ -649,6 +670,20 @@ function ipim_livraria_cover_search(string $query): array
             }
             $image = 'https://covers.openlibrary.org/b/id/' . $cover_id . '-L.jpg';
             $title = (string) ($doc['title'] ?? '');
+            $normalizedTitle = ipim_livraria_normalize_text($title);
+            similar_text($normalizedQuery, $normalizedTitle, $percent);
+            if ($percent < 60) {
+                continue;
+            }
+            if ($normalizedAuthor !== '') {
+                $docAuthors = ipim_livraria_normalize_text(implode(' ', array_map('strval', $doc['author_name'] ?? [])));
+                if ($docAuthors !== '') {
+                    similar_text($normalizedAuthor, $docAuthors, $authorPercent);
+                    if ($authorPercent < 45) {
+                        continue;
+                    }
+                }
+            }
             $key = strtolower($title) . '|' . $image;
             if (isset($seen[$key])) {
                 continue;
@@ -830,7 +865,10 @@ add_action('rest_api_init', static function (): void {
     register_rest_route('1ipim/v1', '/admin/livros/capas', [
         'methods' => 'GET',
         'callback' => static function (WP_REST_Request $request): array {
-            return ipim_livraria_cover_search((string) $request->get_param('q'));
+            return ipim_livraria_cover_search(
+                (string) $request->get_param('q'),
+                (string) $request->get_param('author')
+            );
         },
         'permission_callback' => 'ipim_livraria_can_manage',
     ]);
@@ -943,6 +981,11 @@ function ipim_livraria_admin_page(): void
         return;
     }
 
+    if (isset($_POST['ipim_google_books_key']) && check_admin_referer('ipim_google_books_key')) {
+        update_option('1ipim_google_books_api_key', sanitize_text_field(wp_unslash((string) $_POST['ipim_google_books_api_key'])));
+        echo '<div class="notice notice-success"><p>Chave do Google Books atualizada.</p></div>';
+    }
+
     if (isset($_POST['ipim_livraria_import']) && check_admin_referer('ipim_livraria_import')) {
         $result = ipim_livraria_import_file();
         if (is_wp_error($result)) {
@@ -972,6 +1015,15 @@ function ipim_livraria_admin_page(): void
                 <tr><td>Estoque total</td><td><strong><?php echo esc_html((string) $stock); ?></strong></td></tr>
             </tbody>
         </table>
+        <h2>Google Books</h2>
+        <p>Sem chave, a API pública tem cota diária compartilhada e pode retornar 429. O Open Library continua como fallback.</p>
+        <form method="post">
+            <?php wp_nonce_field('ipim_google_books_key'); ?>
+            <p>
+                <input type="text" name="ipim_google_books_api_key" value="<?php echo esc_attr((string) get_option('1ipim_google_books_api_key', '')); ?>" class="regular-text" placeholder="AIza...">
+                <button type="submit" name="ipim_google_books_key" class="button">Salvar chave</button>
+            </p>
+        </form>
         <h2>Importar catálogo</h2>
         <p>Lê <code>/data/livraria-import.json</code> e atualiza pelo código legado. Campos editados no portal são preservados.</p>
         <form method="post">

@@ -106,6 +106,16 @@ const description = 'Gestão do catálogo, estoque e capas da livraria da 1IPIM.
                 <i class="fa-solid fa-magnifying-glass mr-1"></i> Buscar capa
               </button>
               <div id="cover-results" class="grid grid-cols-3 gap-2"></div>
+              <div class="space-y-2 pt-1">
+                <label for="book-cover-url-manual" class="block text-[10px] font-black uppercase tracking-widest text-gray-500">Colar URL da capa</label>
+                <div class="flex gap-2">
+                  <input id="book-cover-url-manual" type="url" placeholder="https://..." class="min-w-0 flex-1 px-3 py-2 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-[11px] text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+                  <button id="book-cover-url-apply" type="button" class="px-3 py-2 rounded-xl bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 text-[10px] font-black uppercase">Usar</button>
+                </div>
+                <a id="book-cover-google-images" href="https://www.google.com/search?tbm=isch" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--color-brand)] hover:underline">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Buscar no Google Imagens
+                </a>
+              </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -183,6 +193,7 @@ const description = 'Gestão do catálogo, estoque e capas da livraria da 1IPIM.
         </form>
       </div>
     </div>
+  </div>
 
   <div id="stock-modal" class="fixed inset-0 z-[3000] hidden bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
     <div class="min-h-full flex items-center justify-center py-6">

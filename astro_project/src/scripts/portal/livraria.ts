@@ -69,7 +69,7 @@ onPageReady("#livraria-manager", async () => {
   const session = (await auth.ensureSession()) ?? auth.getUser();
   const permissions = getPermissions(session);
   const canManageStock = Boolean(
-    session.canManageLivrariaStock || session.isAdmin || session.isPastor,
+    session.canManageLivrariaStock || permissions.isAdmin || permissions.isPastor,
   );
 
   if (!permissions.canLivraria) {
@@ -118,6 +118,15 @@ onPageReady("#livraria-manager", async () => {
     "book-cover-search-btn",
   ) as HTMLButtonElement | null;
   const coverResults = document.getElementById("cover-results");
+  const coverUrlManual = document.getElementById(
+    "book-cover-url-manual",
+  ) as HTMLInputElement | null;
+  const coverUrlApply = document.getElementById(
+    "book-cover-url-apply",
+  ) as HTMLButtonElement | null;
+  const coverGoogleImages = document.getElementById(
+    "book-cover-google-images",
+  ) as HTMLAnchorElement | null;
   const categoryOptions = document.getElementById("book-category-options");
   const lowStock = document.getElementById(
     "livraria-low-stock",
@@ -443,6 +452,8 @@ onPageReady("#livraria-manager", async () => {
     if (featured) featured.checked = Boolean(book?.destaque);
     if (coverFile) coverFile.value = "";
     if (coverResults) coverResults.innerHTML = "";
+    if (coverUrlManual) coverUrlManual.value = "";
+    updateCoverGoogleLink();
     clearFeedback();
     setCoverPreview(book?.capa || "");
   }
@@ -575,6 +586,16 @@ onPageReady("#livraria-manager", async () => {
     }
   }
 
+  function updateCoverGoogleLink(): void {
+    if (!coverGoogleImages) return;
+    const title = field<HTMLInputElement>("book-title")?.value.trim() || "";
+    const author = field<HTMLInputElement>("book-author")?.value.trim() || "";
+    const query = [title, author].filter(Boolean).join(" ");
+    coverGoogleImages.href =
+      "https://www.google.com/search?tbm=isch&q=" +
+      encodeURIComponent(query || "capa de livro");
+  }
+
   async function searchCovers(): Promise<void> {
     const title = field<HTMLInputElement>("book-title")?.value.trim() || "";
     const author = field<HTMLInputElement>("book-author")?.value.trim() || "";
@@ -590,14 +611,15 @@ onPageReady("#livraria-manager", async () => {
 
     try {
       const response = await apiFetch(
-        `${API}/admin/livros/capas?q=${encodeURIComponent(query)}`,
+        `${API}/admin/livros/capas?q=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}`,
       );
       const results = (await response.json().catch(() => [])) as CoverResult[];
       if (!coverResults) return;
 
       if (!Array.isArray(results) || results.length === 0) {
         coverResults.innerHTML =
-          '<p class="col-span-3 text-[11px] text-gray-400 text-center py-2">Nenhuma capa encontrada.</p>';
+          '<p class="col-span-3 text-[11px] text-gray-500 text-center py-2">Nenhuma capa encontrada nas APIs. Cole uma URL, envie uma imagem ou use o Google Imagens.</p>';
+        updateCoverGoogleLink();
         return;
       }
 
@@ -623,6 +645,7 @@ onPageReady("#livraria-manager", async () => {
             showToast("Capa selecionada. Salve o livro para baixá-la.", "info");
           };
         });
+      updateCoverGoogleLink();
     } catch {
       showToast("Erro ao buscar capas.", "error");
     } finally {
@@ -850,6 +873,22 @@ onPageReady("#livraria-manager", async () => {
   coverSearchButton?.addEventListener("click", () => {
     void searchCovers();
   });
+  coverUrlApply?.addEventListener("click", () => {
+    const url = coverUrlManual?.value.trim() || "";
+    if (!url) {
+      showToast("Cole a URL de uma imagem.", "error");
+      return;
+    }
+    setCoverPreview(url);
+    showToast("URL aplicada. Salve o livro para baixar a capa.", "info");
+  });
+  ["book-title", "book-author"].forEach((id) => {
+    field<HTMLInputElement>(id)?.addEventListener(
+      "input",
+      updateCoverGoogleLink,
+    );
+  });
+
   coverFile?.addEventListener("change", () => {
     const file = coverFile.files?.[0];
     if (!file) return;

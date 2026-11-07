@@ -5,10 +5,115 @@ const title = 'Estrutura de Ministérios - 1IPIM';
 const description = 'Igreja Presbiteriana Independente de Machado – Há 150 anos servindo a Deus e à comunidade.';
 ---
 <PortalLayout title={title} description={description}>
-  <div class="mb-12"> <h1 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tighter uppercase">Ministérios</h1> <p class="text-gray-500 mt-2">Crie áreas de atuação e visualize as equipes de trabalho da igreja.</p> </div> <div class="grid grid-cols-1 lg:grid-cols-3 gap-8"> <!-- Sidebar: Cadastro --> <div class="lg:col-span-1"> <div class="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm sticky top-8"> <h3 class="text-xl font-black text-gray-900 dark:text-white mb-6 flex items-center gap-2 uppercase tracking-tighter"> <i class="fa-solid fa-plus text-[var(--color-brand)]"></i> Novo Ministério
-</h3> <form id="add-min-form" class="space-y-4"> <div> <label for="min-title" class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">Nome do Ministério</label> <input type="text" id="min-title" name="title" required class="block w-full px-5 py-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none transition-all font-bold placeholder:font-normal" placeholder="Ex: Mídia / Kids"> </div> <button type="submit" id="add-btn" class="w-full bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-black py-4 rounded-2xl shadow-lg shadow-[var(--color-brand)]/20 transition-all flex items-center justify-center gap-2 text-sm uppercase"> <span id="add-text">Criar Ministério</span> <i id="add-loader" class="fa-solid fa-circle-notch animate-spin hidden"></i> </button> </form> </div> </div> <!-- Main: Lista --> <div class="lg:col-span-2"> <div id="min-list" class="space-y-4"> <!-- Ministries will be injected here --> </div> <div id="loading-min" class="py-32 text-center"> <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div> <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Carregando estrutura...</p> </div> <div id="no-min" class="hidden py-32 text-center bg-gray-50/50 dark:bg-slate-800/20 rounded-[2.5rem] border-2 border-dashed border-gray-100 dark:border-slate-800"> <i class="fa-solid fa-layer-group text-4xl text-gray-100 mb-4"></i> <p class="text-gray-400 font-bold">Nenhum ministério cadastrado.</p> </div> </div> </div>  
+  <div class="mb-12">
+    <h1 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tighter uppercase">Ministérios</h1>
+    <p class="text-gray-500 mt-2">Crie áreas de atuação, defina líderes e organize as equipes de trabalho.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-1">
+      <div id="min-form-column" class="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-slate-700 shadow-sm sticky top-8">
+        <h3 id="min-form-title" class="text-xl font-black text-gray-900 dark:text-white mb-6 flex items-center gap-2 uppercase tracking-tighter">
+          <i class="fa-solid fa-plus text-[var(--color-brand)]"></i> Novo Ministério
+        </h3>
+        <form id="add-min-form" class="space-y-4">
+          <input id="min-id" type="hidden" value="">
+          <div>
+            <label for="min-title" class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 ml-1">Nome do Ministério</label>
+            <input type="text" id="min-title" name="title" required class="block w-full px-5 py-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none transition-all font-bold" placeholder="Ex: Mídia / Kids">
+          </div>
+          <div id="min-type-field">
+            <label for="min-type" class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 ml-1">Tipo</label>
+            <select id="min-type" class="block w-full px-4 py-3.5 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl text-gray-700 dark:text-gray-200 outline-none font-bold text-sm">
+              <option value="geral">Geral</option>
+              <option value="som">Som</option>
+              <option value="midia">Mídia</option>
+              <option value="louvor">Louvor</option>
+              <option value="diaconia">Diaconia/Recepção</option>
+              <option value="infantil">Infantil</option>
+              <option value="jovens">Jovens</option>
+              <option value="livraria">Livraria</option>
+              <option value="missoes">Missões</option>
+              <option value="ensino">Ensino</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+          <div>
+            <label for="min-description" class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 ml-1">Descrição</label>
+            <textarea id="min-description" rows="3" class="block w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl text-gray-900 dark:text-white outline-none text-sm font-medium focus:ring-2 focus:ring-[var(--color-brand)]" placeholder="Breve descrição do ministério"></textarea>
+          </div>
+          <div id="min-leader-field">
+            <label for="min-leader" class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 ml-1">Líder inicial</label>
+            <select id="min-leader" class="block w-full px-4 py-3.5 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl text-gray-700 dark:text-gray-200 outline-none font-bold text-sm">
+              <option value="">Nenhum</option>
+            </select>
+          </div>
+          <div id="min-archived-field">
+            <label class="flex items-center gap-2 text-xs font-bold text-gray-600 dark:text-gray-300">
+              <input id="min-archived" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-[var(--color-brand)]"> Ministério arquivado
+            </label>
+          </div>
+          <button type="submit" id="add-btn" class="w-full bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white font-black py-4 rounded-2xl shadow-lg shadow-[var(--color-brand)]/20 transition-all flex items-center justify-center gap-2 text-sm uppercase">
+            <span id="add-text">Criar Ministério</span>
+            <i id="add-loader" class="fa-solid fa-circle-notch animate-spin hidden"></i>
+          </button>
+          <button type="button" id="cancel-edit-min" class="hidden w-full py-3 rounded-2xl bg-gray-50 dark:bg-slate-900 text-gray-500 text-xs font-black uppercase tracking-widest">Cancelar edição</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2">
+      <div id="min-list" class="space-y-4"></div>
+      <div id="loading-min" class="py-32 text-center">
+        <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div>
+        <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Carregando estrutura...</p>
+      </div>
+      <div id="no-min" class="hidden py-32 text-center bg-gray-50/50 dark:bg-slate-800/20 rounded-[2.5rem] border-2 border-dashed border-gray-100 dark:border-slate-800">
+        <i class="fa-solid fa-layer-group text-4xl text-gray-200 mb-4"></i>
+        <p class="text-gray-500 font-bold">Nenhum ministério encontrado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="member-modal" class="fixed inset-0 z-[3000] hidden bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="min-h-full flex items-center justify-center py-6">
+      <div class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-[2rem] shadow-2xl border border-white/10 p-6 md:p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-widest text-[var(--color-brand)]">Equipe</p>
+            <h2 id="member-modal-title" class="text-2xl font-black text-gray-900 dark:text-white">Adicionar voluntário</h2>
+          </div>
+          <button id="member-modal-close" type="button" aria-label="Fechar" class="w-10 h-10 rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-400 hover:text-red-500">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label for="member-search" class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 ml-1">Buscar</label>
+            <input id="member-search" type="search" placeholder="Nome ou e-mail" class="block w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-xl text-sm font-medium text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+          </div>
+          <div>
+            <label for="member-user" class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 ml-1">Voluntário</label>
+            <select id="member-user" class="block w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]"></select>
+          </div>
+          <div id="member-role-field">
+            <label for="member-role" class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2 ml-1">Papel no ministério</label>
+            <select id="member-role" class="block w-full px-4 py-3 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+              <option value="colaborador">Colaborador</option>
+              <option value="lider">Líder</option>
+            </select>
+          </div>
+          <div id="member-feedback" class="hidden p-3 rounded-xl text-sm font-bold"></div>
+          <div class="flex gap-3 pt-2">
+            <button id="member-cancel" type="button" class="flex-1 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-500 text-xs font-black uppercase tracking-widest">Cancelar</button>
+            <button id="member-save" type="button" class="flex-1 py-3 rounded-xl bg-[var(--color-brand)] text-white text-xs font-black uppercase tracking-widest">Adicionar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </PortalLayout>
 
 <script>
-import '../../scripts/portal/ministerios.ts';
+  import '../../scripts/portal/ministerios.ts';
 </script>

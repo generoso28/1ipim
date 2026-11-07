@@ -476,6 +476,14 @@ function ipim_rbac_admin_page(): void
             esc_html(wp_json_encode($counts, JSON_UNESCAPED_UNICODE)) . '</p></div>';
     }
 
+    if (isset($_POST['ipim_schedule_cleanup']) && check_admin_referer('ipim_schedule_cleanup')) {
+        $counts = function_exists('ipim_schedule_cleanup_duplicates')
+            ? ipim_schedule_cleanup_duplicates()
+            : ['error' => 'função indisponível'];
+        echo '<div class="notice notice-success"><p>Limpeza de escalas: ' .
+            esc_html(wp_json_encode($counts, JSON_UNESCAPED_UNICODE)) . '</p></div>';
+    }
+
     $status = ipim_rbac_status();
     ?>
     <div class="wrap">
@@ -488,6 +496,15 @@ function ipim_rbac_admin_page(): void
             <p>
                 <button type="submit" name="ipim_rbac_migrate" class="button button-primary">
                     Rodar migração de papéis e vínculos
+                </button>
+            </p>
+        </form>
+        <h2>Escalas</h2>
+        <form method="post">
+            <?php wp_nonce_field('ipim_schedule_cleanup'); ?>
+            <p>
+                <button type="submit" name="ipim_schedule_cleanup" class="button">
+                    Limpar nomes/e-mails duplicados nas escalas
                 </button>
             </p>
         </form>

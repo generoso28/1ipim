@@ -243,8 +243,89 @@ function ipim_schedule_conflicts_for_emails(array $emails, string $date, string 
     return $all;
 }
 
+/**
+ * Deduplica e-mails/nomes mantendo o alinhamento entre eles.
+ *
+ * @return array{names:string,emails:string}
+ */
+function ipim_schedule_normalize_participants(array $data): array
+{
+    $emails = ipim_emails((string) ($data['emails'] ?? ''));
+    $names = ipim_names((string) ($data['names'] ?? ''));
+
+    if ($emails !== []) {
+        $pairs = [];
+        $seen = [];
+        foreach ($emails as $index => $email) {
+            if (isset($seen[$email])) {
+                continue;
+            }
+            $seen[$email] = true;
+            $pairs[] = [
+                'email' => $email,
+                'name' => $names[$index] ?? '',
+            ];
+        }
+
+        return [
+            'names' => implode(', ', array_column($pairs, 'name')),
+            'emails' => implode(', ', array_column($pairs, 'email')),
+        ];
+    }
+
+    $unique = [];
+    $seen = [];
+    foreach ($names as $name) {
+        $key = strtolower($name);
+        if (!isset($seen[$key])) {
+            $seen[$key] = true;
+            $unique[] = $name;
+        }
+    }
+
+    return ['names' => implode(', ', $unique), 'emails' => ''];
+}
+
+/**
+ * Corrige nomes/e-mails duplicados nas escalas existentes.
+ *
+ * @return array{changed:int,total:int}
+ */
+function ipim_schedule_cleanup_duplicates(): array
+{
+    $posts = get_posts([
+        'post_type' => 'escala',
+        'post_status' => 'any',
+        'numberposts' => -1,
+        'fields' => 'ids',
+    ]);
+
+    $changed = 0;
+    foreach ($posts as $post_id) {
+        $data = ipim_schedule_data((int) $post_id);
+        $normalized = ipim_schedule_normalize_participants($data);
+        if ($normalized['emails'] !== $data['emails'] || $normalized['names'] !== $data['names']) {
+            $data['emails'] = $normalized['emails'];
+            $data['names'] = $normalized['names'];
+            ipim_schedule_write_content((int) $post_id, $data);
+            $changed++;
+        }
+    }
+
+    ipim_rbac_audit(get_current_user_id(), 'schedule_cleanup_duplicates', 'system', 0, null, [
+        'changed' => $changed,
+        'total' => count($posts),
+    ]);
+
+    return ['changed' => $changed, 'total' => count($posts)];
+}
+
 function ipim_schedule_write_content(int $post_id, array $data): void
 {
+    $normalized = ipim_schedule_normalize_participants($data);
+    $data['emails'] = $normalized['emails'];
+    $data['names'] = $normalized['names'];
+
     $content = sprintf(
         '<p>%s|%s|%s|%s|%s</p>',
         $data['date'],
@@ -312,6 +393,8 @@ function ipim_user_summary(int $user_id): array
         'name' => $user->display_name,
         'email' => $user->user_email,
         'roles' => array_values((array) $user->roles),
+        'account_type' => (string) get_user_meta($user->ID, '_ipim_account_type', true),
+        'email_verified' => get_user_meta($user->ID, '_ipim_email_verified', true) === '1',
         'meta' => [
             'ministries_approved' => (string) get_user_meta($user->ID, 'ministries_approved', true),
             'ministries_requested' => (string) get_user_meta($user->ID, 'ministries_requested', true),
@@ -339,6 +422,8 @@ function ipim_ministry_summary(int $ministry_id): array
         'title' => ['rendered' => get_the_title($post)],
         'status' => $post->post_status,
         'tipo' => ipim_rbac_ministry_type($post->ID),
+        'descricao' => (string) get_post_meta($post->ID, 'descricao', true),
+        'arquivado' => $post->post_status !== 'publish',
         'can_view' => ipim_rbac_can_view_ministry($user_id, $post->ID),
         'can_manage' => ipim_rbac_can_manage_ministry($user_id, $post->ID),
     ];
@@ -361,6 +446,31 @@ function ipim_rest_conflict(array $conflicts): WP_Error
         'conflicts' => $conflicts,
         'can_override' => true,
     ]);
+}
+
+function ipim_rest_assign_membership(int $user_id, int $ministry_id, string $role): void
+{
+    $role = in_array($role, ['colaborador', 'lider'], true) ? $role : 'colaborador';
+    $raw = get_user_meta($user_id, 'ministries_approved', true);
+    $approved = is_string($raw) ? json_decode($raw, true) : $raw;
+    $approved = is_array($approved) ? array_values(array_unique(array_map('intval', $approved))) : [];
+    if (!in_array($ministry_id, $approved, true)) {
+        $approved[] = $ministry_id;
+    }
+    update_user_meta($user_id, 'ministries_approved', wp_json_encode($approved));
+
+    global $wpdb;
+    $table = ipim_rbac_table('ministry_memberships');
+    $wpdb->query($wpdb->prepare(
+        "INSERT INTO {$table} (user_id, ministry_id, role, status, created_at, updated_at)
+         VALUES (%d, %d, %s, 'active', %s, %s)
+         ON DUPLICATE KEY UPDATE role = VALUES(role), status = 'active', updated_at = VALUES(updated_at)",
+        $user_id,
+        $ministry_id,
+        $role,
+        current_time('mysql'),
+        current_time('mysql')
+    ));
 }
 
 /* -------------------------------------------------------------------------
@@ -405,7 +515,7 @@ add_action('rest_api_init', static function (): void {
                     }
                     $posts = $ids === [] ? [] : get_posts([
                         'post_type' => 'ministerio',
-                        'post_status' => 'publish',
+                        'post_status' => ['publish', 'draft'],
                         'numberposts' => -1,
                         'post__in' => $ids,
                         'orderby' => 'title',
@@ -414,7 +524,7 @@ add_action('rest_api_init', static function (): void {
                 } else {
                     $posts = get_posts([
                         'post_type' => 'ministerio',
-                        'post_status' => 'publish',
+                        'post_status' => $manage ? ['publish', 'draft'] : 'publish',
                         'numberposts' => -1,
                         'orderby' => 'title',
                         'order' => 'ASC',
@@ -449,13 +559,72 @@ add_action('rest_api_init', static function (): void {
                 if ($tipo !== '') {
                     update_post_meta($post_id, 'tipo', $tipo);
                 }
+                $descricao = sanitize_textarea_field((string) $request->get_param('descricao'));
+                if ($descricao !== '') {
+                    update_post_meta($post_id, 'descricao', $descricao);
+                }
+                $leader_id = (int) $request->get_param('leader_id');
+                if ($leader_id > 0) {
+                    ipim_rest_assign_membership($leader_id, (int) $post_id, 'lider');
+                }
 
-                ipim_rbac_audit(get_current_user_id(), 'ministry_create', 'ministerio', (int) $post_id, null, ['title' => $title]);
+                ipim_rbac_audit(get_current_user_id(), 'ministry_create', 'ministerio', (int) $post_id, null, ['title' => $title, 'tipo' => $tipo, 'descricao' => $descricao]);
 
                 return ipim_ministry_summary((int) $post_id);
             },
             'permission_callback' => $manager,
         ],
+    ]);
+
+    register_rest_route('1ipim/v1', '/ministries/(?P<id>\d+)', [
+        'methods' => 'POST,PUT,PATCH',
+        'callback' => static function (WP_REST_Request $request) {
+            $id = (int) $request['id'];
+            $post = get_post($id);
+            if (!$post || $post->post_type !== 'ministerio') {
+                return new WP_Error('ipim_not_found', 'Ministério não encontrado.', ['status' => 404]);
+            }
+            if (!ipim_rbac_can_manage_ministry(get_current_user_id(), $id)) {
+                return ipim_rest_forbidden();
+            }
+
+            $is_manager = ipim_rbac_is_admin() || ipim_rbac_is_pastor();
+            $before = ipim_ministry_summary($id);
+            $update = ['ID' => $id];
+
+            $title = $request->get_param('title');
+            if ($title !== null) {
+                $title = sanitize_text_field((string) $title);
+                if ($title !== '') {
+                    $update['post_title'] = $title;
+                }
+            }
+
+            if ($request->get_param('descricao') !== null) {
+                update_post_meta($id, 'descricao', sanitize_textarea_field((string) $request->get_param('descricao')));
+            }
+
+            if ($is_manager) {
+                $tipo = $request->get_param('tipo');
+                if ($tipo !== null) {
+                    update_post_meta($id, 'tipo', sanitize_key((string) $tipo));
+                }
+                $leader_id = (int) $request->get_param('leader_id');
+                if ($leader_id > 0) {
+                    ipim_rest_assign_membership($leader_id, $id, 'lider');
+                }
+                $arquivado = $request->get_param('arquivado');
+                if ($arquivado !== null) {
+                    $update['post_status'] = (bool) $arquivado ? 'draft' : 'publish';
+                }
+            }
+
+            wp_update_post($update);
+            ipim_rbac_audit(get_current_user_id(), 'ministry_update', 'ministerio', $id, $before, ipim_ministry_summary($id));
+
+            return ipim_ministry_summary($id);
+        },
+        'permission_callback' => $login,
     ]);
 
     register_rest_route('1ipim/v1', '/ministries/(?P<id>\d+)', [
@@ -625,6 +794,84 @@ add_action('rest_api_init', static function (): void {
             $users = array_values(array_filter(array_map('ipim_user_summary', array_map('intval', $user_ids))));
 
             return $users;
+        },
+        'permission_callback' => $login,
+    ]);
+
+    register_rest_route('1ipim/v1', '/admin/users', [
+        'methods' => 'GET',
+        'callback' => static function (WP_REST_Request $request): array {
+            if (!ipim_rbac_is_admin() && !ipim_rbac_is_pastor()) {
+                return ['items' => [], 'total' => 0, 'page' => 1, 'pages' => 0, 'stats' => []];
+            }
+
+            $q = trim((string) $request->get_param('q'));
+            $role = sanitize_key((string) $request->get_param('role'));
+            $ministry = (int) $request->get_param('ministry');
+            $pending = (bool) $request->get_param('pending');
+            $page = max(1, (int) $request->get_param('page'));
+            $per_page = min(100, max(1, (int) ($request->get_param('per_page') ?: 20)));
+
+            $all = get_users(['fields' => 'all', 'orderby' => 'display_name', 'order' => 'ASC']);
+            $ministry_users = [];
+            if ($ministry > 0) {
+                global $wpdb;
+                $table = ipim_rbac_table('ministry_memberships');
+                $ids = $wpdb->get_col($wpdb->prepare(
+                    "SELECT user_id FROM {$table} WHERE ministry_id = %d AND status = 'active'",
+                    $ministry
+                ));
+                $ministry_users = array_map('intval', $ids ?: []);
+            }
+
+            $stats = ['total' => count($all), 'pending' => 0, 'bible_rats' => 0, 'unverified' => 0];
+            $filtered = [];
+            foreach ($all as $user) {
+                $requested = json_decode((string) get_user_meta($user->ID, 'ministries_requested', true), true);
+                $approved = json_decode((string) get_user_meta($user->ID, 'ministries_approved', true), true);
+                $requested = is_array($requested) ? array_map('intval', $requested) : [];
+                $approved = is_array($approved) ? array_map('intval', $approved) : [];
+                $isPending = count(array_diff($requested, $approved)) > 0;
+                if ($isPending) {
+                    $stats['pending']++;
+                }
+                $isBible = get_user_meta($user->ID, '_ipim_account_type', true) === 'bible_rats';
+                if ($isBible) {
+                    $stats['bible_rats']++;
+                    if (get_user_meta($user->ID, '_ipim_email_verified', true) !== '1') {
+                        $stats['unverified']++;
+                    }
+                }
+
+                if ($role !== '' && !in_array($role, (array) $user->roles, true)) {
+                    continue;
+                }
+                if ($ministry > 0 && !in_array((int) $user->ID, $ministry_users, true)) {
+                    continue;
+                }
+                if ($pending && !$isPending) {
+                    continue;
+                }
+                if ($q !== '') {
+                    $haystack = strtolower($user->display_name . ' ' . $user->user_login . ' ' . $user->user_email);
+                    if (strpos($haystack, strtolower($q)) === false) {
+                        continue;
+                    }
+                }
+                $filtered[] = $user;
+            }
+
+            $total = count($filtered);
+            $pages = $per_page > 0 ? (int) ceil($total / $per_page) : 0;
+            $slice = array_slice($filtered, ($page - 1) * $per_page, $per_page);
+
+            return [
+                'items' => array_values(array_map(static fn (WP_User $user): array => ipim_user_summary((int) $user->ID), $slice)),
+                'total' => $total,
+                'page' => $page,
+                'pages' => $pages,
+                'stats' => $stats,
+            ];
         },
         'permission_callback' => $login,
     ]);

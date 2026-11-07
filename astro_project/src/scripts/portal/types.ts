@@ -71,12 +71,16 @@ export interface WpUser {
     ministries_approved?: string;
   };
   memberships?: PortalMembership[];
+  account_type?: string;
+  email_verified?: boolean;
 }
 
 export interface WpMinistry {
   id: number;
   title: WpRendered;
   tipo?: string;
+  descricao?: string;
+  arquivado?: boolean;
   can_manage?: boolean;
 }
 

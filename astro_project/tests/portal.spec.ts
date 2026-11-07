@@ -166,8 +166,14 @@ test.describe("Portal autenticado", () => {
         await json(route, MINISTRIES);
         return true;
       }
-      if (path === "/1ipim/v1/users" && method === "GET") {
-        await json(route, USERS);
+      if (path === "/1ipim/v1/admin/users" && method === "GET") {
+        await json(route, {
+          items: USERS,
+          total: 2,
+          page: 1,
+          pages: 1,
+          stats: { total: 2, pending: 1, bible_rats: 0, unverified: 0 },
+        });
         return true;
       }
       if (path === "/1ipim/v1/ministries/1/members" && method === "POST") {
@@ -192,11 +198,15 @@ test.describe("Portal autenticado", () => {
     await expectToast(page, "Vínculo aprovado com sucesso!");
 
     const promoteRow = page.locator("tr", {
-      has: page.locator('.promote-btn[data-id="2"]'),
+      has: page.locator('.role-action-btn[data-id="2"]'),
     });
     await promoteRow.locator("button:has(i.fa-ellipsis-vertical)").hover();
-    await page.click('.promote-btn[data-id="2"][data-to="editor"]');
-    await expectToast(page, "Promovido a Líder com Vínculo!");
+    await page.click(
+      '.role-action-btn[data-id="2"][data-role="lider_ministerio"]',
+    );
+    await expect(page.locator("#role-modal")).toBeVisible();
+    await page.click("#role-save");
+    await expectToast(page, "Papel atualizado!");
 
     const deleteRow = page.locator("tr", {
       has: page.locator('.delete-user-btn[data-id="2"]'),
@@ -233,8 +243,8 @@ test.describe("Portal autenticado", () => {
         await json(route, { id: 3 });
         return true;
       }
-      if (path === "/1ipim/v1/ministries/2" && method === "DELETE") {
-        await json(route, { deleted: true });
+      if (path === "/1ipim/v1/ministries/2" && method === "POST") {
+        await json(route, { id: 2, arquivado: true });
         return true;
       }
       if (path === "/1ipim/v1/ministries/1/members" && method === "POST") {
@@ -252,8 +262,8 @@ test.describe("Portal autenticado", () => {
     await page.click("#add-btn");
     await expectToast(page, "Ministério criado!");
 
-    await page.click('.delete-min-btn[data-id="2"]');
-    await expectToast(page, "Ministério removido");
+    await page.click('.archive-min-btn[data-id="2"]');
+    await expectToast(page, "Ministério arquivado");
   });
 
   test("reflexões: listar, mover para lixeira e filtrar", async ({ page }) => {

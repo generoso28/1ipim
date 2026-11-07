@@ -134,6 +134,8 @@ onPageReady("#form-container", async () => {
 
   const ministryNames: Record<number, string> = {};
   let schedules: WpSchedule[] = [];
+  let usersList: WpUser[] = [];
+  let calendarCursor = new Date();
 
   const filterState: ScheduleFilters = { active: "all" };
   const initialActiveTab =
@@ -177,6 +179,7 @@ onPageReady("#form-container", async () => {
     try {
       const response = await apiFetch("/wp-json/1ipim/v1/users");
       const users = (await response.json()) as WpUser[];
+      usersList = users;
 
       if (volunteersSelect) {
         volunteersSelect.innerHTML = users
@@ -265,15 +268,22 @@ onPageReady("#form-container", async () => {
       byDate[date].push({ ...schedule, minId: meta.ministryId });
     });
 
+    const cursor = calendarCursor;
+    const month = cursor.getMonth();
+    const year = cursor.getFullYear();
     const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
     const firstWeekday = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     let html = `
       <div class="flex items-center justify-between mb-4">
-        <h4 class="font-black text-gray-900 dark:text-white text-lg uppercase">${today.toLocaleString("pt-BR", { month: "long" })} ${year}</h4>
+        <button id="calendar-prev" type="button" aria-label="Mês anterior" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-500 hover:text-[var(--color-brand)]">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <h4 class="font-black text-gray-900 dark:text-white text-lg uppercase">${cursor.toLocaleString("pt-BR", { month: "long" })} ${year}</h4>
+        <button id="calendar-next" type="button" aria-label="Próximo mês" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-500 hover:text-[var(--color-brand)]">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
       </div>
       <div class="grid grid-cols-7 gap-1 sm:gap-2 text-center mb-2">
         ${["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
@@ -324,6 +334,19 @@ onPageReady("#form-container", async () => {
           const date = day.getAttribute("data-date");
           if (date) openDayModal(date, byDate[date] || []);
         };
+      });
+
+    calendarView
+      .querySelector<HTMLButtonElement>("#calendar-prev")
+      ?.addEventListener("click", () => {
+        calendarCursor = new Date(year, month - 1, 1);
+        renderCalendar(schedules);
+      });
+    calendarView
+      .querySelector<HTMLButtonElement>("#calendar-next")
+      ?.addEventListener("click", () => {
+        calendarCursor = new Date(year, month + 1, 1);
+        renderCalendar(schedules);
       });
   }
 
@@ -420,6 +443,34 @@ onPageReady("#form-container", async () => {
       });
 
     document
+      .querySelectorAll<HTMLButtonElement>(".leave-scale-btn")
+      .forEach((button) => {
+        button.onclick = async () => {
+          const id = button.getAttribute("data-id");
+          if (!id) return;
+          if (!confirm("Sair desta escala?")) return;
+          button.disabled = true;
+          try {
+            const response = await apiFetch(
+              `/wp-json/1ipim/v1/escalas/${id}/sair`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: "{}",
+              },
+            );
+            if (!response.ok) throw new Error("Falha ao sair");
+            showToast("Você saiu da escala", "success");
+            modal?.classList.add("hidden");
+            await loadSchedules();
+          } catch {
+            showToast("Erro ao sair da escala", "error");
+            button.disabled = false;
+          }
+        };
+      });
+
+    document
       .querySelectorAll<HTMLButtonElement>(".edit-scale-btn")
       .forEach((button) => {
         button.onclick = () => {
@@ -463,6 +514,10 @@ onPageReady("#form-container", async () => {
           .toLocaleString("pt-BR", { month: "short" })
           .toUpperCase()
           .replace(".", "");
+        const isParticipant = meta.emails
+          .split(",")
+          .map((email) => email.trim().toLowerCase())
+          .includes((user.email || "").toLowerCase());
 
         return `
           <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex flex-col sm:flex-row sm:items-center gap-6 group hover:shadow-xl transition-all animate-slide-up">
@@ -488,9 +543,15 @@ onPageReady("#form-container", async () => {
             </div>
 
             <div class="sm:ml-auto flex items-center gap-2">
-              <button class="join-scale-btn px-4 py-2 flex items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-[var(--color-brand)] hover:text-white transition-all font-bold text-xs gap-2 border border-transparent hover:border-[var(--color-brand)]" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(meta.date)}" data-minid="${escapeAttribute(meta.ministryId)}">
-                <i class="fa-solid fa-user-plus"></i> Participar
-              </button>
+              ${
+                isParticipant
+                  ? `<button class="leave-scale-btn px-4 py-2 flex items-center justify-center rounded-xl bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 hover:bg-red-600 hover:text-white transition-all font-bold text-xs gap-2 border border-transparent hover:border-red-600" data-id="${schedule.id}">
+                      <i class="fa-solid fa-user-minus"></i> Sair
+                    </button>`
+                  : `<button class="join-scale-btn px-4 py-2 flex items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-[var(--color-brand)] hover:text-white transition-all font-bold text-xs gap-2 border border-transparent hover:border-[var(--color-brand)]" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(meta.date)}" data-minid="${escapeAttribute(meta.ministryId)}">
+                      <i class="fa-solid fa-user-plus"></i> Participar
+                    </button>`
+              }
 
               ${
                 isManager
@@ -529,6 +590,10 @@ onPageReady("#form-container", async () => {
           const meta = scheduleMetadata(schedule);
           const ministryName =
             ministryNames[Number(meta.ministryId)] || "Geral";
+          const isParticipant = meta.emails
+            .split(",")
+            .map((email) => email.trim().toLowerCase())
+            .includes((user.email || "").toLowerCase());
           return `
             <div class="bg-gray-50 dark:bg-slate-900/50 p-5 rounded-3xl border border-gray-100 dark:border-slate-700/50">
               <div class="flex items-center justify-between mb-3">
@@ -540,7 +605,11 @@ onPageReady("#form-container", async () => {
                 <p class="text-[10px] text-gray-500 font-bold flex items-center gap-2"><i class="fa-solid fa-users text-[var(--color-brand)]"></i> ${escapeHtml(meta.names)}</p>
               </div>
               <div class="flex items-center gap-2">
-                <button class="join-scale-btn flex-1 bg-[var(--color-brand)] text-white py-2 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-[var(--color-brand)]/20" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(date)}" data-minid="${escapeAttribute(meta.ministryId)}">Participar</button>
+                ${
+                  isParticipant
+                    ? `<button class="leave-scale-btn flex-1 bg-red-600 text-white py-2 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-red-600/20" data-id="${schedule.id}">Sair da escala</button>`
+                    : `<button class="join-scale-btn flex-1 bg-[var(--color-brand)] text-white py-2 rounded-xl text-[10px] font-black uppercase shadow-lg shadow-[var(--color-brand)]/20" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(date)}" data-minid="${escapeAttribute(meta.ministryId)}">Participar</button>`
+                }
                 ${
                   isManager
                     ? `
@@ -570,16 +639,47 @@ onPageReady("#form-container", async () => {
   ): void {
     if (!modal || !modalContent || !modalTitle) return;
 
-    modalTitle.innerText = "Editar Equipe Escala";
+    const currentEmails = emails
+      .split(",")
+      .map((email) => email.trim().toLowerCase())
+      .filter(Boolean);
+    const currentNames = names.split(",").map((name) => name.trim());
+    const seen = new Set<string>();
+    const candidates: Array<{ name: string; email: string }> = [];
+    usersList.forEach((member) => {
+      const email = (member.email || "").toLowerCase();
+      if (email && !seen.has(email)) {
+        seen.add(email);
+        candidates.push({ name: member.name, email });
+      }
+    });
+    currentEmails.forEach((email, index) => {
+      if (!seen.has(email)) {
+        seen.add(email);
+        candidates.push({ name: currentNames[index] || email, email });
+      }
+    });
+    const candidatesHtml = candidates.length
+      ? candidates
+          .map(
+            (candidate) => `
+              <label class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-transparent hover:border-gray-100 dark:hover:border-slate-700">
+                <input type="checkbox" name="edit-volunteers" value="${escapeAttribute(candidate.email)}" data-name="${escapeAttribute(candidate.name)}" ${currentEmails.includes(candidate.email) ? "checked" : ""} class="w-5 h-5 rounded-md border-gray-300 text-[var(--color-brand)] focus:ring-[var(--color-brand)]">
+                <span class="text-xs font-bold text-gray-700 dark:text-gray-300">${escapeHtml(candidate.name)} <span class="text-gray-500 font-normal">${escapeHtml(candidate.email)}</span></span>
+              </label>
+            `,
+          )
+          .join("")
+      : '<p class="text-xs text-gray-500">Nenhum voluntário disponível.</p>';
+
+    modalTitle.innerText = `Editar equipe — ${date} ${time}`.trim();
     modalContent.innerHTML = `
       <div class="space-y-4">
         <div>
-          <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Equipe (Nomes separados por vírgula)</label>
-          <textarea id="edit-names" class="w-full bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 text-xs font-bold outline-none h-24">${escapeHtml(names === "---" ? "" : names)}</textarea>
-        </div>
-        <div>
-          <label class="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">E-mails (Separados por vírgula - Opcional)</label>
-          <textarea id="edit-emails" class="w-full bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 text-xs font-bold outline-none h-24">${escapeHtml(emails)}</textarea>
+          <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Equipe escalada</span>
+          <div id="edit-volunteers" class="bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl max-h-64 overflow-y-auto p-2 space-y-1">
+            ${candidatesHtml}
+          </div>
         </div>
         <div class="flex gap-3">
           <button id="cancel-edit" class="flex-1 py-3 bg-gray-50 dark:bg-slate-700 text-gray-500 font-black rounded-2xl text-xs uppercase">Cancelar</button>
@@ -600,14 +700,17 @@ onPageReady("#form-container", async () => {
 
     if (saveButton) {
       saveButton.onclick = async () => {
-        const namesInput = document.getElementById(
-          "edit-names",
-        ) as HTMLTextAreaElement | null;
-        const emailsInput = document.getElementById(
-          "edit-emails",
-        ) as HTMLTextAreaElement | null;
-        const teamNames = namesInput?.value || "---";
-        const teamEmails = emailsInput?.value || "";
+        const selected = Array.from(
+          document.querySelectorAll<HTMLInputElement>(
+            'input[name="edit-volunteers"]:checked',
+          ),
+        );
+        const teamNames =
+          selected
+            .map((input) => input.getAttribute("data-name") || "")
+            .filter(Boolean)
+            .join(", ") || "---";
+        const teamEmails = selected.map((input) => input.value).join(", ");
 
         saveButton.innerText = "Salvando...";
         saveButton.disabled = true;

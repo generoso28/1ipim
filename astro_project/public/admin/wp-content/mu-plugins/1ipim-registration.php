@@ -222,6 +222,21 @@ function ipim_reg_create_user(array $data, string $account_type)
     return ['id' => (int) $user_id, 'name' => $name, 'email' => $email];
 }
 
+function ipim_reg_find_user(string $login): ?WP_User
+{
+    $login = trim($login);
+    if ($login === '') {
+        return null;
+    }
+
+    $user = is_email($login) ? get_user_by('email', $login) : get_user_by('login', $login);
+    if (!$user && !is_email($login)) {
+        $user = get_user_by('email', $login);
+    }
+
+    return $user instanceof WP_User ? $user : null;
+}
+
 add_action('rest_api_init', static function (): void {
     register_rest_route('1ipim/v1', '/registrar', [
         'methods' => 'POST',
@@ -289,6 +304,79 @@ add_action('rest_api_init', static function (): void {
             ];
         },
         'permission_callback' => '__return_true',
+    ]);
+
+    register_rest_route('1ipim/v1', '/reenviar-verificacao', [
+        'methods' => 'POST',
+        'callback' => static function (WP_REST_Request $request) {
+            if (!ipim_reg_rate_limit('resend_verification', 5, 3600)) {
+                return new WP_Error('rate_limited', 'Muitas tentativas. Tente novamente mais tarde.', ['status' => 429]);
+            }
+
+            $login = sanitize_text_field((string) $request->get_param('login'));
+            $user = ipim_reg_find_user($login);
+            if ($user && get_user_meta($user->ID, '_ipim_account_type', true) === 'bible_rats') {
+                if (get_user_meta($user->ID, '_ipim_email_verified', true) !== '1') {
+                    ipim_reg_send_verification((int) $user->ID);
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Se a conta existir e estiver pendente, enviaremos um novo link de confirmação.',
+            ];
+        },
+        'permission_callback' => '__return_true',
+    ]);
+
+    register_rest_route('1ipim/v1', '/admin/users/(?P<id>\d+)/verify-email', [
+        'methods' => 'POST',
+        'callback' => static function (WP_REST_Request $request) {
+            $user_id = (int) $request['id'];
+            $user = get_userdata($user_id);
+            if (!$user) {
+                return new WP_Error('ipim_user_not_found', 'Usuário não encontrado.', ['status' => 404]);
+            }
+            $before = [
+                'verified' => get_user_meta($user_id, '_ipim_email_verified', true),
+                'account_type' => get_user_meta($user_id, '_ipim_account_type', true),
+            ];
+            update_user_meta($user_id, '_ipim_email_verified', '1');
+            delete_user_meta($user_id, '_ipim_email_token');
+            delete_user_meta($user_id, '_ipim_email_token_expires');
+            ipim_rbac_audit(get_current_user_id(), 'email_verify_manual', 'user', $user_id, $before, ['verified' => '1']);
+
+            return [
+                'success' => true,
+                'id' => $user_id,
+                'email_verified' => true,
+                'message' => 'E-mail verificado manualmente.',
+            ];
+        },
+        'permission_callback' => static fn (): bool => current_user_can('manage_options'),
+    ]);
+
+    register_rest_route('1ipim/v1', '/admin/users/(?P<id>\d+)/resend-verification', [
+        'methods' => 'POST',
+        'callback' => static function (WP_REST_Request $request) {
+            $user_id = (int) $request['id'];
+            $user = get_userdata($user_id);
+            if (!$user) {
+                return new WP_Error('ipim_user_not_found', 'Usuário não encontrado.', ['status' => 404]);
+            }
+            if (get_user_meta($user_id, '_ipim_account_type', true) !== 'bible_rats') {
+                return new WP_Error('ipim_not_bible_rats', 'Este usuário não é uma conta Bible Rats.', ['status' => 400]);
+            }
+            $sent = ipim_reg_send_verification($user_id);
+            ipim_rbac_audit(get_current_user_id(), 'email_verification_resend', 'user', $user_id, null, ['sent' => $sent]);
+
+            return [
+                'success' => true,
+                'sent' => $sent,
+                'message' => $sent ? 'Confirmação reenviada.' : 'Não foi possível enviar o e-mail.',
+            ];
+        },
+        'permission_callback' => static fn (): bool => current_user_can('manage_options'),
     ]);
 
     register_rest_route('1ipim/v1', '/admin/users/invite', [

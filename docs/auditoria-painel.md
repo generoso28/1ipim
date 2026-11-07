@@ -4,6 +4,29 @@ Sondagem com sessões reais de **admin, líder e membro**, em desktop (1440px) e
 mobile (390px), com axe/WCAG 2.1 A/AA, console, requests, overflow e inspeção
 visual. Foram avaliadas 32 combinações de usuário × viewport × página.
 
+## Status — Fase 1 (07/11/2026)
+
+Os itens P0 foram corrigidos e publicados no build **#37**:
+
+- ✅ Cadastro público corrigido (`1ipim/v1/registrar`, payload de ministérios,
+  honeypot e rate limit).
+- ✅ Convite/reset para usuários criados pelo admin; link de “Esqueci minha
+  senha” no login.
+- ✅ Autocadastro Bible Rats separado, com verificação de e-mail e bloqueio de
+  login até a confirmação.
+- ✅ Spinners de login/cadastro/contato/publicar/escalas ocultos de verdade
+  (Font Awesome × cascade layers).
+- ✅ Corrida das escalas corrigida; ministério aparece como “Mídia”, não “GERAL”.
+- ✅ Acessibilidade do portal: **0 violações sérias** em 32 combinações de
+  usuário × viewport × página (axe/WCAG 2.1 A/AA).
+- ✅ Rótulos visíveis na sidebar, menu mobile com backdrop/fechamento e ações
+  acessíveis no toque.
+- ✅ Página “Novo Voluntário” padronizada dentro do PortalLayout.
+- ✅ 84/84 testes Playwright; build #37 verde em staging e produção.
+
+Pendente para as próximas fases: P1 (ministérios/usuários/escalas/reflexões) e
+P2 (FR-70, notificações, auditoria, perfil, relatórios e dados legados).
+
 ## Pontos positivos
 
 - Nenhum erro de console ou request nas páginas auditadas.

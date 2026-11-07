@@ -318,6 +318,29 @@ onPageReady("#livraria-manager", async () => {
         };
       });
 
+    document
+      .querySelectorAll<HTMLButtonElement>(".stock-book-btn")
+      .forEach((button) => {
+        button.onclick = () => {
+          const id = Number(button.getAttribute("data-id"));
+          const book = state.items.find((item) => item.id === id);
+          if (book) openStockModal(book);
+        };
+      });
+
+    document
+      .querySelectorAll<HTMLButtonElement>(".cover-search-book-btn")
+      .forEach((button) => {
+        button.onclick = () => {
+          const id = Number(button.getAttribute("data-id"));
+          const book = state.items.find((item) => item.id === id);
+          if (book) {
+            openModal(book);
+            window.setTimeout(() => void searchCovers(), 150);
+          }
+        };
+      });
+
     if (pageInfo) {
       pageInfo.innerText = `Página ${state.page} de ${state.pages} · ${state.total} livros`;
     }

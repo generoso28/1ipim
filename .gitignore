@@ -1,3 +1,5 @@
 
 # Jenkins local
 docker/jenkins/.env
+astro_project/dist-berea/
+test-results/

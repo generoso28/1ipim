@@ -39,6 +39,8 @@ export interface PortalUser {
   canProgramacao?: boolean;
   canRelatorios?: boolean;
   canAuditoria?: boolean;
+  hasPortalAccess?: boolean;
+  canApproveAccess?: boolean;
 }
 
 export interface Permissions {
@@ -53,6 +55,7 @@ export interface Permissions {
   canProgramacao: boolean;
   canRelatorios: boolean;
   canAuditoria: boolean;
+  canApproveAccess: boolean;
   isAdmin: boolean;
   isPrivileged: boolean;
   isMinistryLeader: boolean;

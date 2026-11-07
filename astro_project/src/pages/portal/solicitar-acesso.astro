@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const title = 'Solicitar acesso ao Portal - 1IPIM';
+const description = 'Solicite autorização para acessar o Portal da equipe da 1IPIM.';
+---
+<Layout title={title} description={description} noindex={true}>
+  <section class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 px-4 py-24 transition-colors">
+    <div class="max-w-xl w-full bg-white dark:bg-slate-800 rounded-[2rem] shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700 p-8 md:p-10">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-[var(--color-brand)]/10 text-[var(--color-brand)] rounded-2xl mb-4">
+          <i class="fa-solid fa-user-shield text-2xl"></i>
+        </div>
+        <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-2 tracking-tighter uppercase">Acesso restrito à equipe</h1>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">
+          O Portal é exclusivo para a equipe da igreja. Sua conta existe, mas ainda não tem vínculo com um ministério.
+        </p>
+      </div>
+
+      <div id="access-feedback" class="hidden mb-6 p-4 rounded-xl text-sm font-bold"></div>
+
+      <div id="access-status" class="hidden mb-6 p-5 rounded-2xl border"></div>
+
+      <form id="access-request-form" class="space-y-5 hidden">
+        <div>
+          <label for="access-ministry" class="block text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2 ml-1">Ministério</label>
+          <select id="access-ministry" required class="block w-full px-4 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none">
+            <option value="">Selecione o ministério</option>
+          </select>
+        </div>
+        <div>
+          <label for="access-reason" class="block text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2 ml-1">Por que você precisa de acesso?</label>
+          <textarea id="access-reason" required rows="4" class="block w-full px-4 py-3.5 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-brand)] outline-none" placeholder="Ex.: sirvo no ministério de mídia e preciso registrar escalas."></textarea>
+        </div>
+        <button type="submit" id="access-submit" class="w-full bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] text-white px-6 py-3.5 rounded-xl font-black uppercase tracking-widest text-xs transition-all disabled:opacity-60">
+          Enviar solicitação
+        </button>
+      </form>
+
+      <div class="mt-8 pt-6 border-t border-gray-100 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
+        <a href="/" class="text-xs font-bold text-gray-500 hover:text-[var(--color-brand)]">Voltar ao site</a>
+        <a href="/portal/login" class="text-xs font-bold text-[var(--color-brand)] hover:underline">Entrar com outra conta</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import '../../scripts/portal/solicitar-acesso.ts';
+</script>

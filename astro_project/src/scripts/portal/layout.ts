@@ -70,6 +70,13 @@ function buildNavItems(permissions: Permissions): NavItem[] {
       label: "Auditoria",
     });
   }
+  if (permissions.canApproveAccess) {
+    items.push({
+      href: "/portal/solicitacoes",
+      icon: "fa-solid fa-user-check",
+      label: "Solicitações",
+    });
+  }
   if (permissions.isAdmin) {
     items.push(
       {
@@ -272,5 +279,9 @@ onPageReady("#portal-root", () => {
 
     renderShell(user);
     hideAuthGuard();
+
+    if (user.hasPortalAccess === false) {
+      window.location.href = "/portal/solicitar-acesso";
+    }
   })();
 });

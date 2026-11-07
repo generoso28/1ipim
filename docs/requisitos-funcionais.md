@@ -183,7 +183,7 @@ conflito de escalas).
 | FR-101 | Integração PG ↔ Berea no relatório do encontro | 🔴 | Líder lista presentes, identifica quem não tem conta e envia convite/código da sala |
 | FR-102 | Seção de encontros do PG na sala do Berea | 🔴 | Registros ficam separados do feed principal, com foto, texto, tema, preletor e público |
 | FR-103 | Planos, desafios e devocionais por sala | 🔴 | Líder/moderador publica direto; moderador apaga conteúdo, remove pessoas e restringe postagens |
-| FR-104 | Portal restrito à equipe | 🔴 | Conta só do Berea não acessa o Portal; vê tela de solicitação. Líder de ministério aprova só colaborador no próprio escopo; admin/pastor aprovam em escopo geral; líder de PG não aprova |
+| FR-104 | Portal restrito à equipe | ✅ | Conta só do Berea é redirecionada à tela de solicitação; aprovação delega vínculo ao ministério. Líder de ministério aprova só colaborador no próprio escopo; admin/pastor aprovam em escopo geral; líder de PG não aprova |
 | FR-105 | Papéis `conteudista_berea` e `moderador_berea` | 🔴 | Criados na fase do Berea, com escopo por sala e auditoria |
 | FR-107 | Migração de subdomínios | 🔴 | `admin`, `portal`, `berea` e `staging` ativos em `.1ipim.online` (já cadastrados); cookie/cors/CSP por ambiente |
 

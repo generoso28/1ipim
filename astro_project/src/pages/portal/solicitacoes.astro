@@ -1,0 +1,41 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+const title = 'Solicitações de acesso - Portal 1IPIM';
+const description = 'Aprovação de acesso de novos membros da equipe ao Portal.';
+---
+<PortalLayout title={title} description={description}>
+  <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <p class="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--color-brand)] mb-2">Equipe</p>
+      <h1 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tighter uppercase">Solicitações</h1>
+      <p class="text-gray-500 mt-2">Aprove o acesso de contas do Berea ao Portal, dentro do seu escopo.</p>
+    </div>
+    <label class="w-full md:w-56">
+      <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Status</span>
+      <select id="requests-status" class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+        <option value="pendente">Pendentes</option>
+        <option value="aprovado">Aprovadas</option>
+        <option value="recusado">Recusadas</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="requests-feedback" class="hidden mb-6 p-4 rounded-xl text-sm font-bold"></div>
+
+  <div id="requests-list" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+
+  <div id="requests-empty" class="hidden py-24 text-center bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700">
+    <i class="fa-solid fa-user-check text-4xl text-gray-200 mb-4"></i>
+    <p class="text-gray-500 font-bold">Nenhuma solicitação neste status.</p>
+  </div>
+
+  <div id="requests-loading" class="py-24 text-center">
+    <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div>
+    <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Carregando solicitações...</p>
+  </div>
+</PortalLayout>
+
+<script>
+  import '../../scripts/portal/solicitacoes.ts';
+</script>

@@ -35,6 +35,8 @@ export const AUTH_KEYS = {
   canProgramacao: "1ipim_user_can_programacao",
   canRelatorios: "1ipim_user_can_relatorios",
   canAuditoria: "1ipim_user_can_auditoria",
+  hasPortalAccess: "1ipim_user_has_portal_access",
+  canApproveAccess: "1ipim_user_can_approve_access",
 } as const;
 
 /** Chave do JWT antigo: removida para não confundir navegadores com cache velho. */
@@ -115,6 +117,8 @@ export const auth = {
       canProgramacao: readKey(AUTH_KEYS.canProgramacao) === "1",
       canRelatorios: readKey(AUTH_KEYS.canRelatorios) === "1",
       canAuditoria: readKey(AUTH_KEYS.canAuditoria) === "1",
+      hasPortalAccess: readKey(AUTH_KEYS.hasPortalAccess) !== "0",
+      canApproveAccess: readKey(AUTH_KEYS.canApproveAccess) === "1",
     };
   },
 
@@ -155,6 +159,14 @@ export const auth = {
     writeKey(AUTH_KEYS.canProgramacao, session.canProgramacao ? "1" : "0");
     writeKey(AUTH_KEYS.canRelatorios, session.canRelatorios ? "1" : "0");
     writeKey(AUTH_KEYS.canAuditoria, session.canAuditoria ? "1" : "0");
+    writeKey(
+      AUTH_KEYS.hasPortalAccess,
+      session.hasPortalAccess === false ? "0" : "1",
+    );
+    writeKey(
+      AUTH_KEYS.canApproveAccess,
+      session.canApproveAccess ? "1" : "0",
+    );
   },
 
   setRole(role: string): void {

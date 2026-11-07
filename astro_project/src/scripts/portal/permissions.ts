@@ -9,6 +9,7 @@ type PermissionSet = Omit<
   | "canProgramacao"
   | "canRelatorios"
   | "canAuditoria"
+  | "canApproveAccess"
 >;
 
 const ROLE_PERMISSIONS: Record<string, PermissionSet> = {
@@ -127,6 +128,7 @@ interface PermissionUser {
   canProgramacao?: boolean;
   canRelatorios?: boolean;
   canAuditoria?: boolean;
+  canApproveAccess?: boolean;
 }
 
 export function getPermissions(
@@ -166,6 +168,7 @@ export function getPermissions(
     canRelatorios:
       isAdmin || isMinistryLeader || Boolean(user.canRelatorios),
     canAuditoria: isAdmin || isMinistryLeader || Boolean(user.canAuditoria),
+    canApproveAccess: isAdmin || Boolean(user.canApproveAccess),
     isAdmin,
     isPrivileged: isAdmin || isMinistryLeader,
     isMinistryLeader,

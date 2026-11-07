@@ -248,6 +248,11 @@ estoque baixo, CSV). Frontend em abas Log/Relatórios na auditoria. Sessão exp�
 
 **Objetivo:** conta só do Berea não acessa o portal; vê tela de solicitação.
 
+**Status:** implementada. `1ipim-acesso.php` (tabela `1ipim_access_requests`,
+checagem de equipe, solicitação, fila de aprovação e auditoria);
+`/portal/solicitar-acesso` (fora do shell do portal) e `/portal/solicitacoes`
+(fila para aprovadores). Sessão expõe `hasPortalAccess`/`canApproveAccess`.
+
 ### 6.1 Fluxo
 
 1. Usuário autentica (login único).

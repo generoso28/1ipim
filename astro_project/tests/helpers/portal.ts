@@ -12,6 +12,8 @@ export const SESSION = {
   "1ipim_user_can_programacao": "1",
   "1ipim_user_can_relatorios": "1",
   "1ipim_user_can_auditoria": "1",
+  "1ipim_user_has_portal_access": "1",
+  "1ipim_user_can_approve_access": "1",
 } as const;
 
 /** Usuário devolvido por `/admin/portal-auth/session.php`. */
@@ -33,6 +35,8 @@ export const SESSION_USER = {
   canProgramacao: true,
   canRelatorios: true,
   canAuditoria: true,
+  hasPortalAccess: true,
+  canApproveAccess: true,
   nonce: "e2e-nonce",
 } as const;
 

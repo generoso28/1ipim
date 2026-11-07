@@ -81,7 +81,7 @@ test.describe("Portal", () => {
 
     await expect(page).toHaveURL(/\/portal\/?$/);
     await expect(page.locator("#dashboard-grid a")).toHaveCount(8);
-    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(11);
+    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(12);
 
     const session = await page.evaluate(() => ({
       nonce: localStorage.getItem("1ipim_auth_nonce"),
@@ -108,7 +108,7 @@ test.describe("Portal autenticado", () => {
     await page.goto("/portal/", { waitUntil: "domcontentloaded" });
     await expect(page.locator("h1")).toContainText("Teste E2E");
     await expect(page.locator("#dashboard-grid a")).toHaveCount(8);
-    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(11);
+    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(12);
     await expect(page.locator("#user-nav-role")).toHaveText("Administrador");
   });
 

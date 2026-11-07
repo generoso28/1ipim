@@ -145,6 +145,14 @@ function user_payload(WP_User $user): array
         || $isMinistryLeader
         || (function_exists('ipim_grupos_user_leads_any') && ipim_grupos_user_leads_any((int) $user->ID));
 
+    $hasPortalAccess = $isAdmin || $isPastor
+        || $isMinistryLeader
+        || in_array('colaborador_ministerio', $roles, true)
+        || (function_exists('ipim_acesso_user_has_team') && ipim_acesso_user_has_team((int) $user->ID));
+    $canApproveAccess = function_exists('ipim_acesso_can_approve')
+        ? ipim_acesso_can_approve((int) $user->ID)
+        : ($isAdmin || $isPastor);
+
     return [
         'id' => (string) $user->ID,
         'nicename' => (string) $user->user_nicename,
@@ -164,6 +172,8 @@ function user_payload(WP_User $user): array
         'canProgramacao' => $canProgramacao,
         'canRelatorios' => $canRelatorios,
         'canAuditoria' => $canRelatorios,
+        'hasPortalAccess' => $hasPortalAccess,
+        'canApproveAccess' => $canApproveAccess,
         'nonce' => wp_create_nonce('wp_rest'),
     ];
 }

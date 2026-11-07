@@ -179,6 +179,9 @@ conflito de escalas).
 | FR-96 | Gestão de programação no portal | 🔴 | CRUD de cultos/eventos, recorrência e página pública dinâmica |
 | FR-97 | Gestão de pequenos grupos no portal | 🔴 | CRUD de grupos, líder, horário, local, contato e status |
 | FR-98 | Berea — comunidade | 🔴 | Feed, salas criadas pelos usuários, desafios, ranking, moderação delegada |
+| FR-101 | Integração PG ↔ Berea no relatório do encontro | 🔴 | Líder lista presentes, identifica quem não tem conta e envia convite/código da sala |
+| FR-102 | Seção de encontros do PG na sala do Berea | 🔴 | Registros ficam separados do feed principal, com foto, texto, tema, preletor e público |
+| FR-103 | Planos, desafios e devocionais por sala | 🔴 | Líder/moderador da sala cria e edita o conteúdo da própria sala |
 
 ---
 
@@ -293,6 +296,8 @@ manual. Sem capa, o catálogo usa um placeholder com o título.
 | FR-30 | Inscrição/interesse em um PG | 🔴 | Líder recebe notificação |
 | FR-31 | Gestão de membros e líderes por PG | 🔴 | Admin/líder edita |
 | FR-99 | Registro de encontro do PG: foto, nome, data, texto lido, tema, preletor e público presente | 🔴 | Cada líder publica o seu; admin/pastor veem todos; registro auditável |
+| FR-101 | Integração do relatório com o Berea | 🔴 | Líder lista presentes, vê quem não tem conta e envia convite/código da sala |
+| FR-102 | Seção de encontros na sala do PG | 🔴 | Aba separada do feed, somente para registros do grupo |
 | FR-100 | Relatório de frequência/público por PG e período | 🔴 | Agregação por grupo/período e exportação CSV |
 
 #### 3.7 Visitantes e acolhimento

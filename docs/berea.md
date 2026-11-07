@@ -40,6 +40,8 @@ Pontos técnicos:
 - Público: igreja toda; forte uso nos pequenos grupos.
 - Feed social interno (padrão: visível para membros; posts públicos opcionais).
 - Salas/grupos criados pelos próprios usuários, com acesso por convite/código para desafios específicos; o criador vira moderador.
+- Salas vinculadas a um PG têm aba **Encontros** separada do feed.
+- Cada sala pode ter planos de leitura, desafios e devocionais próprios; o líder/moderador da sala é responsável por esse conteúdo.
 - Desafios com período, plano de leitura e check-ins.
 - Ranking geral opt-in; rankings internos por sala.
 - Streak privado por padrão.
@@ -67,9 +69,11 @@ Esses registros alimentam relatórios de frequência e participação por grupo/
 Recomendação: o **Portal é a fonte oficial** dos grupos e dos registros de encontro
 (frequência, foto, texto lido, tema, preletor). O Berea é a camada social.
 
-- tabelas compartilhadas: `1ipim_grupos` e `1ipim_grupo_encontros`;
+- tabelas compartilhadas: `1ipim_grupos`, `1ipim_grupo_encontros` e presença por encontro;
 - cada grupo pode ter uma sala no Berea (`room_id`);
-- o líder registra o encontro no Portal e pode optar por **publicar um resumo no feed da sala**;
+- o líder registra o encontro no Portal, lista os presentes e pode **convidar quem ainda não tem conta**;
+- o convite pode ser por e-mail ou link/código da sala; ao criar a conta, a pessoa entra no grupo;
+- a sala do PG tem uma **seção separada de Encontros**, fora do feed principal;
 - relatórios e frequência saem do Portal, sem depender do feed;
 - se o Berea for construído primeiro, a sala pode criar o registro estruturado, mas o modelo de dados continua o mesmo.
 

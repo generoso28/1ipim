@@ -24,17 +24,36 @@ Os itens P0 foram corrigidos e publicados no build **#37**:
 - ✅ Página “Novo Voluntário” padronizada dentro do PortalLayout.
 - ✅ 84/84 testes Playwright; build #37 verde em staging e produção.
 
-Pendente para as próximas fases: P1 (ministérios/usuários/escalas/reflexões) e
-P2 (FR-70, notificações, auditoria, perfil, relatórios e dados legados).
+## Status — Fases 2 e 3 (07/11/2026)
+
+Publicadas nos builds **#40–#43**:
+
+- ✅ Ministérios: editar, tipo, descrição, líder inicial, arquivar/reativar.
+- ✅ Voluntários: busca, filtros por papel/ministério, pendências, paginação,
+  modal de papel e verificação/reenvio de e-mail.
+- ✅ Escalas: edição por checkboxes, sair da escala, calendário navegável e
+  normalização de participantes duplicados.
+- ✅ Reflexões: abas Publicadas/Rascunhos/Lixeira, busca, paginação e preview.
+- ✅ Estoque: botões +/- com motivo, histórico e filtro de estoque baixo.
+- ✅ Notificações internas: badge, central, marcar lida/todas e eventos de
+  cadastro, vínculo, escala, conflito e estoque.
+- ✅ Auditoria: tela com filtros e antes/depois.
+- ✅ Perfil e troca de senha.
+- ✅ Dashboard operacional.
+- ✅ 111 categorias de livros preenchidas; filtro “sem capa” e busca individual
+  com revisão.
+
+Pendente: lote automático de capas, página individual do livro com SEO e
+relatórios operacionais.
 
 ### Fallback de confirmação de e-mail
 
 O SMTP aceitou a mensagem, mas um Hotmail específico não recebeu. Fica no
 backlog:
 
-- **FR-72 — reenviar confirmação:** botão no login para solicitar novo link,
+- **FR-84 — reenviar confirmação:** botão no login para solicitar novo link,
   com rate limit e resposta genérica.
-- **FR-73 — verificação manual:** na lista de usuários, admin vê “e-mail
+- **FR-85 — verificação manual:** na lista de usuários, admin vê “e-mail
   pendente” e pode confirmar a conta Bible Rats, com auditoria.
 - Se o problema se repetir em outros provedores, avaliar um provedor
   transacional (Resend/SendGrid/Mailgun) como fallback de entrega.
@@ -69,11 +88,11 @@ backlog:
   pré-visualização de conflitos; nomes duplicados em dados antigos.
 - **Reflexões:** “Lixeira (Rascunhos)” usa `status=draft`, não `trash`;
   “Enviar para Lixeira” despublica; sem busca/paginação/autor.
-- **Livraria:** falta FR-70 (movimentação por botões); sem filtro de estoque
-  baixo; categoria livre (111 sem categoria); 159 sem capa; sem ordenação.
-- **Navegação/dashboard:** sidebar só de ícones; menu mobile não fecha ao clicar
-  fora; dashboard sem pendências/próxima escala/estoque baixo; sem central de
-  notificações nem tela de auditoria.
+- **Livraria:** movimentação por botões (FR-82), filtro de estoque baixo e filtro
+  “sem capa” implementados; categorias preenchidas; sem ordenação e sem lote
+  automático de capas.
+- **Navegação/dashboard:** sidebar com rótulos, menu mobile com backdrop,
+  dashboard operacional, central de notificações e tela de auditoria implementados.
 
 ## P2 — funcionalidades sugeridas
 
@@ -92,4 +111,4 @@ backlog:
    escalas, acessibilidade e ações no mobile.
 2. **Sprint 2:** ministérios (editar/tipo), voluntários (busca/fila/papéis),
    escalas (checkboxes/sair/calendário), reflexões (lixeira real).
-3. **Sprint 3:** FR-70, dashboard operacional, notificações e auditoria.
+3. **Sprint 3:** FR-82, dashboard operacional, notificações e auditoria.

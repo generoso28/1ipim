@@ -153,19 +153,27 @@ conflito de escalas).
 | FR-58 | Assinante acessa Bible Rats | 🟡 | Sessão e papel prontos; falta a área Bible Rats |
 | FR-59 | Pastor com visão ampla e moderação | 🟡 | Visão ampla pronta; falta moderação Bible Rats |
 | FR-60 | Admin com acesso total | ✅ | Acessa usuários, configurações e livraria |
-| FR-61 | Testes automatizados da matriz | ✅ | Matriz PHP (25 cenários) + 77 E2E locais |
+| FR-61 | Testes automatizados da matriz | ✅ | Matriz PHP (25 cenários) + 84 E2E locais |
 | FR-62 | Catálogo público para consulta, sem login | ✅ | Visitante vê a lista e busca |
 | FR-63 | Líder/colaborador do ministério Livraria cadastra/edita livros e capas | ✅ | Só o vínculo no ministério Livraria e admin acessam a gestão |
 | FR-64 | Busca de capa no cadastro do livro (Google/Open Library) | ✅ | Escolhe imagem, confirma e salva |
 | FR-65 | Retenção de fotos configurável (padrão 90 dias) | 🔴 | Admin altera sem deploy |
 | FR-66 | Isolamento por ministério: líder do Som não acessa a Mídia | ✅ | 403 ao tentar outro `ministry_id` |
 | FR-67 | Configurações por ministério em `1ipim_ministry_settings` | 🔴 | Chave de um ministério não vaza para outro |
-| FR-68 | Interface lista apenas os ministérios do usuário | 🔴 | Menu/atalhos não mostram ministérios sem vínculo |
-| FR-69 | Auditoria por ministério | 🔴 | Log registra `ministry_id` e autor |
-| FR-70 | Movimentação de estoque sem digitar o número: botões de adicionar/subtrair em tela separada (protótipo) | 🔴 | Líder/admin registra entrada/saída por botões, com motivo e auditoria; saldo não fica negativo |
-| FR-71 | Avisos ao visitante no catálogo público sobre estoque e títulos fora do catálogo | ✅ | Mensagem orienta consultar a secretaria durante a semana ou a equipe da Livraria aos domingos; aviso de que o catálogo pode não listar todos os títulos |
-| FR-72 | Reenvio de confirmação de e-mail no login | 🔴 | Usuário solicita novo link; rate limit; resposta genérica para não revelar contas; auditoria |
-| FR-73 | Verificação manual de e-mail pelo admin | 🔴 | Admin vê o status “e-mail pendente” e confirma a conta Bible Rats quando o provedor bloqueia a mensagem; auditoria registrada |
+| FR-68 | Interface lista apenas os ministérios do usuário | ✅ | Menu/atalhos e telas respeitam o vínculo |
+| FR-69 | Auditoria por ministério | 🟡 | Tela de auditoria e logs; `ministry_id` explícito em todas as ações ainda pendente |
+| FR-82 | Movimentação de estoque sem digitar o número: botões de adicionar/subtrair em tela separada (protótipo) | ✅ | Líder/admin registra entrada/saída por botões, com motivo, histórico e auditoria |
+| FR-83 | Avisos ao visitante no catálogo público sobre estoque e títulos fora do catálogo | ✅ | Mensagem orienta consultar a secretaria durante a semana ou a equipe da Livraria aos domingos; aviso de que o catálogo pode não listar todos os títulos |
+| FR-84 | Reenvio de confirmação de e-mail no login | ✅ | Botão no login, rate limit, resposta genérica e auditoria |
+| FR-85 | Verificação manual de e-mail pelo admin | ✅ | Admin vê “e-mail pendente”, verifica manualmente e pode reenviar; auditoria registrada |
+| FR-86 | Central de notificações internas | ✅ | Badge, página, marcar lida e marcar todas |
+| FR-87 | Tela de auditoria administrativa | ✅ | Filtros por ação/autor/alvo e detalhes antes/depois |
+| FR-88 | Perfil e troca de senha | ✅ | Usuário vê dados e altera a própria senha |
+| FR-89 | Dashboard operacional | ✅ | Pendências, estoque baixo, não lidas e próxima escala |
+| FR-90 | Categorias da Livraria preenchidas | ✅ | 169 livros com categoria; 111 lacunas preenchidas |
+| FR-91 | Revisão de capas por livro | 🟡 | Filtro “sem capa” e busca individual com revisão; lote automático ainda pendente |
+| FR-92 | Página individual do livro com SEO | 🔴 | `/livraria/{slug}` com `Book` JSON-LD |
+| FR-93 | Relatórios operacionais | 🔴 | Escalas, voluntários e estoque baixo exportáveis |
 
 ---
 
@@ -248,8 +256,8 @@ custo/aprovação) e o horário de término de cada escala (ou duração padrão
 | FR-26 | Estoque por item (fonte oficial no portal) | 🟡 | Admin/líder atualiza; estoque fica interno e não aparece no catálogo público |
 | FR-27 | Reserva/venda com baixa de estoque | 🔴 (P2) | Estoque não fica negativo |
 | FR-28 | Relatório de saídas e comprovante | 🔴 (P2) | Exportação CSV por período |
-| FR-70 | Movimentação de estoque por botões (+/-), em tela separada de protótipo | 🔴 | Líder/admin adiciona ou subtrai sem digitar o número, informa motivo e gera auditoria |
-| FR-71 | Aviso público: estoque sob consulta e catálogo pode estar incompleto | ✅ | Visitante é orientado a falar com a secretaria durante a semana ou com a equipe da Livraria aos domingos |
+| FR-82 | Movimentação de estoque por botões (+/-), em tela separada de protótipo | ✅ | Líder/admin adiciona ou subtrai sem digitar o número, informa motivo e gera auditoria |
+| FR-83 | Aviso público: estoque sob consulta e catálogo pode estar incompleto | ✅ | Visitante é orientado a falar com a secretaria durante a semana ou com a equipe da Livraria aos domingos |
 
 **Dados importados:** `code`, `title`, `author`, `publisher`, `category`,
 `priceCash`, `priceCard`, `coverPrice`, `stockLegacy` e `cover`. Lacunas na

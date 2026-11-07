@@ -39,6 +39,8 @@ Detalhes completos em [`docs/berea.md`](berea.md) e [`docs/requisitos-funcionais
 
 **Objetivo:** corrigir a integridade visual do portal e remover URLs hardcoded, preparando a migração.
 
+**Status:** código aplicado (build ok; suíte Playwright verde).
+
 Entregáveis:
 
 1. Definir `--color-brand-50/100/200` no `@theme` (global.css) e remover o hack
@@ -276,7 +278,7 @@ Tabela `{prefix}1ipim_access_requests`:
 |---|---|
 | Posicionamento | App própria em `berea.1ipim.online`, **sem** navbar/footer do site |
 | Tema | **Light-first**, toggle para dark |
-| Accent | **Âmbar** `#fdba74` (300) + derivados AA |
+| Accent | **Dourado quente** `#f59e0b` (500) + `#d97706` (600) para AA |
 | Neutros | Zinc (`#f4f4f5`, `#e4e4e7`, `#27272a`, `#151718`…) |
 | Destrutivo | `#f87171` |
 | Tipografia | Inter (corpo) + Cormorant Garamond (títulos/versículos) |
@@ -284,8 +286,8 @@ Tabela `{prefix}1ipim_access_requests`:
 | Navegação | Bottom tab bar (mobile) / left rail (desktop) + FAB de check-in |
 | Superfícies | Raios generosos, cards de feed, avatares circulares |
 
-> Tokens âmbar precisam de teste de contraste AA sobre superfícies claras antes
-> de fechar; criar `--color-amber-*` no `@theme`.
+> Tokens dourados (`--color-amber-50…700`) no `@theme`, com contraste AA
+> validado sobre superfícies claras (usar `#d97706`/`#b45309` para texto).
 
 ### 7.2 Estrutura de telas (IA)
 
@@ -325,6 +327,10 @@ Reutiliza o modelo sugerido na seção 3.14 de `requisitos-funcionais.md`
 ## 8. Fase 6 — Migração de subdomínios
 
 **Objetivo:** ativar `admin`, `portal`, `berea` e `staging` em `.1ipim.online`.
+
+**Status:** código preparado (CORS, CSP e config por ambiente); passos de
+servidor (DNS/docroot/SSL/cookie/redirects) no runbook
+[`docs/subdominios.md`](subdominios.md).
 
 1. Cookie de sessão em `.1ipim.online` (HttpOnly + Secure).
 2. CORS para os 4 hosts; CSP com `connect-src`/`img-src` dos subdomínios.
@@ -367,10 +373,15 @@ Um requisito está pronto quando:
 
 ---
 
-## 11. Decisões ainda pendentes (não bloqueiam as fases 0–4)
+## 11. Decisões fechadas para o MVP do Berea
 
-1. Primeiro plano de leitura/desafio do Berea.
-2. Moderadores iniciais do Berea e quem pode delegar moderador.
-3. Fotos do Berea: moderação manual/automática/híbrida (retenção 90 dias já configurada).
-4. Termos de uso/LGPD e política de conduta do Berea.
-5. Paleta final do âmbar + validação de contraste AA.
+1. **Primeiro plano:** Provérbios em 31 dias.
+2. **Moderadores iniciais:** admin/pastor + líder do ministério de PGs + criador
+   da sala; admin/pastor delegam `moderador_berea` por sala.
+3. **Fotos:** sempre comprimidas (máx. 1600 px, ≤500 KB, EXIF removido);
+   publicação direta + denúncia; sem triagem automática no MVP.
+4. **Termos/LGPD/conduta:** provisórios no MVP, com revisão posterior.
+5. **Accent:** dourado quente (`#f59e0b` / `#d97706`).
+
+Ficam para depois: revisão jurídica dos termos, segundo plano de leitura e
+triagem automática de fotos (se o volume justificar).

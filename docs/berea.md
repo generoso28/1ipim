@@ -140,7 +140,7 @@ administrativo). Parâmetros:
 |---|---|
 | Posicionamento | App própria em `berea.1ipim.online`, sem o navbar/footer do site |
 | Tema padrão | **Light-first**, com toggle para dark |
-| Accent | **Âmbar** `#fdba74` (300) + derivados — feed, streak, check-in |
+| Accent | **Dourado quente** `#f59e0b` (500) + `#d97706` (600) para texto/AA — feed, streak, check-in |
 | Neutros | Zinc (mesma família de cinzas do portal) |
 | Destrutivo | `#f87171` (red-400) |
 | Tipografia | Inter (corpo) + Cormorant Garamond (títulos/versículos) |
@@ -153,11 +153,11 @@ Paleta (referência do app Bible-Rats, ajustada para light-first):
 
 - superfície clara `#ffffff` / `#f4f4f5` / `#e4e4e7`; bordas `#e4e4e7`;
 - superfície escura (dark) `#151718` / `#202425` / `#27272a`;
-- accent âmbar `#fdba74` (300) com derivados 400/500 para contraste AA;
+- accent dourado quente `#f59e0b` (500), com `#d97706` (600) para texto/botões e `#b45309` para AA;
 - destrutivo `#f87171`.
 
-> O accent âmbar precisa de token próprio (`--color-amber-*`) e de teste de
-> contraste AA sobre superfícies claras antes de fechar.
+> Criar tokens `--color-amber-50…700` no `@theme` e validar contraste AA do
+> texto dourado sobre superfícies claras (usar o tom 600/700 quando necessário).
 
 ## Quem edita o conteúdo inicial
 
@@ -183,14 +183,14 @@ Toda alteração de conteúdo ou moderação entra na auditoria.
 
 Não é código; é o conteúdo editorial para a comunidade não nascer vazia:
 
-1. Plano de **Provérbios em 31 dias** (um capítulo/dia + pergunta curta).
-2. Um plano de leitura inicial (ex.: João ou Atos em 21 dias).
+1. Plano de **Provérbios em 31 dias** (um capítulo/dia + pergunta curta) — **escolhido como primeiro plano**.
+2. Um segundo plano de leitura (João ou Atos em 21 dias) fica como conteúdo seguinte.
 3. 3 a 5 modelos de desafio (7, 21 e 90 dias).
 4. Post de boas-vindas e diretrizes da comunidade.
 5. Modelos de sala para pequenos grupos (nome, líder, horário, convite).
 6. 10 a 20 devocionais/reflexões iniciais.
 7. Regras de badges, streak e ranking.
-8. Termos de uso, privacidade e LGPD.
+8. Termos de uso, privacidade e LGPD — **provisórios no MVP**, com revisão posterior.
 9. Traduções: Almeida 1819 como padrão; confirmar BLIVRE, BPM e TB 1917.
 
 ## Decisões fechadas
@@ -214,14 +214,21 @@ Não é código; é o conteúdo editorial para a comunidade não nascer vazia:
     e eventos filtrados pelo ano corrente; mantém o visual atual.
 14. **PGs públicos:** página dinâmica, com cadastro/edição via portal.
 15. **Salas:** salas dos PGs vinculadas (`room_id`); demais salas criadas pelos usuários.
-16. **Berea:** app própria, light-first com toggle dark, accent âmbar + zinc,
+16. **Berea:** app própria, light-first com toggle dark, accent dourado + zinc,
     Material Symbols, bottom tab bar/FAB.
 17. **Subdomínios:** já cadastrados; seguir com a migração.
+18. **Primeiro plano:** Provérbios em 31 dias.
+19. **Moderadores iniciais:** admin/pastor + líder do ministério de PGs + criador
+    da sala; admin/pastor delegam `moderador_berea` por sala.
+20. **Fotos:** sempre comprimidas (máx. 1600 px, ≤500 KB, EXIF removido);
+    publicação direta + denúncia; sem triagem automática no MVP.
+21. **Termos/LGPD/conduta:** provisórios no MVP.
+22. **Accent:** dourado quente (`#f59e0b` / `#d97706`).
 
 ## Decisões pendentes
 
-1. Primeiro plano de leitura/desafio.
-2. Quem são os moderadores iniciais e quem pode delegar.
-3. Fotos: moderação manual, automática ou híbrida (retenção 90 dias já configurada).
-4. Termos/LGPD e política de conduta.
-5. Paleta final do âmbar + validação de contraste AA.
+Nada bloqueante para o MVP do Berea. Ficam para depois:
+
+1. Revisão jurídica dos termos/LGPD provisórios.
+2. Segundo plano de leitura (João/Atos em 21 dias).
+3. Triagem automática de fotos, se o volume justificar.

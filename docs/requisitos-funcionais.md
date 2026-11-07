@@ -443,6 +443,12 @@ Supabase, em `~/Code/bible-rats`) tem o fluxo:
   remoção de EXIF, recompressão no servidor e **exclusão automática em 90 dias**.
   O prazo fica em uma configuração (`photo_retention_days`) editável pelo admin,
   sem deploy. A limpeza roda em **cron do cPanel + endpoint PHP/WP-Cron**.
+  Moderação: **publicação direta + denúncia** (sem triagem automática no MVP).
+- **Primeiro plano:** **Provérbios em 31 dias** (um capítulo/dia + pergunta curta).
+- **Moderadores iniciais:** admin/pastor + líder do ministério de PGs + criador da
+  sala; admin/pastor delegam `moderador_berea` por sala.
+- **Termos/LGPD/conduta:** provisórios no MVP, com revisão posterior.
+- **Accent do Berea:** dourado quente (`#f59e0b` / `#d97706`).
 - **Notificações:** **somente internas no portal** por enquanto. E-mail, web
   push e WhatsApp ficam para depois.
 - **Catálogo:** 169 livros importados; consulta pública e gestão pelo
@@ -540,12 +546,12 @@ versículos, app nativo e integração com o YouTube.
 6. **Retenção de dados:** prazo para visitantes, orações e inscrições?
 7. **Livraria:** exibir preços? O estoque do Notion está inconsistente.
 8. **Capas:** busca no Google resolve as 157 sem capa ou o admin envia?
-9. **Berea — plano:** qual o primeiro plano de leitura/desafio?
-10. **Berea — moderação:** quem são os moderadores iniciais e quem pode delegar?
-11. **Berea — fotos:** moderação manual, automática ou híbrida (retenção 90 dias já configurada)?
-12. **Berea — termos:** termos de uso/LGPD e política de conduta.
-13. **Berea — ranking para menores:** desativar por padrão para menores de idade?
-14. **Berea — paleta:** validar contraste AA do accent âmbar sobre superfícies claras.
+9. **Berea — ranking para menores:** desativar por padrão para menores de idade?
+
+> **Berea — decidido para o MVP:** primeiro plano Provérbios em 31 dias;
+> moderadores iniciais admin/pastor + líder do ministério de PGs + criador da
+> sala (admin/pastor delegam); fotos comprimidas e publicação direta + denúncia;
+> termos/LGPD provisórios; accent dourado quente (`#f59e0b` / `#d97706`).
 
 ---
 

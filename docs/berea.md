@@ -62,6 +62,38 @@ Além do diretório, cada líder poderá publicar o registro do encontro:
 
 Esses registros alimentam relatórios de frequência e participação por grupo/período.
 
+## Pequenos grupos e Berea
+
+Recomendação: o **Portal é a fonte oficial** dos grupos e dos registros de encontro
+(frequência, foto, texto lido, tema, preletor). O Berea é a camada social.
+
+- tabelas compartilhadas: `1ipim_grupos` e `1ipim_grupo_encontros`;
+- cada grupo pode ter uma sala no Berea (`room_id`);
+- o líder registra o encontro no Portal e pode optar por **publicar um resumo no feed da sala**;
+- relatórios e frequência saem do Portal, sem depender do feed;
+- se o Berea for construído primeiro, a sala pode criar o registro estruturado, mas o modelo de dados continua o mesmo.
+
+Isso evita duplicar grupos, mantém os relatórios confiáveis e permite que o
+Berea evolua sem virar o sistema administrativo da igreja.
+
+## Quem edita o conteúdo inicial
+
+| Conteúdo | Quem edita |
+|---|---|
+| Termos, LGPD, traduções e configurações globais | Admin |
+| Planos de leitura, desafios, devocionais e diretrizes | Pastor + **conteudista Berea** delegado |
+| Salas e registros do próprio grupo | Líder do grupo |
+| Moderação de posts/comentários | Admin, pastor, líder e moderador delegado |
+| Posts/comentários próprios | Membro |
+
+Sugestão de novos papéis/capabilities:
+
+- `conteudista_berea` — cria/edita planos, desafios e devocionais, sem acesso a usuários;
+- `moderador_berea` — modera salas/comentários, com escopo por sala quando necessário;
+- líder de grupo continua sendo o vínculo do grupo, não um papel global.
+
+Toda alteração de conteúdo ou moderação entra na auditoria.
+
 ## Conteúdo inicial (o que é)
 
 Não é código; é o conteúdo editorial para a comunidade não nascer vazia:

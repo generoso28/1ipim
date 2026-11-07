@@ -488,7 +488,7 @@ onPageReady("#form-container", async () => {
             </div>
 
             <div class="sm:ml-auto flex items-center gap-2">
-              <button class="join-scale-btn px-4 py-2 flex items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 hover:bg-[var(--color-brand)] hover:text-white transition-all font-bold text-xs gap-2 border border-transparent hover:border-[var(--color-brand)]" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(meta.date)}" data-minid="${escapeAttribute(meta.ministryId)}">
+              <button class="join-scale-btn px-4 py-2 flex items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-[var(--color-brand)] hover:text-white transition-all font-bold text-xs gap-2 border border-transparent hover:border-[var(--color-brand)]" data-id="${schedule.id}" data-names="${escapeAttribute(meta.names)}" data-emails="${escapeAttribute(meta.emails)}" data-time="${escapeAttribute(meta.time)}" data-date="${escapeAttribute(meta.date)}" data-minid="${escapeAttribute(meta.ministryId)}">
                 <i class="fa-solid fa-user-plus"></i> Participar
               </button>
 

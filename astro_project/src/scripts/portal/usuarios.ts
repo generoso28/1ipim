@@ -9,17 +9,17 @@ interface RoleVisual {
 }
 
 const ROLE_VISUALS: Record<string, RoleVisual> = {
-  administrator: { badgeClass: "bg-red-500 text-white", label: "Admin" },
-  pastor: { badgeClass: "bg-blue-600 text-white", label: "Pastor" },
-  editor: { badgeClass: "bg-purple-500 text-white", label: "Líder" },
-  lider_ministerio: { badgeClass: "bg-purple-500 text-white", label: "Líder" },
-  contributor: { badgeClass: "bg-green-500 text-white", label: "Voluntário" },
+  administrator: { badgeClass: "bg-red-700 text-white", label: "Admin" },
+  pastor: { badgeClass: "bg-blue-700 text-white", label: "Pastor" },
+  editor: { badgeClass: "bg-purple-700 text-white", label: "Líder" },
+  lider_ministerio: { badgeClass: "bg-purple-700 text-white", label: "Líder" },
+  contributor: { badgeClass: "bg-green-700 text-white", label: "Voluntário" },
   colaborador_ministerio: {
-    badgeClass: "bg-green-500 text-white",
+    badgeClass: "bg-green-700 text-white",
     label: "Voluntário",
   },
-  subscriber: { badgeClass: "bg-slate-500 text-white", label: "Membro" },
-  assinante: { badgeClass: "bg-slate-500 text-white", label: "Membro" },
+  subscriber: { badgeClass: "bg-slate-700 text-white", label: "Membro" },
+  assinante: { badgeClass: "bg-slate-700 text-white", label: "Membro" },
 };
 
 function getRoleVisual(roles: string[] | undefined): RoleVisual {
@@ -77,7 +77,7 @@ onPageReady("#users-table-body", async () => {
   }
 
   function renderApproved(ministryId: string): string {
-    return `<span class="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-lg text-[9px] font-bold border border-green-200 dark:border-green-800/50 whitespace-nowrap">✓ ${escapeHtml(
+    return `<span class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-2 py-0.5 rounded-lg text-[9px] font-bold border border-green-200 dark:border-green-800/50 whitespace-nowrap">✓ ${escapeHtml(
       ministryNames[Number(ministryId)] || ministryId,
     )}</span>`;
   }

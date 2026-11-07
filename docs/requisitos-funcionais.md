@@ -174,11 +174,11 @@ conflito de escalas).
 | FR-91 | Revisão de capas por livro | 🟡 | Filtro “sem capa” e busca individual com revisão; lote automático ainda pendente |
 | FR-92 | Página individual do livro com SEO | 🔴 | `/livraria/{slug}` com `Book` JSON-LD |
 | FR-93 | Relatórios operacionais | 🔴 | Escalas, voluntários e estoque baixo exportáveis |
-| FR-94 | Seletor de imagens via Google Custom Search | 🟡 | Chave + CX configurados; modal com ocorrências; imagem escolhida baixada para a mídia |
-| FR-95 | Página dinâmica do livro | 🔴 | `/livraria/{slug}` server-rendered, com `Book` JSON-LD e canonical |
+| FR-94 | Busca de capas via Google Books + link Google Imagens | 🟡 | Chave do Books configurada; resultados com revisão; CSE/Google Images interno adiado |
+| FR-95 | Página dinâmica do livro | 🔴 | `/livraria/{slug}` server-rendered a partir da tabela, com `Book` JSON-LD e canonical |
 | FR-96 | Gestão de programação no portal | 🔴 | CRUD de cultos/eventos, recorrência e página pública dinâmica |
 | FR-97 | Gestão de pequenos grupos no portal | 🔴 | CRUD de grupos, líder, horário, local, contato e status |
-| FR-98 | Berea — comunidade | 🔴 | Feed, salas por convite, desafios, ranking opt-in, moderação delegada |
+| FR-98 | Berea — comunidade | 🔴 | Feed, salas criadas pelos usuários, desafios, ranking, moderação delegada |
 
 ---
 
@@ -289,9 +289,11 @@ manual. Sem capa, o catálogo usa um placeholder com o título.
 
 | ID | Requisito | Status | Critério de aceite |
 |---|---|---|---|
-| FR-29 | Diretório de PGs: dia, horário, local, líder, público | 🔴 | Filtro por região/dia |
+| FR-29 | Diretório de PGs: dia, horário, local, líder e público-alvo | 🔴 | Filtro por região/dia |
 | FR-30 | Inscrição/interesse em um PG | 🔴 | Líder recebe notificação |
 | FR-31 | Gestão de membros e líderes por PG | 🔴 | Admin/líder edita |
+| FR-99 | Registro de encontro do PG: foto, nome, data, texto lido, tema, preletor e público presente | 🔴 | Cada líder publica o seu; admin/pastor veem todos; registro auditável |
+| FR-100 | Relatório de frequência/público por PG e período | 🔴 | Agregação por grupo/período e exportação CSV |
 
 #### 3.7 Visitantes e acolhimento
 
@@ -351,12 +353,14 @@ manual. Sem capa, o catálogo usa um placeholder com o título.
 | FR-51 | Notificações no portal | 🔴 | Sino com não lidos |
 
 
-#### 3.14 Bible Rats — comunidade de devocionais
+#### 3.14 Berea (ex-Bible Rats) — comunidade de devocionais
 
 **Premissa.** Uma comunidade de devocionais dentro do site: o membro lê a
 passagem do dia, faz um check-in com uma frase (e foto opcional), mantém um
 diário privado e compartilha o check-in com grupos. A consistência gera
 sequência (streak), badges e um pódio do grupo.
+
+**Nome de trabalho:** Berea — “Juntos, nas Escrituras”.
 
 **Referência analisada.** O app iOS `Bible Rats` (Expo/React Native +
 Supabase, em `~/Code/bible-rats`) tem o fluxo:

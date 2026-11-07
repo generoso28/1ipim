@@ -2,10 +2,12 @@
 
 **Nome de trabalho:** Berea (Atos 17:11). Em português bíblico, “Bereia”.
 **Subdomínio proposto:** `berea.1ipim.online`.
+**Subtítulo:** “Juntos, nas Escrituras”.
 
 ## Por que Berea
 
 - Remete aos bereanos que examinavam as Escrituras diariamente.
+- Grafia em inglês escolhida: **Berea**; “Bereia” pode aparecer em textos explicativos.
 - Funciona para a igreja toda e para pequenos grupos.
 - É mais institucional e acolhedor que “Bible Rats”.
 - Combina com leitura diária, desafios, salas e feed.
@@ -37,13 +39,28 @@ Pontos técnicos:
 
 - Público: igreja toda; forte uso nos pequenos grupos.
 - Feed social interno (padrão: visível para membros; posts públicos opcionais).
-- Salas/grupos com acesso por convite/código para desafios específicos.
+- Salas/grupos criados pelos próprios usuários, com acesso por convite/código para desafios específicos; o criador vira moderador.
 - Desafios com período, plano de leitura e check-ins.
 - Ranking geral opt-in; rankings internos por sala.
 - Streak privado por padrão.
 - Comentários, reações, badges e notificações internas.
-- Moderação: admin, pastores e líderes; podem delegar moderador por sala.
+- Moderação: admin, pastores e líderes; podem delegar moderador por sala; criador da sala também modera.
 - Denúncia/bloqueio e trilha de auditoria.
+
+## Pequenos grupos no portal
+
+Além do diretório, cada líder poderá publicar o registro do encontro:
+
+- foto do grupo;
+- nome do grupo;
+- data;
+- texto lido;
+- tema;
+- preletor;
+- público presente (quantidade);
+- observações opcionais.
+
+Esses registros alimentam relatórios de frequência e participação por grupo/período.
 
 ## Conteúdo inicial (o que é)
 

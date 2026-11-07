@@ -611,7 +611,8 @@ function ipim_livraria_cover_search(string $query, string $author = ''): array
         return [];
     }
 
-    $cache_key = 'ipim_livraria_cover_' . md5(strtolower($query . '|' . $author));
+    $api_key = (string) get_option('1ipim_google_books_api_key', '');
+    $cache_key = 'ipim_livraria_cover_' . md5(strtolower($query . '|' . $author . '|' . $api_key));
     $cached = get_transient($cache_key);
     if (is_array($cached)) {
         return $cached;
@@ -625,7 +626,6 @@ function ipim_livraria_cover_search(string $query, string $author = ''): array
         $google_query .= ' inauthor:' . $author;
     }
     $google_url = 'https://www.googleapis.com/books/v1/volumes?q=' . rawurlencode($google_query) . '&maxResults=8&langRestrict=pt';
-    $api_key = (string) get_option('1ipim_google_books_api_key', '');
     if ($api_key !== '') {
         $google_url .= '&key=' . rawurlencode($api_key);
     }

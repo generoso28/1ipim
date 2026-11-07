@@ -229,7 +229,7 @@ add_action('rest_api_init', static function (): void {
             if (ipim_reg_is_honeypot($request)) {
                 return ['success' => true, 'message' => 'Cadastro realizado! Aguarde a aprovação.'];
             }
-            if (!ipim_reg_rate_limit('volunteer', 5, 3600)) {
+            if (!ipim_reg_rate_limit('volunteer', 20, 3600)) {
                 return new WP_Error('rate_limited', 'Muitas tentativas. Tente novamente mais tarde.', ['status' => 429]);
             }
 
@@ -265,7 +265,7 @@ add_action('rest_api_init', static function (): void {
             if (ipim_reg_is_honeypot($request)) {
                 return ['success' => true, 'message' => 'Conta criada! Confirme seu e-mail para ativar.'];
             }
-            if (!ipim_reg_rate_limit('subscriber', 5, 3600)) {
+            if (!ipim_reg_rate_limit('subscriber', 20, 3600)) {
                 return new WP_Error('rate_limited', 'Muitas tentativas. Tente novamente mais tarde.', ['status' => 429]);
             }
 

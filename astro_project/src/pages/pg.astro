@@ -31,7 +31,7 @@ function cardHtml(g: GrupoPublico): string {
     const text = encodeURIComponent(`Olá, gostaria de saber mais sobre o Pequeno Grupo: ${g.nome}`);
 
     return `
-        <div class="rounded-3xl border border-gray-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden flex flex-col scroll-card group relative min-h-[480px]">
+        <div class="rounded-3xl border border-gray-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden flex flex-col group relative min-h-[480px]">
             <div class="absolute inset-0 z-0 bg-gradient-to-br from-[#7ccece] to-[#7bcfa0]">
                 ${imagem}
                 <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10"></div>
@@ -130,7 +130,7 @@ const gridHtml = grupos.length
         const text = encodeURIComponent(`Olá, gostaria de saber mais sobre o Pequeno Grupo: ${g.nome}`);
 
         return `
-            <div class="rounded-3xl border border-gray-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden flex flex-col scroll-card group relative min-h-[480px]">
+            <div class="rounded-3xl border border-gray-200 dark:border-slate-700/50 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden flex flex-col group relative min-h-[480px]">
                 <div class="absolute inset-0 z-0 bg-gradient-to-br from-[#7ccece] to-[#7bcfa0]">
                     ${imagem}
                     <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10"></div>

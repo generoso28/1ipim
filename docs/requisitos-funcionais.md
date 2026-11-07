@@ -49,7 +49,7 @@ Prioridade recomendada (frente portal/comunidade):
 | Analytics (GA4) | ✅ Pronto | Consentimento LGPD, pageviews e `generate_lead` |
 | SEO estruturado | ✅ Pronto | Church, FAQ, Event semanal, Person, VideoObject |
 | Qualidade (axe/Lighthouse) | ✅ Pronto | 14 varreduras axe + Lighthouse CI no Jenkins |
-| Bible Rats | 🟡 Referência pronta | App iOS analisado (Expo/Supabase); falta o módulo web no site |
+| Berea | 🟡 Referência pronta | App iOS analisado (Expo/Supabase); identidade visual e app web definidas, falta o módulo |
 
 Legenda: ✅ pronto · 🟡 parcial · 🔴 não iniciado
 
@@ -167,23 +167,25 @@ conflito de escalas).
 | FR-84 | Reenvio de confirmação de e-mail no login | ✅ | Botão no login, rate limit, resposta genérica e auditoria |
 | FR-85 | Verificação manual de e-mail pelo admin | ✅ | Admin vê “e-mail pendente”, verifica manualmente e pode reenviar; auditoria registrada |
 | FR-86 | Central de notificações internas | ✅ | Badge, página, marcar lida e marcar todas |
-| FR-87 | Tela de auditoria administrativa | ✅ | Filtros por ação/autor/alvo e detalhes antes/depois |
+| FR-87 | Tela de auditoria administrativa | 🟡 | Filtros por ação/autor/alvo e detalhes antes/depois; líderes passam a ver log filtrado ao próprio escopo + relatórios (FR-93) |
 | FR-88 | Perfil e troca de senha | ✅ | Usuário vê dados e altera a própria senha |
 | FR-89 | Dashboard operacional | ✅ | Pendências, estoque baixo, não lidas e próxima escala |
 | FR-90 | Categorias da Livraria preenchidas | ✅ | 169 livros com categoria; 111 lacunas preenchidas |
 | FR-91 | Revisão de capas por livro | 🟡 | Filtro “sem capa” e busca individual com revisão; lote automático ainda pendente |
 | FR-92 | Página individual do livro com SEO | 🔴 | `/livraria/{slug}` com `Book` JSON-LD |
-| FR-93 | Relatórios operacionais | 🔴 | Escalas, voluntários e estoque baixo exportáveis |
+| FR-93 | Relatórios operacionais | 🔴 | Emitidos na página de auditoria; líderes emitem do próprio escopo, pastor/admin veem tudo; CSV |
 | FR-94 | Busca de capas via Google Books + link Google Imagens | 🟡 | Chave do Books configurada; resultados com revisão; CSE/Google Images interno adiado |
 | FR-95 | Página dinâmica do livro | 🔴 | `/livraria/{slug}` server-rendered a partir da tabela, com `Book` JSON-LD e canonical |
-| FR-96 | Gestão de programação no portal | 🔴 | CRUD de cultos/eventos, recorrência e página pública dinâmica |
-| FR-97 | Gestão de pequenos grupos no portal | 🔴 | CRUD de grupos, líder, horário, local, contato e status |
-| FR-98 | Berea — comunidade | 🔴 | Feed, salas criadas pelos usuários, desafios, ranking, moderação delegada |
+| FR-96 | Gestão de programação no portal | 🔴 | CRUD de semanais (por dia da semana, sem recorrência) e eventos (data única, filtrados pelo ano corrente); página pública dinâmica mantendo o visual atual |
+| FR-97 | Gestão de pequenos grupos no portal | 🔴 | CRUD de grupos via portal (ministério `tipo=pequenos_grupos`; líder de PG = colaborador); página pública `/pg` dinâmica |
+| FR-98 | Berea — comunidade | 🔴 | Feed, salas criadas pelos usuários + vinculadas aos PGs, desafios, ranking, moderação delegada |
+| FR-106 | Identidade visual e app do Berea | 🔴 | App própria (sem navbar do site), light-first com toggle dark, accent âmbar + zinc, Material Symbols, bottom tab bar/FAB |
 | FR-101 | Integração PG ↔ Berea no relatório do encontro | 🔴 | Líder lista presentes, identifica quem não tem conta e envia convite/código da sala |
 | FR-102 | Seção de encontros do PG na sala do Berea | 🔴 | Registros ficam separados do feed principal, com foto, texto, tema, preletor e público |
 | FR-103 | Planos, desafios e devocionais por sala | 🔴 | Líder/moderador publica direto; moderador apaga conteúdo, remove pessoas e restringe postagens |
-| FR-104 | Portal restrito à equipe | 🔴 | Conta só do Berea não acessa o Portal; vê tela de solicitação que o líder aprova e delega função |
+| FR-104 | Portal restrito à equipe | 🔴 | Conta só do Berea não acessa o Portal; vê tela de solicitação. Líder de ministério aprova só colaborador no próprio escopo; admin/pastor aprovam em escopo geral; líder de PG não aprova |
 | FR-105 | Papéis `conteudista_berea` e `moderador_berea` | 🔴 | Criados na fase do Berea, com escopo por sala e auditoria |
+| FR-107 | Migração de subdomínios | 🔴 | `admin`, `portal`, `berea` e `staging` ativos em `.1ipim.online` (já cadastrados); cookie/cors/CSP por ambiente |
 
 ---
 
@@ -294,13 +296,18 @@ manual. Sem capa, o catálogo usa um placeholder com o título.
 
 | ID | Requisito | Status | Critério de aceite |
 |---|---|---|---|
-| FR-29 | Diretório de PGs: dia, horário, local, líder e público-alvo | 🔴 | Filtro por região/dia |
+| FR-29 | Diretório de PGs: dia, horário, local, líder e público-alvo | 🔴 | Página pública `/pg` dinâmica (lê a API); filtro por região/dia |
 | FR-30 | Inscrição/interesse em um PG | 🔴 | Líder recebe notificação |
-| FR-31 | Gestão de membros e líderes por PG | 🔴 | Admin/líder edita |
-| FR-99 | Registro de encontro do PG: foto, nome, data, texto lido, tema, preletor e público presente | 🔴 | Cada líder publica o seu; admin/pastor veem todos; registro auditável |
+| FR-31 | Gestão de membros e líderes por PG | 🔴 | Admin/líder edita; líder de PG gerencia o próprio grupo |
+| FR-99 | Registro de encontro do PG: foto, nome, data, texto lido, tema, preletor e público presente | 🔴 | Público = total + lista opcional de nomes (com `user_id`); cada líder publica o seu; admin/pastor veem todos; auditável |
 | FR-101 | Integração do relatório com o Berea | 🔴 | Líder lista presentes, vê quem não tem conta e convida por código, link ou e-mail |
 | FR-102 | Seção de encontros na sala do PG | 🔴 | Aba separada do feed; registros visíveis a todos os líderes de PG no Portal; opção de publicar resumo no feed |
-| FR-100 | Relatório de frequência/público por PG e período | 🔴 | Agregação por grupo/período e exportação CSV |
+| FR-100 | Relatório de frequência/público por PG e período | 🔴 | Agregação por grupo/período e exportação CSV; emitido na página de auditoria |
+
+**Modelo:** os PGs são um **ministério** (`tipo=pequenos_grupos`). O líder de PG é
+**colaborador** desse ministério; o **líder do ministério de PGs** é delegado por
+**admin/pastor** (pode ser pastor). O vínculo "líder de PG" é atributo do grupo
+(`1ipim_grupo_lideres`), não um papel global.
 
 #### 3.7 Visitantes e acolhimento
 
@@ -368,6 +375,13 @@ diário privado e compartilha o check-in com grupos. A consistência gera
 sequência (streak), badges e um pódio do grupo.
 
 **Nome de trabalho:** Berea — “Juntos, nas Escrituras”.
+
+**Identidade visual (definida).** App própria em `berea.1ipim.online` (sem o
+navbar/footer do site), **light-first** com toggle para dark, accent **âmbar**
+(`#fdba74` + derivados AA), neutros **zinc**, ícones **Material Symbols**,
+tipografia Inter + Cormorant Garamond, bottom tab bar (mobile) / left rail
+(desktop) + FAB de check-in. Detalhes em [`docs/berea.md`](berea.md) e
+[`docs/plano-implementacao.md`](plano-implementacao.md).
 
 **Referência analisada.** O app iOS `Bible Rats` (Expo/React Native +
 Supabase, em `~/Code/bible-rats`) tem o fluxo:
@@ -524,12 +538,14 @@ versículos, app nativo e integração com o YouTube.
 4. **Doações:** só PIX/dados bancários ou gateway com recorrência?
 5. **2FA:** obrigatório só para admins ou para todos os líderes?
 6. **Retenção de dados:** prazo para visitantes, orações e inscrições?
-7. **Quem opera:** quais líderes terão acesso a quais módulos?
-8. **Bible Rats — grupos:** clubes livres, ministérios/PGs ou os dois?
-9. **Bible Rats — ranking:** opt-in? desativado para menores?
-10. **Livraria:** exibir preços? O estoque do Notion está inconsistente.
-11. **Capas:** busca no Google resolve as 157 sem capa ou o admin envia?
-12. **Moderação:** quem cuida das denúncias do Bible Rats?
+7. **Livraria:** exibir preços? O estoque do Notion está inconsistente.
+8. **Capas:** busca no Google resolve as 157 sem capa ou o admin envia?
+9. **Berea — plano:** qual o primeiro plano de leitura/desafio?
+10. **Berea — moderação:** quem são os moderadores iniciais e quem pode delegar?
+11. **Berea — fotos:** moderação manual, automática ou híbrida (retenção 90 dias já configurada)?
+12. **Berea — termos:** termos de uso/LGPD e política de conduta.
+13. **Berea — ranking para menores:** desativar por padrão para menores de idade?
+14. **Berea — paleta:** validar contraste AA do accent âmbar sobre superfícies claras.
 
 ---
 

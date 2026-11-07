@@ -113,6 +113,52 @@ Recomendação: o **Portal é a fonte oficial** dos grupos e dos registros de en
 Isso evita duplicar grupos, mantém os relatórios confiáveis e permite que o
 Berea evolua sem virar o sistema administrativo da igreja.
 
+## Ministério de PGs
+
+Os Pequenos Grupos são um **ministério** (`tipo=pequenos_grupos`), como a
+Livraria é `tipo=livraria`:
+
+- cada **líder de PG** entra no Portal com status de **colaborador** nesse
+  ministério e gerencia o próprio grupo (registro de encontro, presença,
+  convites);
+- o **líder do ministério de PGs** (papel `lider`) é delegado por
+  **admin/pastor** — e pode ser, inclusive, um pastor;
+- o líder de PG **não** altera papéis nem aprova acesso ao Portal (a menos que
+  também seja líder de outro ministério);
+- o líder do ministério de PGs tem visão de todos os grupos e aprova acesso ao
+  Portal **apenas como colaborador**, dentro do escopo de PGs.
+
+Isso mantém a regra: quem altera papel/vínculo é **admin/pastor**; o vínculo de
+grupo (líder de PG) é um atributo do grupo, não um papel global.
+
+## Identidade visual do Berea
+
+O Berea é uma **app social** com identidade distinta do portal (teal + Inter,
+administrativo). Parâmetros:
+
+| Parâmetro | Valor |
+|---|---|
+| Posicionamento | App própria em `berea.1ipim.online`, sem o navbar/footer do site |
+| Tema padrão | **Light-first**, com toggle para dark |
+| Accent | **Âmbar** `#fdba74` (300) + derivados — feed, streak, check-in |
+| Neutros | Zinc (mesma família de cinzas do portal) |
+| Destrutivo | `#f87171` (red-400) |
+| Tipografia | Inter (corpo) + Cormorant Garamond (títulos/versículos) |
+| Ícones | **Material Symbols** (diferente do Font Awesome do site/portal) |
+| Navegação | Bottom tab bar (mobile) / left rail (desktop) + FAB de check-in |
+| Superfícies | Raios generosos, cards de feed, avatares circulares |
+| Gamificação | Streak, badges e pódio com accent âmbar |
+
+Paleta (referência do app Bible-Rats, ajustada para light-first):
+
+- superfície clara `#ffffff` / `#f4f4f5` / `#e4e4e7`; bordas `#e4e4e7`;
+- superfície escura (dark) `#151718` / `#202425` / `#27272a`;
+- accent âmbar `#fdba74` (300) com derivados 400/500 para contraste AA;
+- destrutivo `#f87171`.
+
+> O accent âmbar precisa de token próprio (`--color-amber-*`) e de teste de
+> contraste AA sobre superfícies claras antes de fechar.
+
 ## Quem edita o conteúdo inicial
 
 | Conteúdo | Quem edita |
@@ -156,15 +202,26 @@ Não é código; é o conteúdo editorial para a comunidade não nascer vazia:
 5. **Conteúdo de sala:** publicado direto; moderador apaga conteúdo, remove pessoas e restringe postagens.
 6. **Salas:** usuários podem criar as próprias salas; o criador vira moderador.
 7. **Ranking:** opt-in; geral e por sala.
-8. **Papéis:** `conteudista_berea` e `moderador_berea` criados na próxima fase.
+8. **Papéis:** `conteudista_berea` e `moderador_berea` criados na fase do Berea.
 9. **PGs:** Portal é a fonte oficial; a sala do Berea é a camada social.
+10. **Aprovação do Portal:** líder de ministério aprova só colaborador no próprio
+    escopo; admin/pastor aprovam em escopo geral; líder de PG não aprova.
+11. **Ministério de PGs:** líder de PG = colaborador; líder do ministério é
+    delegado por admin/pastor (pode ser pastor).
+12. **Relatórios:** emitidos na página de auditoria; líderes veem log (escopo) +
+    relatórios; pastor/admin veem tudo.
+13. **Programação:** página dinâmica; semanais por dia da semana (sem recorrência)
+    e eventos filtrados pelo ano corrente; mantém o visual atual.
+14. **PGs públicos:** página dinâmica, com cadastro/edição via portal.
+15. **Salas:** salas dos PGs vinculadas (`room_id`); demais salas criadas pelos usuários.
+16. **Berea:** app própria, light-first com toggle dark, accent âmbar + zinc,
+    Material Symbols, bottom tab bar/FAB.
+17. **Subdomínios:** já cadastrados; seguir com a migração.
 
 ## Decisões pendentes
 
-1. Quem aprova o pedido de acesso ao Portal: líder do PG, líder do ministério ou admin/pastor?
-2. Feed visível só para membros ou também para visitantes? (recomendo membros, com opt-in público.)
-3. Primeiro plano de leitura/desafio.
-4. Quem são os moderadores iniciais e quem pode delegar.
-5. Fotos: moderação manual, automática ou híbrida; retenção de 90 dias.
-6. Termos/LGPD e política de conduta.
-7. Momento da migração para os subdomínios.
+1. Primeiro plano de leitura/desafio.
+2. Quem são os moderadores iniciais e quem pode delegar.
+3. Fotos: moderação manual, automática ou híbrida (retenção 90 dias já configurada).
+4. Termos/LGPD e política de conduta.
+5. Paleta final do âmbar + validação de contraste AA.

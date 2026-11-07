@@ -174,6 +174,11 @@ conflito de escalas).
 | FR-91 | Revisão de capas por livro | 🟡 | Filtro “sem capa” e busca individual com revisão; lote automático ainda pendente |
 | FR-92 | Página individual do livro com SEO | 🔴 | `/livraria/{slug}` com `Book` JSON-LD |
 | FR-93 | Relatórios operacionais | 🔴 | Escalas, voluntários e estoque baixo exportáveis |
+| FR-94 | Seletor de imagens via Google Custom Search | 🟡 | Chave + CX configurados; modal com ocorrências; imagem escolhida baixada para a mídia |
+| FR-95 | Página dinâmica do livro | 🔴 | `/livraria/{slug}` server-rendered, com `Book` JSON-LD e canonical |
+| FR-96 | Gestão de programação no portal | 🔴 | CRUD de cultos/eventos, recorrência e página pública dinâmica |
+| FR-97 | Gestão de pequenos grupos no portal | 🔴 | CRUD de grupos, líder, horário, local, contato e status |
+| FR-98 | Berea — comunidade | 🔴 | Feed, salas por convite, desafios, ranking opt-in, moderação delegada |
 
 ---
 

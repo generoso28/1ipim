@@ -474,7 +474,7 @@ onPageReady("#form-container", async () => {
             <div class="flex-1 min-w-0">
               <div class="flex flex-wrap items-center gap-2 mb-2">
                 <h4 class="font-black text-gray-900 dark:text-white uppercase tracking-tighter text-lg leading-none">${escapeHtml(schedule.title?.rendered || "Escala")}</h4>
-                <span class="bg-indigo-50 dark:bg-indigo-900/40 text-indigo-500 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider">${escapeHtml(ministryName)}</span>
+                <span class="bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider">${escapeHtml(ministryName)}</span>
               </div>
               <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <div class="flex items-center gap-1.5 text-xs text-gray-500 font-bold">

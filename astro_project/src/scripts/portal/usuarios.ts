@@ -106,7 +106,7 @@ onPageReady("#users-table-body", async () => {
             <div>
               <div class="flex items-center gap-2">
                 <span class="font-bold text-gray-900 dark:text-white">${escapeHtml(user.name)}</span>
-                ${isSelf ? '<span class="text-[8px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full font-black uppercase">Você</span>' : ""}
+                ${isSelf ? '<span class="text-[8px] bg-blue-600 text-white px-1.5 py-0.5 rounded-full font-black uppercase">Você</span>' : ""}
               </div>
               <div class="text-[10px] text-gray-400 font-medium">${escapeHtml(user.email)}</div>
             </div>

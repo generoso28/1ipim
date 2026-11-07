@@ -148,7 +148,7 @@ onPageReady("#livraria-manager", async () => {
     feedback.className =
       type === "error"
         ? "p-4 rounded-xl text-sm font-bold bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400"
-        : "p-4 rounded-xl text-sm font-bold bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400";
+        : "p-4 rounded-xl text-sm font-bold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300";
     feedback.classList.remove("hidden");
   }
 
@@ -248,12 +248,12 @@ onPageReady("#livraria-manager", async () => {
               <p class="text-[11px] text-gray-400">${money(book.preco_cartao)} cartão</p>
             </td>
             <td class="px-4 py-4 text-center">
-              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black ${low ? "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400" : "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400"}">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black ${low ? "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400" : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"}">
                 ${stock}
               </span>
             </td>
             <td class="px-4 py-4 text-center">
-              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${book.ativo ? "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400" : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-300"}">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${book.ativo ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-300"}">
                 ${book.ativo ? "Ativo" : "Inativo"}
               </span>
             </td>

@@ -65,7 +65,7 @@ onPageReady("#posts-table-body", () => {
           <div class="text-[9px] font-black uppercase tracking-widest text-gray-300 mt-1">ID: ${post.id} ${isDraft ? "• Movido para a lixeira" : ""}</div>
         </td>
         <td class="px-8 py-6 text-center">
-          <span class="bg-gray-100 dark:bg-slate-700/50 text-gray-500 px-3 py-1 rounded-full text-[10px] font-bold border border-gray-200 dark:border-slate-700/50">
+          <span class="bg-gray-100 dark:bg-slate-700/50 text-gray-700 dark:text-gray-200 px-3 py-1 rounded-full text-[10px] font-bold border border-gray-200 dark:border-slate-700/50">
             ${date}
           </span>
         </td>

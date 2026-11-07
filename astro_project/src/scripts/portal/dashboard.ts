@@ -1,6 +1,7 @@
+import { apiFetch } from "./api";
 import { auth } from "./auth";
 import { getPermissions } from "./permissions";
-import { escapeHtml, onPageReady } from "./ui";
+import { escapeHtml, onPageReady, showToast } from "./ui";
 import type { Permissions } from "./types";
 
 interface DashboardCard {
@@ -102,6 +103,75 @@ function renderCards(cards: DashboardCard[]): void {
     .join("");
 }
 
+interface DashboardSummary {
+  pending_users?: number;
+  low_stock?: number;
+  unread_notifications?: number;
+  next_schedules?: Array<{
+    id: number;
+    title: string;
+    date: string;
+    time: string;
+    ministry: string;
+  }>;
+}
+
+function renderSummary(summary: DashboardSummary): void {
+  const container = document.getElementById("dashboard-summary");
+  if (!container) return;
+  const next = summary.next_schedules?.[0];
+  const nextLabel = next
+    ? `${next.date.split("-").reverse().slice(0, 2).join("/")} ${next.time || ""}`
+    : "Nenhuma";
+  const nextDetail = next ? next.title : "Sem escalas futuras";
+
+  const cards = [
+    {
+      label: "Cadastros pendentes",
+      value: String(summary.pending_users ?? 0),
+      detail: "aprovações aguardando",
+      icon: "fa-user-clock",
+      href: "/portal/usuarios",
+    },
+    {
+      label: "Estoque baixo",
+      value: String(summary.low_stock ?? 0),
+      detail: "livros para repor",
+      icon: "fa-triangle-exclamation",
+      href: "/portal/livraria",
+    },
+    {
+      label: "Não lidas",
+      value: String(summary.unread_notifications ?? 0),
+      detail: "notificações",
+      icon: "fa-bell",
+      href: "/portal/notificacoes",
+    },
+    {
+      label: "Próxima escala",
+      value: nextLabel,
+      detail: nextDetail,
+      icon: "fa-calendar-check",
+      href: "/portal/escalas",
+    },
+  ];
+
+  container.innerHTML = cards
+    .map(
+      (card) => `
+        <a href="${card.href}" class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[10px] font-black uppercase tracking-widest text-gray-500">${escapeHtml(card.label)}</span>
+            <i class="fa-solid ${card.icon} text-[var(--color-brand)]"></i>
+          </div>
+          <p class="text-xl font-black text-gray-900 dark:text-white truncate">${escapeHtml(card.value)}</p>
+          <p class="text-[10px] text-gray-500 mt-1 truncate">${escapeHtml(card.detail)}</p>
+        </a>
+      `,
+    )
+    .join("");
+}
+
 onPageReady("#dashboard-grid", () => {
   void (async () => {
     const user = (await auth.ensureSession()) ?? auth.getUser();
@@ -111,5 +181,14 @@ onPageReady("#dashboard-grid", () => {
     if (greeting) greeting.innerText = user.displayName || "Voluntário";
 
     renderCards(buildCards(permissions));
+
+    try {
+      const response = await apiFetch("/wp-json/1ipim/v1/dashboard");
+      if (response.ok) {
+        renderSummary((await response.json()) as DashboardSummary);
+      }
+    } catch {
+      showToast("Não foi possível carregar o resumo operacional", "info");
+    }
   })();
 });

@@ -495,6 +495,15 @@ function ipim_livraria_move_stock(int $book_id, string $type, int $quantity, str
         'referencia' => $reference,
     ]);
 
+    if ($after <= (int) $book['estoque_minimo'] && function_exists('ipim_notify')) {
+        $message = 'O livro "' . $book['titulo'] . '" está com estoque ' . $after . '.';
+        $ministry_id = ipim_rbac_ensure_livraria();
+        if ($ministry_id > 0 && function_exists('ipim_notify_ministry_leaders')) {
+            ipim_notify_ministry_leaders($ministry_id, 'low_stock', 'Estoque baixo na Livraria', $message, '/portal/livraria');
+        }
+        ipim_notify_admins('low_stock', 'Estoque baixo na Livraria', $message, '/portal/livraria');
+    }
+
     return ['estoque' => $after];
 }
 
@@ -529,6 +538,12 @@ function ipim_livraria_query(array $args): array
         $where[] = 'destaque = %d';
         $params[] = (int) (bool) $args['destaque'];
     }
+    if (!empty($args['low_stock'])) {
+        $where[] = 'estoque <= estoque_minimo';
+    }
+    if (!empty($args['sem_capa'])) {
+        $where[] = "(capa_url IS NULL OR capa_url = '')";
+    }
     if (!empty($args['q'])) {
         $like = '%' . $wpdb->esc_like(sanitize_text_field((string) $args['q'])) . '%';
         $where[] = '(titulo LIKE %s OR autor LIKE %s OR editora LIKE %s OR categoria LIKE %s OR sinopse LIKE %s)';
@@ -557,6 +572,7 @@ function ipim_livraria_query(array $args): array
             'ativos' => (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE ativo = 1"),
             'com_capa' => (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE capa_url <> ''"),
             'estoque' => (int) $wpdb->get_var("SELECT COALESCE(SUM(estoque),0) FROM {$table}"),
+            'low_stock' => (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE estoque <= estoque_minimo AND ativo = 1"),
         ];
     }
 
@@ -697,6 +713,8 @@ add_action('rest_api_init', static function (): void {
                     'per_page' => (int) $request->get_param('per_page'),
                     'include_inactive' => true,
                     'admin' => true,
+                    'low_stock' => (bool) $request->get_param('low_stock'),
+                    'sem_capa' => (bool) $request->get_param('sem_capa'),
                 ]);
             },
             'permission_callback' => 'ipim_livraria_can_manage',
@@ -770,6 +788,23 @@ add_action('rest_api_init', static function (): void {
             ipim_rbac_audit(get_current_user_id(), 'livro_cover', 'livro', $id, null, $cover);
 
             return $cover;
+        },
+        'permission_callback' => 'ipim_livraria_can_manage',
+    ]);
+
+    register_rest_route('1ipim/v1', '/admin/livros/(?P<id>\d+)/movimentacoes', [
+        'methods' => 'GET',
+        'callback' => static function (WP_REST_Request $request): array {
+            global $wpdb;
+            $id = (int) $request['id'];
+            $table = ipim_livraria_table('livro_movimentacoes');
+            $rows = $wpdb->get_results($wpdb->prepare(
+                "SELECT id,tipo,quantidade,motivo,referencia,user_id,created_at
+                 FROM {$table} WHERE livro_id = %d ORDER BY id DESC LIMIT 30",
+                $id
+            ), ARRAY_A);
+
+            return ['items' => $rows ?: []];
         },
         'permission_callback' => 'ipim_livraria_can_manage',
     ]);

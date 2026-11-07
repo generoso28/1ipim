@@ -487,6 +487,87 @@ add_action('rest_api_init', static function (): void {
         'permission_callback' => $login,
     ]);
 
+    register_rest_route('1ipim/v1', '/dashboard', [
+        'methods' => 'GET',
+        'callback' => static function (): array {
+            $user_id = get_current_user_id();
+            $is_manager = ipim_rbac_is_admin() || ipim_rbac_is_pastor();
+
+            $pending_users = 0;
+            if ($is_manager) {
+                foreach (get_users(['fields' => 'all']) as $user) {
+                    $requested = json_decode((string) get_user_meta($user->ID, 'ministries_requested', true), true);
+                    $approved = json_decode((string) get_user_meta($user->ID, 'ministries_approved', true), true);
+                    $requested = is_array($requested) ? array_map('intval', $requested) : [];
+                    $approved = is_array($approved) ? array_map('intval', $approved) : [];
+                    if (count(array_diff($requested, $approved)) > 0) {
+                        $pending_users++;
+                    }
+                }
+            }
+
+            $low_stock = 0;
+            $livraria_id = function_exists('ipim_rbac_ensure_livraria') ? ipim_rbac_ensure_livraria() : 0;
+            if ($is_manager || ($livraria_id > 0 && ipim_rbac_can_manage_ministry($user_id, $livraria_id))) {
+                global $wpdb;
+                $table = $wpdb->prefix . '1ipim_livros';
+                if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) === $table) {
+                    $low_stock = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE ativo = 1 AND estoque <= estoque_minimo");
+                }
+            }
+
+            $unread = function_exists('ipim_notifications_unread_count')
+                ? ipim_notifications_unread_count($user_id)
+                : 0;
+
+            $today = current_time('Y-m-d');
+            $schedules = [];
+            foreach (get_posts(['post_type' => 'escala', 'post_status' => 'publish', 'numberposts' => -1]) as $post) {
+                $data = ipim_schedule_data($post->ID);
+                if ($data['date'] < $today || !ipim_can_view_schedule($user_id, $post->ID)) {
+                    continue;
+                }
+                $schedules[] = [
+                    'id' => $post->ID,
+                    'title' => get_the_title($post),
+                    'date' => $data['date'],
+                    'time' => $data['time'],
+                    'ministry' => $data['ministry_id'] > 0 ? get_the_title($data['ministry_id']) : 'Geral',
+                    'names' => $data['names'],
+                ];
+            }
+            usort($schedules, static fn (array $a, array $b): int => strcmp($a['date'] . $a['time'], $b['date'] . $b['time']));
+
+            return [
+                'pending_users' => $pending_users,
+                'low_stock' => $low_stock,
+                'unread_notifications' => $unread,
+                'next_schedules' => array_slice($schedules, 0, 3),
+            ];
+        },
+        'permission_callback' => $login,
+    ]);
+
+    register_rest_route('1ipim/v1', '/me/password', [
+        'methods' => 'POST',
+        'callback' => static function (WP_REST_Request $request) {
+            $user = wp_get_current_user();
+            $current = (string) $request->get_param('current_password');
+            $new = (string) $request->get_param('new_password');
+            if (!wp_check_password($current, $user->user_pass, $user->ID)) {
+                return new WP_Error('ipim_wrong_password', 'A senha atual está incorreta.', ['status' => 400]);
+            }
+            if (strlen($new) < 8) {
+                return new WP_Error('ipim_weak_password', 'A nova senha deve ter pelo menos 8 caracteres.', ['status' => 400]);
+            }
+            wp_set_password($new, $user->ID);
+            ipim_rbac_audit((int) $user->ID, 'password_change', 'user', (int) $user->ID, null, null);
+
+            return ['success' => true, 'message' => 'Senha alterada. Faça login novamente.'];
+        },
+        'permission_callback' => $login,
+    ]);
+
     register_rest_route('1ipim/v1', '/ministries', [
         [
             'methods' => 'GET',
@@ -707,6 +788,15 @@ add_action('rest_api_init', static function (): void {
                 'ministry_id' => $ministry_id,
                 'role' => $role,
             ]);
+            if (function_exists('ipim_notify')) {
+                ipim_notify(
+                    $user_id,
+                    'membership_approved',
+                    'Novo vínculo de ministério',
+                    'Você foi vinculado ao ministério ' . get_the_title($ministry_id) . '.',
+                    '/portal'
+                );
+            }
 
             return ipim_user_summary($user_id);
         },
@@ -784,6 +874,79 @@ add_action('rest_api_init', static function (): void {
             $users = array_values(array_filter(array_map('ipim_user_summary', array_map('intval', $user_ids))));
 
             return $users;
+        },
+        'permission_callback' => $login,
+    ]);
+
+    register_rest_route('1ipim/v1', '/admin/audit', [
+        'methods' => 'GET',
+        'callback' => static function (WP_REST_Request $request): array {
+            if (!ipim_rbac_is_admin() && !ipim_rbac_is_pastor()) {
+                return ['items' => [], 'total' => 0, 'page' => 1, 'pages' => 0];
+            }
+
+            global $wpdb;
+            $table = ipim_rbac_table('audit_log');
+            $page = max(1, (int) $request->get_param('page'));
+            $per_page = min(100, max(1, (int) ($request->get_param('per_page') ?: 30)));
+            $where = ['1=1'];
+            $params = [];
+
+            $action = sanitize_text_field((string) $request->get_param('action'));
+            if ($action !== '') {
+                $where[] = 'action = %s';
+                $params[] = $action;
+            }
+            $actor = (int) $request->get_param('actor_id');
+            if ($actor > 0) {
+                $where[] = 'actor_id = %d';
+                $params[] = $actor;
+            }
+            $target_type = sanitize_key((string) $request->get_param('target_type'));
+            if ($target_type !== '') {
+                $where[] = 'target_type = %s';
+                $params[] = $target_type;
+            }
+            $target_id = (int) $request->get_param('target_id');
+            if ($target_id > 0) {
+                $where[] = 'target_id = %d';
+                $params[] = $target_id;
+            }
+
+            $where_sql = implode(' AND ', $where);
+            $total = (int) ($params === []
+                ? $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE {$where_sql}")
+                : $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$table} WHERE {$where_sql}", $params)));
+
+            $list_sql = "SELECT * FROM {$table} WHERE {$where_sql} ORDER BY id DESC LIMIT %d OFFSET %d";
+            $rows = $wpdb->get_results($wpdb->prepare(
+                $list_sql,
+                array_merge($params, [$per_page, ($page - 1) * $per_page])
+            ), ARRAY_A);
+
+            $items = [];
+            foreach ($rows ?: [] as $row) {
+                $actor_user = get_userdata((int) $row['actor_id']);
+                $items[] = [
+                    'id' => (int) $row['id'],
+                    'actor_id' => (int) $row['actor_id'],
+                    'actor_name' => $actor_user ? $actor_user->display_name : 'Sistema',
+                    'action' => (string) $row['action'],
+                    'target_type' => (string) $row['target_type'],
+                    'target_id' => (int) $row['target_id'],
+                    'before_json' => (string) $row['before_json'],
+                    'after_json' => (string) $row['after_json'],
+                    'created_at' => (string) $row['created_at'],
+                ];
+            }
+
+            return [
+                'items' => $items,
+                'total' => $total,
+                'page' => $page,
+                'per_page' => $per_page,
+                'pages' => $per_page > 0 ? (int) ceil($total / $per_page) : 0,
+            ];
         },
         'permission_callback' => $login,
     ]);
@@ -999,6 +1162,15 @@ add_action('rest_api_init', static function (): void {
             $data['emails'] = implode(', ', $emails);
             ipim_schedule_write_content($post_id, $data);
             ipim_rbac_audit((int) $user->ID, 'schedule_join', 'escala', $post_id, null, ['email' => $email]);
+            if (function_exists('ipim_notify_ministry_leaders')) {
+                ipim_notify_ministry_leaders(
+                    (int) $data['ministry_id'],
+                    'schedule_join',
+                    'Novo voluntário na escala',
+                    $user->display_name . ' entrou na escala de ' . $data['date'] . ' às ' . $data['time'] . '.',
+                    '/portal/escalas'
+                );
+            }
 
             return ['joined' => true, 'schedule_id' => $post_id, 'names' => $data['names'], 'emails' => $data['emails']];
         },
@@ -1272,4 +1444,19 @@ add_action('rest_after_insert_escala', static function (WP_Post $post, WP_REST_R
     update_post_meta($post->ID, 'equipe_emails', $data['emails']);
     update_post_meta($post->ID, 'horario', $data['time']);
     ipim_rbac_audit(get_current_user_id(), $creating ? 'schedule_create' : 'schedule_update', 'escala', $post->ID, null, $data);
+
+    if (function_exists('ipim_notify')) {
+        foreach (ipim_emails($data['emails']) as $email) {
+            $participant = get_user_by('email', $email);
+            if ($participant && (int) $participant->ID !== get_current_user_id()) {
+                ipim_notify(
+                    (int) $participant->ID,
+                    $creating ? 'schedule_created' : 'schedule_updated',
+                    $creating ? 'Você foi escalado' : 'Sua escala foi atualizada',
+                    $data['date'] . ' às ' . $data['time'] . ' — ' . get_the_title($data['ministry_id']),
+                    '/portal/escalas'
+                );
+            }
+        }
+    }
 }, 10, 3);

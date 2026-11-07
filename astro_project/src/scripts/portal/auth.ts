@@ -28,6 +28,7 @@ export const AUTH_KEYS = {
   isPastor: "1ipim_user_is_pastor",
   isMinistryLeader: "1ipim_user_is_ministry_leader",
   canManageLivraria: "1ipim_user_can_manage_livraria",
+  canManageLivrariaStock: "1ipim_user_can_manage_livraria_stock",
 } as const;
 
 /** Chave do JWT antigo: removida para não confundir navegadores com cache velho. */
@@ -102,6 +103,7 @@ export const auth = {
       isPastor: readKey(AUTH_KEYS.isPastor) === "1",
       isMinistryLeader: readKey(AUTH_KEYS.isMinistryLeader) === "1",
       canManageLivraria: readKey(AUTH_KEYS.canManageLivraria) === "1",
+      canManageLivrariaStock: readKey(AUTH_KEYS.canManageLivrariaStock) === "1",
     };
   },
 
@@ -129,6 +131,10 @@ export const auth = {
     writeKey(
       AUTH_KEYS.canManageLivraria,
       session.canManageLivraria ? "1" : "0",
+    );
+    writeKey(
+      AUTH_KEYS.canManageLivrariaStock,
+      session.canManageLivrariaStock ? "1" : "0",
     );
   },
 

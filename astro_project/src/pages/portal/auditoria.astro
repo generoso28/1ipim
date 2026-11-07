@@ -1,0 +1,77 @@
+---
+import PortalLayout from '../../layouts/PortalLayout.astro';
+
+const title = 'Auditoria - Portal 1IPIM';
+const description = 'Registro de ações administrativas do Portal 1IPIM.';
+---
+<PortalLayout title={title} description={description}>
+  <div class="mb-8">
+    <p class="text-[10px] font-black uppercase tracking-[0.25em] text-[var(--color-brand)] mb-2">Segurança</p>
+    <h1 class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tighter uppercase">Auditoria</h1>
+    <p class="text-gray-500 mt-2">Quem alterou o quê, quando e em qual registro.</p>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 p-5 md:p-6 shadow-sm mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+      <label>
+        <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Ação</span>
+        <input id="audit-action" type="search" placeholder="Ex: schedule_join" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+      </label>
+      <label>
+        <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Tipo de alvo</span>
+        <select id="audit-target" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm font-bold text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+          <option value="">Todos</option>
+          <option value="user">Usuário</option>
+          <option value="escala">Escala</option>
+          <option value="ministerio">Ministério</option>
+          <option value="livro">Livro</option>
+          <option value="system">Sistema</option>
+        </select>
+      </label>
+      <label>
+        <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">ID do alvo</span>
+        <input id="audit-target-id" type="number" min="0" placeholder="Opcional" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+      </label>
+      <label>
+        <span class="block text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1.5">ID do autor</span>
+        <input id="audit-actor" type="number" min="0" placeholder="Opcional" class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-[var(--color-brand)]">
+      </label>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse min-w-[900px]">
+        <thead>
+          <tr class="border-b border-gray-100 dark:border-slate-700">
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Data</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Autor</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Ação</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Alvo</th>
+            <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-500">Detalhes</th>
+          </tr>
+        </thead>
+        <tbody id="audit-table-body"></tbody>
+      </table>
+    </div>
+    <div id="audit-loading" class="py-24 text-center">
+      <div class="animate-spin inline-block w-10 h-10 border-[3px] border-current border-t-transparent text-[var(--color-brand)] rounded-full mb-4"></div>
+      <p class="text-xs font-black text-gray-400 uppercase tracking-widest">Carregando auditoria...</p>
+    </div>
+    <div id="audit-empty" class="hidden py-24 text-center">
+      <i class="fa-solid fa-clipboard-list text-4xl text-gray-200 mb-4"></i>
+      <p class="text-gray-500 font-bold">Nenhum registro encontrado.</p>
+    </div>
+    <div class="flex items-center justify-between gap-4 px-6 py-4 border-t border-gray-100 dark:border-slate-700">
+      <p id="audit-page-info" class="text-[11px] font-bold text-gray-500"></p>
+      <div class="flex items-center gap-2">
+        <button id="audit-prev" type="button" class="px-4 py-2 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-xs font-black uppercase text-gray-500 disabled:opacity-40">Anterior</button>
+        <button id="audit-next" type="button" class="px-4 py-2 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 text-xs font-black uppercase text-gray-500 disabled:opacity-40">Próxima</button>
+      </div>
+    </div>
+  </div>
+</PortalLayout>
+
+<script>
+  import '../../scripts/portal/auditoria.ts';
+</script>

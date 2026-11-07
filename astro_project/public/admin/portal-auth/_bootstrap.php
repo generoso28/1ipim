@@ -117,6 +117,10 @@ function user_payload(WP_User $user): array
         $livrariaId > 0 && function_exists('ipim_rbac_can_view_ministry')
         && ipim_rbac_can_view_ministry((int) $user->ID, (int) $livrariaId)
     );
+    $canManageLivrariaStock = $isAdmin || $isPastor || (
+        $livrariaId > 0 && function_exists('ipim_rbac_can_manage_ministry')
+        && ipim_rbac_can_manage_ministry((int) $user->ID, (int) $livrariaId)
+    );
 
     return [
         'id' => (string) $user->ID,
@@ -131,6 +135,7 @@ function user_payload(WP_User $user): array
         'isPastor' => $isPastor,
         'isMinistryLeader' => $isMinistryLeader,
         'canManageLivraria' => $canManageLivraria,
+        'canManageLivrariaStock' => $canManageLivrariaStock,
         'nonce' => wp_create_nonce('wp_rest'),
     ];
 }

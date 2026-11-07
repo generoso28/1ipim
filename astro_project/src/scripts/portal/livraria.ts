@@ -35,6 +35,7 @@ interface BookList {
     ativos: number;
     com_capa: number;
     estoque: number;
+    low_stock?: number;
   };
 }
 
@@ -67,6 +68,9 @@ const cover = (book: Book): string => {
 onPageReady("#livraria-manager", async () => {
   const session = (await auth.ensureSession()) ?? auth.getUser();
   const permissions = getPermissions(session);
+  const canManageStock = Boolean(
+    session.canManageLivrariaStock || session.isAdmin || session.isPastor,
+  );
 
   if (!permissions.canLivraria) {
     window.location.href = "/portal/";
@@ -115,6 +119,24 @@ onPageReady("#livraria-manager", async () => {
   ) as HTMLButtonElement | null;
   const coverResults = document.getElementById("cover-results");
   const categoryOptions = document.getElementById("book-category-options");
+  const lowStock = document.getElementById(
+    "livraria-low-stock",
+  ) as HTMLInputElement | null;
+  const noCover = document.getElementById(
+    "livraria-no-cover",
+  ) as HTMLInputElement | null;
+
+  const stockModal = document.getElementById("stock-modal");
+  const stockModalTitle = document.getElementById("stock-modal-title");
+  const stockCurrent = document.getElementById("stock-current");
+  const stockReason = document.getElementById(
+    "stock-reason",
+  ) as HTMLInputElement | null;
+  const stockFeedback = document.getElementById("stock-feedback");
+  const stockHistory = document.getElementById("stock-history");
+  const stockApply = document.getElementById(
+    "stock-apply",
+  ) as HTMLButtonElement | null;
 
   const state: {
     page: number;
@@ -122,6 +144,8 @@ onPageReady("#livraria-manager", async () => {
     total: number;
     q: string;
     categoria: string;
+    low_stock: boolean;
+    sem_capa: boolean;
     items: Book[];
     categories: string[];
     stats?: BookList["stats"];
@@ -133,6 +157,8 @@ onPageReady("#livraria-manager", async () => {
     total: 0,
     q: "",
     categoria: "",
+    low_stock: false,
+    sem_capa: false,
     items: [],
     categories: [],
     editing: null,
@@ -169,6 +195,7 @@ onPageReady("#livraria-manager", async () => {
       ["Ativos", stats.ativos, "fa-circle-check"],
       ["Com capa", stats.com_capa, "fa-image"],
       ["Estoque", stats.estoque, "fa-boxes-stacked"],
+      ["Estoque baixo", stats.low_stock ?? 0, "fa-triangle-exclamation"],
     ];
 
     statsBox.innerHTML = cards
@@ -258,6 +285,20 @@ onPageReady("#livraria-manager", async () => {
               </span>
             </td>
             <td class="px-6 py-4 text-right">
+              ${
+                !book.capa
+                  ? `<button type="button" aria-label="Buscar capa para ${escapeAttribute(book.titulo)}" class="cover-search-book-btn w-10 h-10 rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-400 hover:text-indigo-600 transition-colors mr-1" data-id="${book.id}" title="Buscar capa">
+                      <i class="fa-solid fa-image"></i>
+                    </button>`
+                  : ""
+              }
+              ${
+                canManageStock
+                  ? `<button type="button" aria-label="Movimentar estoque de ${escapeAttribute(book.titulo)}" class="stock-book-btn w-10 h-10 rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-400 hover:text-amber-600 transition-colors mr-1" data-id="${book.id}" title="Movimentar estoque">
+                      <i class="fa-solid fa-boxes-stacked"></i>
+                    </button>`
+                  : ""
+              }
               <button type="button" aria-label="Editar ${escapeAttribute(book.titulo)}" class="edit-book-btn w-10 h-10 rounded-xl bg-gray-50 dark:bg-slate-900 text-gray-400 hover:text-[var(--color-brand)] transition-colors" data-id="${book.id}" title="Editar">
                 <i class="fa-solid fa-pen"></i>
               </button>
@@ -296,6 +337,8 @@ onPageReady("#livraria-manager", async () => {
     });
     if (state.q) params.set("q", state.q);
     if (state.categoria) params.set("categoria", state.categoria);
+    if (state.low_stock) params.set("low_stock", "1");
+    if (state.sem_capa) params.set("sem_capa", "1");
 
     try {
       const response = await apiFetch(
@@ -568,6 +611,159 @@ onPageReady("#livraria-manager", async () => {
     }
   }
 
+  let stockBook: Book | null = null;
+  let stockAction: { tipo: "entrada" | "saida"; quantidade: number } | null =
+    null;
+
+  function setStockFeedback(message: string, error = false): void {
+    if (!stockFeedback) return;
+    stockFeedback.innerText = message;
+    stockFeedback.className = error
+      ? "p-3 rounded-xl text-sm font-bold bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400"
+      : "p-3 rounded-xl text-sm font-bold bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300";
+    stockFeedback.classList.remove("hidden");
+  }
+
+  async function loadStockHistory(bookId: number): Promise<void> {
+    if (!stockHistory) return;
+    stockHistory.innerHTML = '<p class="text-gray-500">Carregando...</p>';
+    try {
+      const response = await apiFetch(
+        `${API}/admin/livros/${bookId}/movimentacoes`,
+      );
+      const data = (await response.json().catch(() => ({}))) as {
+        items?: Array<{
+          tipo: string;
+          quantidade: number;
+          motivo: string;
+          created_at: string;
+        }>;
+      };
+      const items = data.items || [];
+      stockHistory.innerHTML =
+        items.length === 0
+          ? '<p class="text-gray-500">Nenhuma movimentação registrada.</p>'
+          : items
+              .map(
+                (item) => `
+                  <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-gray-50 dark:bg-slate-900">
+                    <span class="font-bold ${item.tipo === "entrada" ? "text-green-700 dark:text-green-300" : "text-red-700 dark:text-red-300"}">${item.tipo === "entrada" ? "+" : "−"}${item.quantidade}</span>
+                    <span class="truncate">${escapeHtml(item.motivo || "Sem motivo")}</span>
+                    <span class="text-gray-500 whitespace-nowrap">${escapeHtml(item.created_at)}</span>
+                  </div>
+                `,
+              )
+              .join("");
+    } catch {
+      stockHistory.innerHTML =
+        '<p class="text-red-600">Erro ao carregar histórico.</p>';
+    }
+  }
+
+  function openStockModal(book: Book): void {
+    stockBook = book;
+    stockAction = null;
+    if (stockModalTitle) stockModalTitle.innerText = book.titulo;
+    if (stockCurrent)
+      stockCurrent.innerText = `Estoque atual: ${book.estoque ?? 0}`;
+    if (stockReason) stockReason.value = "";
+    stockFeedback?.classList.add("hidden");
+    document
+      .querySelectorAll<HTMLElement>(".stock-action-btn")
+      .forEach((button) => {
+        button.classList.remove("ring-2", "ring-[var(--color-brand)]");
+      });
+    stockModal?.classList.remove("hidden");
+    void loadStockHistory(book.id);
+  }
+
+  function closeStockModal(): void {
+    stockModal?.classList.add("hidden");
+    stockBook = null;
+    stockAction = null;
+  }
+
+  async function applyStock(): Promise<void> {
+    if (!stockBook || !stockAction) {
+      setStockFeedback(
+        "Escolha uma quantidade para adicionar ou subtrair.",
+        true,
+      );
+      return;
+    }
+    if (stockApply) stockApply.disabled = true;
+    try {
+      const response = await apiFetch(
+        `${API}/admin/livros/${stockBook.id}/movimentacoes`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tipo: stockAction.tipo,
+            quantidade: stockAction.quantidade,
+            motivo: stockReason?.value.trim() || "",
+          }),
+        },
+      );
+      const result = (await response.json().catch(() => ({}))) as {
+        estoque?: number;
+        message?: string;
+      };
+      if (!response.ok)
+        throw new Error(result.message || "Falha ao movimentar estoque");
+      stockBook.estoque = result.estoque ?? stockBook.estoque;
+      if (stockCurrent)
+        stockCurrent.innerText = `Estoque atual: ${stockBook.estoque ?? 0}`;
+      setStockFeedback("Movimentação registrada!", false);
+      stockAction = null;
+      document
+        .querySelectorAll<HTMLElement>(".stock-action-btn")
+        .forEach((button) => {
+          button.classList.remove("ring-2", "ring-[var(--color-brand)]");
+        });
+      await loadStockHistory(stockBook.id);
+      await loadBooks();
+    } catch (error) {
+      setStockFeedback(
+        error instanceof Error ? error.message : "Erro ao movimentar estoque",
+        true,
+      );
+    } finally {
+      if (stockApply) stockApply.disabled = false;
+    }
+  }
+
+  document
+    .querySelectorAll<HTMLButtonElement>(".stock-action-btn")
+    .forEach((button) => {
+      button.onclick = () => {
+        stockAction = {
+          tipo:
+            (button.getAttribute("data-tipo") as "entrada" | "saida") ||
+            "entrada",
+          quantidade: Number(button.getAttribute("data-qtd") || 1),
+        };
+        document
+          .querySelectorAll<HTMLElement>(".stock-action-btn")
+          .forEach((item) => {
+            item.classList.remove("ring-2", "ring-[var(--color-brand)]");
+          });
+        button.classList.add("ring-2", "ring-[var(--color-brand)]");
+      };
+    });
+  stockApply?.addEventListener("click", () => {
+    void applyStock();
+  });
+  document
+    .getElementById("stock-close")
+    ?.addEventListener("click", closeStockModal);
+  stockModal?.addEventListener("click", (event) => {
+    if (event.target === stockModal) closeStockModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeStockModal();
+  });
+
   let searchTimer = 0;
   searchInput?.addEventListener("input", () => {
     window.clearTimeout(searchTimer);
@@ -580,6 +776,18 @@ onPageReady("#livraria-manager", async () => {
 
   categorySelect?.addEventListener("change", () => {
     state.categoria = categorySelect.value;
+    state.page = 1;
+    void loadBooks();
+  });
+
+  lowStock?.addEventListener("change", () => {
+    state.low_stock = lowStock.checked;
+    state.page = 1;
+    void loadBooks();
+  });
+
+  noCover?.addEventListener("change", () => {
+    state.sem_capa = noCover.checked;
     state.page = 1;
     void loadBooks();
   });

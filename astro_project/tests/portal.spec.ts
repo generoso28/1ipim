@@ -28,7 +28,22 @@ async function mockApi(page: Page, handler: ApiHandler): Promise<void> {
       return;
     }
     const handled = await handler(route, path, method);
-    if (!handled) await json(route, { message: `not mocked ${path}` }, 404);
+    if (!handled) {
+      if (path === "/1ipim/v1/dashboard" && method === "GET") {
+        await json(route, {
+          pending_users: 0,
+          low_stock: 0,
+          unread_notifications: 0,
+          next_schedules: [],
+        });
+        return;
+      }
+      if (path === "/1ipim/v1/notifications/unread-count" && method === "GET") {
+        await json(route, { count: 0 });
+        return;
+      }
+      await json(route, { message: `not mocked ${path}` }, 404);
+    }
   });
 }
 
@@ -66,7 +81,7 @@ test.describe("Portal", () => {
 
     await expect(page).toHaveURL(/\/portal\/?$/);
     await expect(page.locator("#dashboard-grid a")).toHaveCount(5);
-    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(6);
+    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(9);
 
     const session = await page.evaluate(() => ({
       nonce: localStorage.getItem("1ipim_auth_nonce"),
@@ -93,7 +108,7 @@ test.describe("Portal autenticado", () => {
     await page.goto("/portal/", { waitUntil: "domcontentloaded" });
     await expect(page.locator("h1")).toContainText("Teste E2E");
     await expect(page.locator("#dashboard-grid a")).toHaveCount(5);
-    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(6);
+    await expect(page.locator("#nav-dynamic-links a")).toHaveCount(9);
     await expect(page.locator("#user-nav-role")).toHaveText("Administrador");
   });
 
@@ -390,6 +405,25 @@ test.describe("Portal autenticado", () => {
         await json(route, [{ id: 5 }]);
         return true;
       }
+      if (path === "/1ipim/v1/notifications") {
+        await json(route, {
+          items: [],
+          total: 0,
+          page: 1,
+          pages: 0,
+          unread_count: 0,
+        });
+        return true;
+      }
+      if (path === "/1ipim/v1/admin/audit") {
+        await json(route, {
+          items: [],
+          total: 0,
+          page: 1,
+          pages: 0,
+        });
+        return true;
+      }
       if (path === "/1ipim/v1/admin/livros") {
         await json(route, {
           items: [],
@@ -407,6 +441,9 @@ test.describe("Portal autenticado", () => {
     const screens: Array<[string, RegExp]> = [
       ["/portal/livraria/", /Catálogo/i],
       ["/portal/novo-usuario/", /Novo Voluntário/i],
+      ["/portal/notificacoes/", /Notificações/i],
+      ["/portal/auditoria/", /Auditoria/i],
+      ["/portal/perfil/", /Meu perfil/i],
     ];
 
     for (const [path, heading] of screens) {

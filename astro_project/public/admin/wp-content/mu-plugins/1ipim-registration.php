@@ -264,6 +264,14 @@ add_action('rest_api_init', static function (): void {
                 'email' => $user['email'],
                 'ministries' => $ministries,
             ]);
+            if (function_exists('ipim_notify_admins')) {
+                ipim_notify_admins(
+                    'user_pending',
+                    'Novo cadastro pendente',
+                    $user['name'] . ' (' . $user['email'] . ') solicitou acesso ao portal.',
+                    '/portal/usuarios'
+                );
+            }
 
             return [
                 'success' => true,
@@ -345,6 +353,9 @@ add_action('rest_api_init', static function (): void {
             delete_user_meta($user_id, '_ipim_email_token');
             delete_user_meta($user_id, '_ipim_email_token_expires');
             ipim_rbac_audit(get_current_user_id(), 'email_verify_manual', 'user', $user_id, $before, ['verified' => '1']);
+            if (function_exists('ipim_notify')) {
+                ipim_notify($user_id, 'email_verified', 'E-mail confirmado', 'Sua conta foi verificada manualmente. Você já pode acessar o portal.', '/portal/login/');
+            }
 
             return [
                 'success' => true,

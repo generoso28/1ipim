@@ -33,6 +33,7 @@ export interface PortalUser {
   isPastor?: boolean;
   isMinistryLeader?: boolean;
   canManageLivraria?: boolean;
+  canManageLivrariaStock?: boolean;
 }
 
 export interface Permissions {

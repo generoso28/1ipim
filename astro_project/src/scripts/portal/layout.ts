@@ -1,3 +1,4 @@
+import { apiFetch } from "./api";
 import { auth } from "./auth";
 import { getPermissions } from "./permissions";
 import { escapeHtml, getUserInitials, showToast, onPageReady } from "./ui";
@@ -13,7 +14,13 @@ interface NavItem {
 const WP_ADMIN_URL = "https://1ipim.online/admin/wp-admin";
 
 function buildNavItems(permissions: Permissions): NavItem[] {
-  const items: NavItem[] = [];
+  const items: NavItem[] = [
+    {
+      href: "/portal/notificacoes",
+      icon: "fa-solid fa-bell",
+      label: "Notificações",
+    },
+  ];
 
   if (permissions.canReflexoes) {
     items.push({
@@ -51,6 +58,11 @@ function buildNavItems(permissions: Permissions): NavItem[] {
         label: "Voluntários",
       },
       {
+        href: "/portal/auditoria",
+        icon: "fa-solid fa-clipboard-list",
+        label: "Auditoria",
+      },
+      {
         href: WP_ADMIN_URL,
         icon: "fa-brands fa-wordpress text-blue-500",
         label: "WP Admin",
@@ -59,7 +71,42 @@ function buildNavItems(permissions: Permissions): NavItem[] {
     );
   }
 
+  items.push({
+    href: "/portal/perfil",
+    icon: "fa-solid fa-user",
+    label: "Meu perfil",
+  });
+
   return items;
+}
+
+function setNotificationBadge(count: number): void {
+  const link = document.querySelector<HTMLAnchorElement>(
+    '#nav-dynamic-links a[href="/portal/notificacoes"]',
+  );
+  if (!link) return;
+  link.querySelector("[data-notification-badge]")?.remove();
+  if (count <= 0) return;
+
+  const badge = document.createElement("span");
+  badge.setAttribute("data-notification-badge", "1");
+  badge.className =
+    "ml-auto min-w-5 h-5 px-1.5 rounded-full bg-red-700 text-white text-[9px] font-black flex items-center justify-center";
+  badge.textContent = count > 9 ? "9+" : String(count);
+  link.appendChild(badge);
+}
+
+async function refreshNotificationBadge(): Promise<void> {
+  try {
+    const response = await apiFetch(
+      "/wp-json/1ipim/v1/notifications/unread-count",
+    );
+    if (!response.ok) return;
+    const data = (await response.json()) as { count?: number };
+    setNotificationBadge(Number(data.count || 0));
+  } catch {
+    // silencioso: o badge é apenas um indicador
+  }
 }
 
 function renderNavigation(permissions: Permissions): void {
@@ -163,6 +210,7 @@ function renderShell(user: { role: string; nicename: string }): void {
   const permissions = getPermissions(user);
   renderUser(permissions);
   renderNavigation(permissions);
+  void refreshNotificationBadge();
 }
 
 onPageReady("#portal-root", () => {
@@ -171,6 +219,13 @@ onPageReady("#portal-root", () => {
     renderShell(auth.getUser());
     hideAuthGuard();
   }
+
+  window.addEventListener("ipim:notifications-updated", (event) => {
+    const count = Number(
+      (event as CustomEvent<{ count?: number }>).detail?.count || 0,
+    );
+    setNotificationBadge(count);
+  });
 
   setupThemeToggle();
   setupMobileMenu();

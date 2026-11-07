@@ -1,7 +1,8 @@
 import { auth } from "./auth";
 import { normalizeBaseUrl } from "./permissions";
+import { WP_ADMIN_BASE } from "../../config/api";
 
-export const WP_BASE = "https://1ipim.online/admin";
+export const WP_BASE = WP_ADMIN_BASE;
 
 export class ApiError extends Error {
   status: number;

@@ -1,10 +1,12 @@
+import { SITE_ORIGIN } from "../config/api";
+
 /**
  * Formulário de contato do site.
  *
  * Envia para o endpoint PHP que usa o wp_mail() do WordPress (SMTP já
- * configurado). Mantém o endpoint absoluto para funcionar também no staging.
+ * configurado). A origem é configurável por ambiente (`PUBLIC_SITE_ORIGIN`).
  */
-const CONTACT_ENDPOINT = "https://1ipim.online/api/contato.php";
+const CONTACT_ENDPOINT = `${SITE_ORIGIN}/api/contato.php`;
 
 interface FeedbackOptions {
   type: "success" | "error";

@@ -31,11 +31,7 @@ nav#main-navbar {
   background: #ffffff0d;
 }
 
-.bg-brand-100[data-astro-cid-4d3t45dq] {
-  background-color: #0081691a;
-}
-
-.animate-shake[data-astro-cid-uaub6dnk] {
+.animate-shake {
   animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 @keyframes shake {

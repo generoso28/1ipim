@@ -1,12 +1,13 @@
 import type { PortalUser } from "./types";
+import { AUTH_BASE as CONFIG_AUTH_BASE } from "../../config/api";
 
 /**
  * Base dos endpoints de sessão do portal.
  *
- * Aponta sempre para produção: o staging usa os mesmos cookies e a mesma
- * REST API, e o backend libera CORS para staging/www.
+ * Configurável por ambiente (`PUBLIC_WP_ADMIN_BASE`); por padrão aponta para
+ * produção em `https://1ipim.online/admin/portal-auth`.
  */
-export const AUTH_BASE = "https://1ipim.online/admin/portal-auth";
+export const AUTH_BASE = CONFIG_AUTH_BASE;
 
 /**
  * Chaves de localStorage usadas pelo portal.

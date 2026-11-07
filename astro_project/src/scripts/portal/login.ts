@@ -1,6 +1,7 @@
 import { AUTH_BASE, auth, type SessionInput } from "./auth";
 import { getErrorMessage } from "./api";
 import { setLoadingState, onPageReady } from "./ui";
+import { WP_REST_BASE } from "../../config/api";
 
 const LOGIN_ERROR_FALLBACK = "Verifique seus dados e tente novamente.";
 
@@ -43,7 +44,7 @@ onPageReady("#login-form", () => {
     resendButton.innerText = "Reenviando...";
     try {
       const response = await fetch(
-        "https://1ipim.online/admin/wp-json/1ipim/v1/reenviar-verificacao",
+        `${WP_REST_BASE}/reenviar-verificacao`,
         {
           method: "POST",
           headers: {

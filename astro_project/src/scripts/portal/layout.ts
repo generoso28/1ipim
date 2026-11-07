@@ -2,6 +2,7 @@ import { apiFetch } from "./api";
 import { auth } from "./auth";
 import { getPermissions } from "./permissions";
 import { escapeHtml, getUserInitials, showToast, onPageReady } from "./ui";
+import { WP_ADMIN_URL } from "../../config/api";
 import type { Permissions } from "./types";
 
 interface NavItem {
@@ -10,8 +11,6 @@ interface NavItem {
   label: string;
   external?: boolean;
 }
-
-const WP_ADMIN_URL = "https://1ipim.online/admin/wp-admin";
 
 function buildNavItems(permissions: Permissions): NavItem[] {
   const items: NavItem[] = [

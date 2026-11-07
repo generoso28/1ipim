@@ -1,5 +1,6 @@
-const ENDPOINT =
-  "https://1ipim.online/admin/wp-json/1ipim/v1/registrar-assinante";
+import { WP_REST_BASE } from "../config/api";
+
+const ENDPOINT = `${WP_REST_BASE}/registrar-assinante`;
 
 function showFeedback(
   box: HTMLElement | null,

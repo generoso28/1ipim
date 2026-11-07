@@ -5,7 +5,19 @@
   --color-brand: #008169;
   --color-brand-dark: #005f4d;
   --color-brand-light: #339987;
+  --color-brand-50: #e8f4f2;
+  --color-brand-100: #e6f3f1;
+  --color-brand-200: #cce7e3;
+  --color-brand-300: #99cfc7;
+  --color-brand-400: #339987;
+  --color-brand-500: #008169;
+  --color-brand-600: #006b57;
+  --color-brand-700: #005f4d;
+  --color-brand-800: #004a3c;
+  --color-brand-900: #003a2f;
   --color-success: #146c43;
+  /* O accent do Berea usa a escala amber do Tailwind (âmbar dourado):
+     amber-500 #f59e0b, amber-600 #d97706, amber-700 #b45309. */
 }
 
 /* We will keep the custom CSS that handles GSAP scrolling for compatibility */

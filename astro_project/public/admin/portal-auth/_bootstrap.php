@@ -12,6 +12,9 @@ $allowedOrigins = [
     'https://1ipim.online',
     'https://www.1ipim.online',
     'https://staging.1ipim.online',
+    'https://admin.1ipim.online',
+    'https://portal.1ipim.online',
+    'https://berea.1ipim.online',
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';

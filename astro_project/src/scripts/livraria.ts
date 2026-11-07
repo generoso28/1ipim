@@ -1,3 +1,5 @@
+import { WP_REST_BASE } from "../config/api";
+
 interface CatalogBook {
   id: number;
   slug: string;
@@ -22,7 +24,7 @@ interface CatalogResponse {
   categorias: string[];
 }
 
-const API_BASE = "https://1ipim.online/admin/wp-json/1ipim/v1";
+const API_BASE = WP_REST_BASE;
 const PLACEHOLDER = "/assets/img/livraria/placeholder.svg";
 const PER_PAGE = 24;
 
